@@ -1,4 +1,4 @@
-import  { PlayerShip } from "shooter"
+import  { PlayerShip, Projectile } from "shooter"
 
 const playerShip = PlayerShip.new()
 
@@ -13,8 +13,7 @@ const strokeWidth=4;
 const strokeColor='purple';
 const fillColor='skyblue';
 
-let ball
-let ballArray = []
+let projectileArray = []
 
 
   
@@ -63,13 +62,13 @@ onkeydown = onkeyup = (e) =>{
     } else if(key === 's' && map[key]){
       playerShip.set_centre_y(10)
     } else if (key === ' ' && map[key]){
-      ball = {
-        x: playerShip.get_centre_x(),
-        y: playerShip.get_centre_y(),
-        speed: 10,
-        initialAngle: playerShip.get_rotation_degrees()
-      }
-      ballArray = [ ...ballArray, ball ]
+      const projectile = Projectile.new(
+        playerShip.get_centre_x(), 
+        playerShip.get_centre_y(),
+        playerShip.get_rotation_degrees(),
+        10.0
+      )
+      projectileArray = [ ...projectileArray, projectile ]
     }
   })
   ctx.clearRect(0,0,cw,ch)
@@ -90,19 +89,17 @@ const step = () => {
 
 const update = () => {
   ctx.clearRect(0,0,cw,ch)
-  // ball.x = playerShip.get_centre_x()
-  // ball.y =  playerShip.get_centre_y()
-  ballArray.forEach(ball => {
-    ball.x += Math.cos(ball.initialAngle*Math.PI/180)* ball.speed
-    ball.y += Math.sin(ball.initialAngle*Math.PI/180)* ball.speed
+  projectileArray.forEach(projectile => {
+    projectile.calculate_new_x()
+    projectile.calculate_new_y()
   })
 }
 
 const render = () => {
   drawPolygon(playerShip.get_centre_x(),playerShip.get_centre_y(),strokeWidth,strokeColor,fillColor, playerShip.get_rotation_degrees())
-  ballArray.forEach(ball => {
+  projectileArray.forEach(projectile => {
     ctx.beginPath()
-    ctx.arc(ball.x, ball.y, 10, 2 * Math.PI, false)
+    ctx.arc(projectile.get_x(), projectile.get_y(), 10, 2 * Math.PI, false)
     ctx.fill()
   })
 }
