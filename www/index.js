@@ -3,18 +3,18 @@ import  { PlayerShip, Projectile, Space } from "shooter"
 const playerShip = PlayerShip.new()
 const space = Space.new()
 
-const canvas=document.getElementById("space");
-const ctx=canvas.getContext("2d");
+const canvas=document.getElementById("space")
+const ctx=canvas.getContext("2d")
 canvas.height = space.get_height()
 canvas.width = space.get_width()
-const cw=canvas.width;
-const ch=canvas.height;
-ctx.fillStyle='black';
+const cw=canvas.width
+const ch=canvas.height
+ctx.fillStyle='black'
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
 const strokeWidth=4;
-const strokeColor='purple';
-const fillColor='skyblue';
+const strokeColor='purple'
+const fillColor='skyblue'
 
 let projectileArray = []
 
@@ -37,13 +37,13 @@ const drawPolygon = (centerX,centerY,strokeWidth,strokeColor,fillColor,rotationD
   ctx.stroke()
   ctx.fill()
   ctx.rotate(-radians)
-  ctx.translate(-centerX,-centerY);  
+  ctx.translate(-centerX,-centerY) 
   }
     
 
  window.addEventListener("keydown", (e) => {
   if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
+      e.preventDefault()
   }
 }, false)
 
@@ -53,17 +53,17 @@ onkeydown = onkeyup = (e) =>{
   map[e.key] = e.type == 'keydown';
   Object.keys(map).forEach(key => {
     if(key === 'ArrowLeft' && map[key]){
-      playerShip.set_rotation_degrees(-20)
+      playerShip.increment_rotation_degrees(-20)
     } else if (key == 'ArrowRight' && map[key]){
-      playerShip.set_rotation_degrees(20)
+      playerShip.increment_rotation_degrees(20)
     } else if(key === 'a' && map[key]){
-      playerShip.set_centre_x(-20)
+      playerShip.increment_centre_x(-20)
     } else if (key === 'd' && map[key]){
-      playerShip.set_centre_x(20)
+      playerShip.increment_centre_x(20)
     } else if(key === 'w' && map[key]){
-      playerShip.set_centre_y(-20)
+      playerShip.increment_centre_y(-20)
     } else if(key === 's' && map[key]){
-      playerShip.set_centre_y(20)
+      playerShip.increment_centre_y(20)
     } else if (key === ' ' && map[key]){
       const projectile = Projectile.new(
         playerShip.get_centre_x(), 
@@ -74,9 +74,10 @@ onkeydown = onkeyup = (e) =>{
       projectileArray = [ ...projectileArray, projectile ]
     }
   })
+  space.check_player_ship_out_of_bounds(playerShip)
   ctx.clearRect(0,0,cw,ch)
-  ctx.fillStyle='black';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='black'
+  ctx.fillRect(0,0,canvas.width,canvas.height)
   drawPolygon(playerShip.get_centre_x(),playerShip.get_centre_y(),strokeWidth,strokeColor,fillColor,playerShip.get_rotation_degrees())
 }
 
@@ -95,14 +96,13 @@ const step = () => {
 const update = () => {
   ctx.clearRect(0,0,cw,ch)
   ctx.fillStyle='black';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillRect(0,0,canvas.width,canvas.height)
   projectileArray.forEach(projectile => {
     space.check_projectile_out_of_bounds(projectile)
     projectile.calculate_new_x()
     projectile.calculate_new_y()
   })
   projectileArray = projectileArray.filter(projectile => projectile.is_active())
-  console.log(projectileArray)
 }
 
 const render = () => {
@@ -116,6 +116,7 @@ const render = () => {
                 
 
 window.onload = () => {
-  
-  animate(step);
-}              
+  animate(step)
+} 
+
+window.onload()

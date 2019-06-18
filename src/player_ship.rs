@@ -63,16 +63,23 @@ impl PlayerShip {
         self.radians
     }
 
-    pub fn set_centre_x(&mut self, x: i32) {
+    pub fn increment_centre_x(&mut self, x: i32) {
         self.centre_x += x
     }
 
+    pub fn set_centre_x(&mut self, x: i32) {
+        self.centre_x = x
+    }
 
     pub fn set_centre_y(&mut self, y: i32) {
+        self.centre_y = y
+    }
+
+    pub fn increment_centre_y(&mut self, y: i32) {
         self.centre_y += y
     }
 
-    pub fn set_rotation_degrees(&mut self, d: f64) {
+    pub fn increment_rotation_degrees(&mut self, d: f64) {
         self.rotation_degress += d
     }
 
