@@ -1,6 +1,7 @@
 pub mod utils;
 pub mod player_ship;
 pub mod projectile;
+pub mod space;
 
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global

@@ -1,13 +1,16 @@
-import  { PlayerShip, Projectile } from "shooter"
+import  { PlayerShip, Projectile, Space } from "shooter"
 
 const playerShip = PlayerShip.new()
+const space = Space.new()
 
 const canvas=document.getElementById("space");
 const ctx=canvas.getContext("2d");
-canvas.width = 1660
-canvas.height = 860
+canvas.height = space.get_height()
+canvas.width = space.get_width()
 const cw=canvas.width;
 const ch=canvas.height;
+ctx.fillStyle='black';
+ctx.fillRect(0,0,canvas.width,canvas.height);
 
 const strokeWidth=4;
 const strokeColor='purple';
@@ -50,17 +53,17 @@ onkeydown = onkeyup = (e) =>{
   map[e.key] = e.type == 'keydown';
   Object.keys(map).forEach(key => {
     if(key === 'ArrowLeft' && map[key]){
-      playerShip.set_rotation_degrees(-10)
+      playerShip.set_rotation_degrees(-20)
     } else if (key == 'ArrowRight' && map[key]){
-      playerShip.set_rotation_degrees(10)
+      playerShip.set_rotation_degrees(20)
     } else if(key === 'a' && map[key]){
-      playerShip.set_centre_x(-10)
+      playerShip.set_centre_x(-20)
     } else if (key === 'd' && map[key]){
-      playerShip.set_centre_x(10)
+      playerShip.set_centre_x(20)
     } else if(key === 'w' && map[key]){
-      playerShip.set_centre_y(-10)
+      playerShip.set_centre_y(-20)
     } else if(key === 's' && map[key]){
-      playerShip.set_centre_y(10)
+      playerShip.set_centre_y(20)
     } else if (key === ' ' && map[key]){
       const projectile = Projectile.new(
         playerShip.get_centre_x(), 
@@ -72,6 +75,8 @@ onkeydown = onkeyup = (e) =>{
     }
   })
   ctx.clearRect(0,0,cw,ch)
+  ctx.fillStyle='black';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
   drawPolygon(playerShip.get_centre_x(),playerShip.get_centre_y(),strokeWidth,strokeColor,fillColor,playerShip.get_rotation_degrees())
 }
 
@@ -89,10 +94,15 @@ const step = () => {
 
 const update = () => {
   ctx.clearRect(0,0,cw,ch)
+  ctx.fillStyle='black';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
   projectileArray.forEach(projectile => {
+    space.check_projectile_out_of_bounds(projectile)
     projectile.calculate_new_x()
     projectile.calculate_new_y()
   })
+  projectileArray = projectileArray.filter(projectile => projectile.is_active())
+  console.log(projectileArray)
 }
 
 const render = () => {

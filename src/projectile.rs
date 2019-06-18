@@ -20,6 +20,7 @@ pub struct Projectile {
     y: f64,
     speed: f64,
     initial_angle: f64,
+    active: bool,
 }
 
 #[wasm_bindgen]
@@ -31,6 +32,7 @@ impl Projectile {
             y,
             speed: 10.0,
             initial_angle,
+            active: true,
         }
     }
 
@@ -56,5 +58,13 @@ impl Projectile {
 
      pub fn calculate_new_y(&mut self) {
        self.y += (self.initial_angle * f64::consts::PI/180.0).sin() * self.speed
+    }
+
+    pub fn is_active(&self) -> bool {
+        self.active
+    }
+
+    pub fn set_active(&mut self) {
+        self.active = !self.active
     }
 }
