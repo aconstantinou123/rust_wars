@@ -11,9 +11,9 @@ canvas.height = space.get_height()
 canvas.width = space.get_width()
 const cw=canvas.width
 const ch=canvas.height
-ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillRect(0,0,canvas.width,canvas.height)
 
-const strokeWidth=4;
+const strokeWidth=4
 const strokeColor='purple'
 const fillColor='skyblue'
 
@@ -31,6 +31,14 @@ const canShootProjectile = () => {
   }, 100)
 }
 
+const drawProjectiles = () => {
+  projectileArray.forEach(projectile => {
+    ctx.beginPath()
+    ctx.fillStyle='red'
+    ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
+    ctx.fill()
+  })
+}
 
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
@@ -59,8 +67,6 @@ const addSquareEnemies = () => {
   }, 500)
 }
 
-
-
 const updateSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
     space.check_enemy_at_edge(squareEnemy)
@@ -76,8 +82,7 @@ const checkProjectileHit = () => {
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.is_active())
 }
-
-  
+ 
 const drawPolygon = (centerX,centerY,strokeWidth,strokeColor,fillColor,rotationDegrees) => {
   const radians=rotationDegrees*Math.PI/180;
   ctx.translate(centerX,centerY)
@@ -104,18 +109,17 @@ const drawPolygon = (centerX,centerY,strokeWidth,strokeColor,fillColor,rotationD
   }
 }, false)
 
-document.body.addEventListener("keydown", function (e) {
+document.body.addEventListener("keydown", (e) => {
   keys[e.keyCode] = true;
 })
 
-document.body.addEventListener("keyup", function (e) {
+document.body.addEventListener("keyup", (e) => {
   keys[e.keyCode] = false;
 })
 
 // canShootProjectile() 
 
 const controlShip = () => {
-  const speed = 5
   if(keys[37] && rotationSpeed > -playerShip.get_speed()){
     rotationSpeed -= 1
   } if (keys[39] && rotationSpeed < playerShip.get_speed()){
@@ -164,9 +168,6 @@ const update = () => {
   playerShip.increment_centre_x(velX)
   playerShip.increment_centre_y(velY)
   space.check_player_ship_out_of_bounds(playerShip)
-  ctx.clearRect(0,0,cw,ch)
-  ctx.fillStyle='black'
-  ctx.fillRect(0,0,canvas.width,canvas.height)
   projectileArray.forEach(projectile => {
     space.check_projectile_out_of_bounds(projectile)
     projectile.calculate_new_x()
@@ -178,14 +179,12 @@ const update = () => {
 }
 
 const render = () => {
+  ctx.clearRect(0,0,cw,ch)
+  ctx.fillStyle='black'
+  ctx.fillRect(0,0,canvas.width,canvas.height) 
   drawPolygon(playerShip.get_centre_x(),playerShip.get_centre_y(),strokeWidth,strokeColor,fillColor, playerShip.get_rotation_degrees())
   drawSquareEnemy()
-  projectileArray.forEach(projectile => {
-    ctx.beginPath()
-    ctx.fillStyle='red'
-    ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
-    ctx.fill()
-  })
+  drawProjectiles()
 }
                 
 
