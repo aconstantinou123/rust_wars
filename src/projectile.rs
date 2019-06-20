@@ -25,6 +25,7 @@ pub struct Projectile {
 impl Projectile {
     pub fn new(x: f64, y: f64, initial_angle: f64) -> Projectile {
         utils::set_panic_hook();
+        
         Projectile {
             x,
             y,

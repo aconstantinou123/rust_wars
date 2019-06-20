@@ -97,18 +97,11 @@ impl SquareEnemy {
     pub fn check_dead(&mut self, projectile: &Projectile) {
         let right_x = self.get_x() as f64 + self.get_size();
         let bottom_y = self.get_y() as f64 + self.get_size();
-        // log!("{}", bottom_y);
         if projectile.get_x() <= right_x  
         && projectile.get_x() >= self.get_x() as f64
         && projectile.get_y() <= bottom_y 
         && projectile.get_y() >= self.get_y() as f64
         {
-            log!("projectile x {}", projectile.get_x());
-            log!("projectile y {}", projectile.get_y());
-            log!("right {}", right_x);
-            log!("left {}", self.get_x());
-            log!("bottom {}", bottom_y);
-            log!("top {}", self.get_y());
             self.set_active();
         }
     }

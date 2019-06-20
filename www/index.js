@@ -19,6 +19,16 @@ const fillColor='skyblue'
 
 let projectileArray = []
 let squareEnemyArray = []
+let canShoot = true
+let velX = 0
+let velY = 0
+let rotationSpeed = 0
+
+const canShootProjectile = () => {
+  setInterval(() => {
+    canShoot = !canShoot
+  }, 100)
+}
 
 
 const drawSquareEnemy = () => {
@@ -47,6 +57,8 @@ const addSquareEnemies = () => {
     }
   }, 3000)
 }
+
+
 
 const updateSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
@@ -91,34 +103,41 @@ const drawPolygon = (centerX,centerY,strokeWidth,strokeColor,fillColor,rotationD
   }
 }, false)
 
+// canShootProjectile() 
+
 let map = {}
 onkeydown = onkeyup = (e) =>{
   e = e || event
   map[e.key] = e.type == 'keydown';
   Object.keys(map).forEach(key => {
-    if(key === 'ArrowLeft' && map[key]){
-      playerShip.increment_rotation_degrees(-20)
-    } else if (key == 'ArrowRight' && map[key]){
-      playerShip.increment_rotation_degrees(20)
-    } else if(key === 'a' && map[key]){
-      playerShip.increment_centre_x(-20)
-    } else if (key === 'd' && map[key]){
-      playerShip.increment_centre_x(20)
-    } else if(key === 'w' && map[key]){
-      playerShip.increment_centre_y(-20)
-    } else if(key === 's' && map[key]){
-      playerShip.increment_centre_y(20)
-    } else if (key === ' ' && map[key]){
-      const projectile = Projectile.new(
-        playerShip.get_centre_x(), 
-        playerShip.get_centre_y(),
-        playerShip.get_rotation_degrees(),
-        10.0
-      )
-      projectileArray = [ ...projectileArray, projectile ]
+    const speed = 20
+    if(key === 'ArrowLeft' && map[key] && rotationSpeed > -speed){
+      rotationSpeed -= 1
+    } if (key == 'ArrowRight' && map[key] && rotationSpeed < speed){
+      rotationSpeed += 1
+    } if(key === 'a' && map[key] && velX > -speed){
+      velX -= 1
+    } if (key === 'd' && map[key] && velX < speed){
+      velX += 1
+    }  if(key === 'w' && map[key] && velY > -speed){
+      velY -= 1
+    }  if(key === 's' && map[key] && velY < speed){
+      velY += 1
+    }  if (key === ' ' && map[key]){ 
+      if(canShoot){
+        canShoot = true
+        const projectile = Projectile.new(
+          playerShip.get_centre_x(), 
+          playerShip.get_centre_y(),
+          playerShip.get_rotation_degrees(),
+          10.0
+        )
+        // canShoot = false 
+
+        projectileArray = [ ...projectileArray, projectile ]
+      }
     }
   })
-  space.check_player_ship_out_of_bounds(playerShip)
   ctx.clearRect(0,0,cw,ch)
   ctx.fillStyle='black'
   ctx.fillRect(0,0,canvas.width,canvas.height)
@@ -140,6 +159,13 @@ const step = () => {
 }
 
 const update = () => {
+  velX *= 0.98
+  velY *= 0.98
+  rotationSpeed *= 0.98
+  playerShip.increment_rotation_degrees(rotationSpeed)
+  playerShip.increment_centre_x(velX)
+  playerShip.increment_centre_y(velY)
+  space.check_player_ship_out_of_bounds(playerShip)
   ctx.clearRect(0,0,cw,ch)
   ctx.fillStyle='black'
   ctx.fillRect(0,0,canvas.width,canvas.height)
