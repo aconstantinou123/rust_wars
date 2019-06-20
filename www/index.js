@@ -11,7 +11,6 @@ canvas.height = space.get_height()
 canvas.width = space.get_width()
 const cw=canvas.width
 const ch=canvas.height
-// ctx.fillStyle='black'
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
 const strokeWidth=4;
@@ -21,7 +20,6 @@ const fillColor='skyblue'
 let projectileArray = []
 let squareEnemyArray = []
 
-// ctx.fillStyle='white'
 
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
@@ -47,7 +45,7 @@ const addSquareEnemies = () => {
         squareEnemy,
       ]
     }
-  }, 10000)
+  }, 3000)
 }
 
 const updateSquareEnemy = () => {
@@ -55,6 +53,15 @@ const updateSquareEnemy = () => {
     space.check_enemy_at_edge(squareEnemy)
     squareEnemy.move_enemy()
   })
+}
+
+const checkProjectileHit = () => {
+  projectileArray.forEach(projectile => {
+    squareEnemyArray.forEach(squareEnemy => {
+      squareEnemy.check_dead(projectile)
+    })
+  })
+  squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.is_active())
 }
 
   
@@ -143,6 +150,7 @@ const update = () => {
   })
   projectileArray = projectileArray.filter(projectile => projectile.is_active())
   updateSquareEnemy()
+  checkProjectileHit()
 }
 
 const render = () => {
@@ -151,7 +159,7 @@ const render = () => {
   projectileArray.forEach(projectile => {
     ctx.beginPath()
     ctx.fillStyle='red'
-    ctx.arc(projectile.get_x(), projectile.get_y(), 10, 2 * Math.PI, false)
+    ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
     ctx.fill()
   })
 }

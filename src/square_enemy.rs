@@ -1,5 +1,6 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
+use crate::projectile::Projectile;
 use std::f64;
 
 extern crate web_sys;
@@ -91,5 +92,24 @@ impl SquareEnemy {
     pub fn move_enemy(&mut self) {
         self.x += self.x_speed as i32;
         self.y += self.y_speed as i32;
+    }
+
+    pub fn check_dead(&mut self, projectile: &Projectile) {
+        let right_x = self.get_x() as f64 + self.get_size();
+        let bottom_y = self.get_y() as f64 + self.get_size();
+        // log!("{}", bottom_y);
+        if projectile.get_x() <= right_x  
+        && projectile.get_x() >= self.get_x() as f64
+        && projectile.get_y() <= bottom_y 
+        && projectile.get_y() >= self.get_y() as f64
+        {
+            log!("projectile x {}", projectile.get_x());
+            log!("projectile y {}", projectile.get_y());
+            log!("right {}", right_x);
+            log!("left {}", self.get_x());
+            log!("bottom {}", bottom_y);
+            log!("top {}", self.get_y());
+            self.set_active();
+        }
     }
 }
