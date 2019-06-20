@@ -28,7 +28,7 @@ impl SquareEnemy {
     pub fn new(x: i32, y: i32) -> SquareEnemy {
         utils::set_panic_hook();
         SquareEnemy {
-            size: 30.0,
+            size: 15.0,
             x,
             y,
             x_speed: 5.0,

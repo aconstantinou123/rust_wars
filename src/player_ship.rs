@@ -20,6 +20,7 @@ pub struct PlayerShip {
     centre_x: i32,
     centre_y: i32,
     radians: f64,
+    speed: i32,
 }
 
 #[wasm_bindgen]
@@ -29,12 +30,17 @@ impl PlayerShip {
         let rotation_degress = 0.0;
         PlayerShip {
             side_count: 3,
-            size: 60.0,
+            size: 30.0,
             rotation_degress,
             centre_x: 440,
             centre_y: 440,
             radians: rotation_degress * f64::consts::PI / 180.0,
+            speed: 5
         }
+    }
+
+    pub fn get_speed(&self) -> i32 {
+        self.speed
     }
 
     pub fn get_side_count(&self) -> i32 {

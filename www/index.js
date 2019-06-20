@@ -23,6 +23,7 @@ let canShoot = true
 let velX = 0
 let velY = 0
 let rotationSpeed = 0
+let keys = []
 
 const canShootProjectile = () => {
   setInterval(() => {
@@ -47,7 +48,7 @@ const addSquareEnemies = () => {
         squareEnemy,
       ]
   setInterval(() => {
-    if(squareEnemyArray.length < 10){
+    if(squareEnemyArray.length < 20){
       const squareEnemy = SquareEnemy
         .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       squareEnemyArray = [
@@ -55,7 +56,7 @@ const addSquareEnemies = () => {
         squareEnemy,
       ]
     }
-  }, 3000)
+  }, 500)
 }
 
 
@@ -103,49 +104,45 @@ const drawPolygon = (centerX,centerY,strokeWidth,strokeColor,fillColor,rotationD
   }
 }, false)
 
+document.body.addEventListener("keydown", function (e) {
+  keys[e.keyCode] = true;
+})
+
+document.body.addEventListener("keyup", function (e) {
+  keys[e.keyCode] = false;
+})
+
 // canShootProjectile() 
 
-let map = {}
-onkeydown = onkeyup = (e) =>{
-  e = e || event
-  map[e.key] = e.type == 'keydown';
-  Object.keys(map).forEach(key => {
-    const speed = 20
-    if(key === 'ArrowLeft' && map[key] && rotationSpeed > -speed){
-      rotationSpeed -= 1
-    } if (key == 'ArrowRight' && map[key] && rotationSpeed < speed){
-      rotationSpeed += 1
-    } if(key === 'a' && map[key] && velX > -speed){
-      velX -= 1
-    } if (key === 'd' && map[key] && velX < speed){
-      velX += 1
-    }  if(key === 'w' && map[key] && velY > -speed){
-      velY -= 1
-    }  if(key === 's' && map[key] && velY < speed){
-      velY += 1
-    }  if (key === ' ' && map[key]){ 
-      if(canShoot){
-        canShoot = true
-        const projectile = Projectile.new(
-          playerShip.get_centre_x(), 
-          playerShip.get_centre_y(),
-          playerShip.get_rotation_degrees(),
-          10.0
-        )
-        // canShoot = false 
-
-        projectileArray = [ ...projectileArray, projectile ]
-      }
+const controlShip = () => {
+  const speed = 5
+  if(keys[37] && rotationSpeed > -playerShip.get_speed()){
+    rotationSpeed -= 1
+  } if (keys[39] && rotationSpeed < playerShip.get_speed()){
+    rotationSpeed += 1
+  } if(keys[65] && velX > -playerShip.get_speed()){
+    velX -= 1
+  } if (keys[68] && velX < playerShip.get_speed()){
+    velX += 1
+  }  if(keys[87] && velY > -playerShip.get_speed()){
+    velY -= 1
+  }  if(keys[83] && velY < playerShip.get_speed()){
+    velY += 1
+  }  if (keys[32]){ 
+    if(canShoot){
+      const projectile = Projectile.new(
+        playerShip.get_centre_x(), 
+        playerShip.get_centre_y(),
+        playerShip.get_rotation_degrees(),
+        10.0
+      )
+      projectileArray = [ ...projectileArray, projectile ]
     }
-  })
-  ctx.clearRect(0,0,cw,ch)
-  ctx.fillStyle='black'
-  ctx.fillRect(0,0,canvas.width,canvas.height)
-  drawPolygon(playerShip.get_centre_x(),playerShip.get_centre_y(),strokeWidth,strokeColor,fillColor,playerShip.get_rotation_degrees())
+  }
 }
 
-addSquareEnemies()
 
+addSquareEnemies()
 
 const animate = window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
@@ -162,6 +159,7 @@ const update = () => {
   velX *= 0.98
   velY *= 0.98
   rotationSpeed *= 0.98
+  controlShip()
   playerShip.increment_rotation_degrees(rotationSpeed)
   playerShip.increment_centre_x(velX)
   playerShip.increment_centre_y(velY)
