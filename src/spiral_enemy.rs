@@ -1,7 +1,6 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
 use crate::projectile::Projectile;
-use crate::player_ship::PlayerShip;
 use std::f64;
 
 extern crate web_sys;
@@ -15,28 +14,34 @@ macro_rules! log {
 
 #[wasm_bindgen]
 #[derive(Debug)]
-pub struct ClawEnemy {
+pub struct SpiralEnemy {
     size: f64,
     x: f64,
     y: f64,
-    speed: f64,
+    x_speed: f64,
+    y_speed: f64,
     active: bool,
     ready_to_remove: bool,
     radians: f64,
+    rotation_radius: f64,
+    reverse: bool
 }
 
 #[wasm_bindgen]
-impl ClawEnemy {
-    pub fn new(x: f64, y: f64) -> ClawEnemy {
+impl SpiralEnemy {
+    pub fn new(x: f64, y: f64) -> SpiralEnemy {
         utils::set_panic_hook();
-        ClawEnemy {
+        SpiralEnemy {
             size: 25.0,
             x,
             y,
-            speed: 5.0,
+            x_speed: 1.5,
+            y_speed: 1.5,
             active: true,
             ready_to_remove: false,
             radians: 0.0,
+            rotation_radius: 2.0,
+            reverse: false,
         }
     }
 
@@ -64,23 +69,19 @@ impl ClawEnemy {
         self.y = y
     }
 
-    pub fn increment_y(&mut self, y: f64) {
-        self.y += y
-    }
-
-     pub fn increment_x(&mut self, x: f64) {
-        self.x += x
-    }
-
     pub fn get_speed(&self) -> f64 {
-        self.speed
+        self.x_speed
     }
 
     pub fn reverse_x_speed(&mut self) {
-        self.speed = -self.speed
+        self.x_speed = -self.x_speed
     }
 
-      pub fn is_active(&self) -> bool {
+    pub fn reverse_y_speed(&mut self) {
+        self.y_speed = -self.y_speed
+    }
+
+    pub fn is_active(&self) -> bool {
         self.active
     }
 
@@ -90,14 +91,6 @@ impl ClawEnemy {
 
      pub fn set_ready_to_remove(&mut self) {
         self.ready_to_remove = !self.ready_to_remove
-    }
-
-    pub fn move_enemy(&mut self, player_ship: &PlayerShip) {
-        let delta_x = player_ship.get_centre_x() as f64 - self.x;
-        let delta_y = player_ship.get_centre_y() as f64 - self.y;
-        self.radians = delta_y.atan2(delta_x);
-        self.x += self.radians.cos() * self.speed;
-        self.y += self.radians.sin() * self.speed;
     }
 
     pub fn check_dead(&mut self, projectile: &Projectile) {
@@ -112,30 +105,30 @@ impl ClawEnemy {
         }
     }
 
-    pub fn avoid_projectile(&mut self, projectile: &Projectile) {
-        let delta_x = projectile.get_x() - self.x;
-        let delta_y = projectile.get_y() - self.y;
-        if delta_x < 50.0 && delta_x > -50.0 {
-            if projectile.get_x() < self.get_x() {
-                self.x += 5.0
-            } else {
-                self.x -= 5.0
-            }
-        }
-        if delta_y < 50.0 && delta_y > -50.0 {
-            if projectile.get_y() < self.get_y() {
-                self.y += 5.0
-            } else {
-                self.y -= 5.0
-            }
-        }
-    }
-
     pub fn blow_up(&mut self){
         if self.ready_to_remove && self.size < 50.0 {
             self.size += 0.03
         }  else if self.ready_to_remove {
             self.set_active()
+        }
+    }
+
+
+    pub fn spiral_movement(&mut self) {
+        let rotation_radius_increase = 0.1;
+        self.radians += f64::consts::PI / 180.0 + 0.1;
+        let x_rotation = self.rotation_radius * self.radians.cos();
+        let y_rotation = self.rotation_radius * self.radians.sin();
+        self.x += x_rotation + self.x_speed;
+        self.y += y_rotation + self.x_speed;
+        if self.rotation_radius <= 20.0 && self.reverse == false {
+            self.rotation_radius += rotation_radius_increase/5.0;
+        } else if self.rotation_radius > 20.0 && self.reverse == false {
+            self.reverse = true
+        } else if self.rotation_radius >= 5.0 && self.reverse == true {
+            self.rotation_radius -= rotation_radius_increase/5.0;
+        } else {
+            self.reverse = false
         }
     }
 }

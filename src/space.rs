@@ -4,6 +4,7 @@ use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
 use crate::square_enemy::SquareEnemy;
 use crate::claw_enemy::ClawEnemy;
+use crate::spiral_enemy::SpiralEnemy;
 
 extern crate web_sys;
 
@@ -94,6 +95,25 @@ impl Space {
         }
         if claw_enemy.get_y() + claw_enemy.get_size() >= self.get_height() {
             claw_enemy.set_y(self.get_height() - claw_enemy.get_size());
+        }
+    }
+
+    pub fn check_spiral_enemy_at_edge(&self, spiral_enemy: &mut SpiralEnemy) {
+        if spiral_enemy.get_x() <= 0.0 {
+            spiral_enemy.set_x(1.0);
+            spiral_enemy.reverse_x_speed();
+        } 
+        if spiral_enemy.get_x() + spiral_enemy.get_size() >= self.get_width() {
+            spiral_enemy.set_x(self.get_width() - spiral_enemy.get_size());
+            spiral_enemy.reverse_x_speed()
+        }
+        if spiral_enemy.get_y() <= 0.0 {
+            spiral_enemy.set_y(1.0);
+            spiral_enemy.reverse_y_speed();
+        }
+        if spiral_enemy.get_y() + spiral_enemy.get_size() >= self.get_height() {
+            spiral_enemy.set_y(self.get_height() - spiral_enemy.get_size());
+            spiral_enemy.reverse_y_speed();
         }
     }
 

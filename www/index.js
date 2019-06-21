@@ -1,4 +1,12 @@
-import  { PlayerShip, Projectile, Space, SquareEnemy, FollowEnemy, ClawEnemy } from "shooter"
+import  { 
+  PlayerShip, 
+  Projectile, 
+  Space, 
+  SquareEnemy, 
+  FollowEnemy, 
+  ClawEnemy, 
+  SpiralEnemy,
+} from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
@@ -20,11 +28,15 @@ let projectileArray = []
 let squareEnemyArray = []
 let followEnemyArray = []
 let clawEnemyArray = []
+let spiralEnemyArray = []
 let keys = []
 let velX = 0
 let velY = 0
 let rotationSpeed = 0
 let delay = 0
+let drawSpirals = true
+let spiralX = getRandomInt(space.get_width() - 30)
+let spiralY = getRandomInt(space.get_height() - 30)
 
 const drawPlayerShip = (centerX,centerY,strokeWidth,strokeColor,rotationDegrees) => {
   const radians=rotationDegrees*Math.PI/180;
@@ -36,14 +48,39 @@ const drawPlayerShip = (centerX,centerY,strokeWidth,strokeColor,rotationDegrees)
     ctx.lineTo (playerShip.draw_line_x(i), playerShip.draw_line_y(i))
   }
   ctx.closePath()
-  ctx.strokeStyle = strokeColor
-  ctx.lineWidth = strokeWidth
+  ctx.strokeStyle = '#33F0FF'
+  ctx.lineWidth = 3
   ctx.stroke()
   ctx.fill()
   ctx.rotate(-radians)
   ctx.translate(-centerX,-centerY) 
 }
-    
+
+const drawSpiral = () => {
+  if(spiralEnemyArray.length == 30){
+    drawSpirals = false
+  } else if (spiralEnemyArray.length == 0){
+    drawSpirals = true
+    spiralX = getRandomInt(space.get_width() - 30)
+    spiralY = getRandomInt(space.get_height() - 30)
+  }
+  if(spiralEnemyArray.length <= 30 && drawSpirals){
+    const spiralEnemy = SpiralEnemy
+      .new(spiralX, spiralY)
+    spiralEnemyArray = [
+      ...spiralEnemyArray,
+      spiralEnemy
+    ]
+  }
+  spiralEnemyArray.forEach(spiralEnemy => {
+    spiralEnemy.spiral_movement()
+    ctx.beginPath()
+    ctx.strokeStyle="#8D33FF"
+    ctx.arc(spiralEnemy.get_x(),spiralEnemy.get_y(), 10,0, 2*Math.PI,false);
+    ctx.closePath()
+    ctx.stroke()
+  })
+}    
 
 
 const drawProjectiles = () => {
@@ -164,6 +201,9 @@ const updateProjectiles = () => {
 }
 
 const updateEnemies = () => {
+  spiralEnemyArray.forEach(spiralEnemy => {
+    space.check_spiral_enemy_at_edge(spiralEnemy)
+  })
   squareEnemyArray.forEach(squareEnemy => {
     space.check_enemy_at_edge(squareEnemy)
     squareEnemy.move_enemy()
@@ -192,10 +232,15 @@ const checkProjectileHit = () => {
       enemy.check_dead(projectile)
       enemy.blow_up()
     })
+    spiralEnemyArray.forEach(enemy => {
+      enemy.check_dead(projectile)
+      enemy.blow_up()
+    })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.is_active())
   followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.is_active())
   clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.is_active())
+  spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.is_active())
   
 }
 
@@ -280,6 +325,7 @@ const render = () => {
   drawProjectiles()
   drawFollowEnemy()
   drawClawEnemy()
+  drawSpiral()
 }
                 
 
