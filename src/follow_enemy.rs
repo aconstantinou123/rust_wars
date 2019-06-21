@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
 use crate::projectile::Projectile;
+use crate::player_ship::PlayerShip;
 use std::f64;
 
 extern crate web_sys;
@@ -14,28 +15,28 @@ macro_rules! log {
 
 #[wasm_bindgen]
 #[derive(Debug)]
-pub struct SquareEnemy {
+pub struct FollowEnemy {
     size: f64,
-    x: i32,
-    y: i32,
-    x_speed: f64,
-    y_speed: f64,
+    x: f64,
+    y: f64,
+    speed: f64,
     active: bool,
-    ready_to_remove: bool
+    ready_to_remove: bool,
+    radians: f64,
 }
 
 #[wasm_bindgen]
-impl SquareEnemy {
-    pub fn new(x: i32, y: i32) -> SquareEnemy {
+impl FollowEnemy {
+    pub fn new(x: f64, y: f64) -> FollowEnemy {
         utils::set_panic_hook();
-        SquareEnemy {
-            size: 15.0,
+        FollowEnemy {
+            size: 25.0,
             x,
             y,
-            x_speed: 1.0,
-            y_speed: 1.0,
+            speed: 1.5,
             active: true,
             ready_to_remove: false,
+            radians: 0.0,
         }
     }
 
@@ -43,44 +44,36 @@ impl SquareEnemy {
         self.size
     }
 
-     pub fn get_x(&self) -> i32 {
+     pub fn get_x(&self) -> f64 {
         self.x
     }
 
-    pub fn get_y(&self) -> i32 {
+    pub fn get_y(&self) -> f64 {
         self.y
     }
 
-     pub fn set_x(&mut self, x: i32) {
+     pub fn set_x(&mut self, x: f64) {
         self.x = x
     }
 
-    pub fn set_y(&mut self, y: i32) {
+    pub fn set_y(&mut self, y: f64) {
         self.y = y
     }
 
-    pub fn increment_y(&mut self, y: i32) {
+    pub fn increment_y(&mut self, y: f64) {
         self.y += y
     }
 
-     pub fn increment_x(&mut self, x: i32) {
+     pub fn increment_x(&mut self, x: f64) {
         self.x += x
     }
 
-    pub fn get_x_speed(&self) -> f64 {
-        self.x_speed
-    }
-
-    pub fn get_y_speed(&self) -> f64 {
-        self.y_speed
+    pub fn get_speed(&self) -> f64 {
+        self.speed
     }
 
     pub fn reverse_x_speed(&mut self) {
-        self.x_speed = -self.x_speed
-    }
-
-    pub fn reverse_y_speed(&mut self) {
-        self.y_speed = -self.y_speed
+        self.speed = -self.speed
     }
 
       pub fn is_active(&self) -> bool {
@@ -95,18 +88,21 @@ impl SquareEnemy {
         self.ready_to_remove = !self.ready_to_remove
     }
 
-    pub fn move_enemy(&mut self) {
-        self.x += self.x_speed as i32;
-        self.y += self.y_speed as i32;
+    pub fn move_enemy(&mut self, player_ship: &PlayerShip) {
+        let delta_x = player_ship.get_centre_x() as f64 - self.x;
+        let delta_y = player_ship.get_centre_y() as f64 - self.y;
+        self.radians = delta_y.atan2(delta_x);
+        self.x += self.radians.cos() * self.speed;
+        self.y += self.radians.sin() * self.speed;
     }
 
     pub fn check_dead(&mut self, projectile: &Projectile) {
-        let right_x = self.get_x() as f64 + self.get_size();
-        let bottom_y = self.get_y() as f64 + self.get_size();
+        let right_x = self.get_x() + self.get_size();
+        let bottom_y = self.get_y() + self.get_size();
         if projectile.get_x() <= right_x  
-        && projectile.get_x() >= self.get_x() as f64
+        && projectile.get_x() >= self.get_x()
         && projectile.get_y() <= bottom_y 
-        && projectile.get_y() >= self.get_y() as f64
+        && projectile.get_y() >= self.get_y()
         {
             self.ready_to_remove = true
         }
