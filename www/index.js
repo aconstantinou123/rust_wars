@@ -78,6 +78,7 @@ const checkProjectileHit = () => {
   projectileArray.forEach(projectile => {
     squareEnemyArray.forEach(squareEnemy => {
       squareEnemy.check_dead(projectile)
+      squareEnemy.blow_up()
     })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.is_active())

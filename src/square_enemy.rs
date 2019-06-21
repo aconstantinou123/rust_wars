@@ -21,6 +21,7 @@ pub struct SquareEnemy {
     x_speed: f64,
     y_speed: f64,
     active: bool,
+    ready_to_remove: bool
 }
 
 #[wasm_bindgen]
@@ -31,9 +32,10 @@ impl SquareEnemy {
             size: 15.0,
             x,
             y,
-            x_speed: 5.0,
-            y_speed: 5.0,
+            x_speed: 2.0,
+            y_speed: 2.0,
             active: true,
+            ready_to_remove: false,
         }
     }
 
@@ -89,6 +91,10 @@ impl SquareEnemy {
         self.active = !self.active
     }
 
+     pub fn set_ready_to_remove(&mut self) {
+        self.ready_to_remove = !self.ready_to_remove
+    }
+
     pub fn move_enemy(&mut self) {
         self.x += self.x_speed as i32;
         self.y += self.y_speed as i32;
@@ -102,7 +108,15 @@ impl SquareEnemy {
         && projectile.get_y() <= bottom_y 
         && projectile.get_y() >= self.get_y() as f64
         {
-            self.set_active();
+            self.ready_to_remove = true
+        }
+    }
+
+    pub fn blow_up(&mut self){
+        if self.ready_to_remove && self.size < 50.0 {
+            self.size += 0.03
+        }  else if self.ready_to_remove {
+            self.set_active()
         }
     }
 }
