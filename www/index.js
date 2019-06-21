@@ -1,4 +1,4 @@
-import  { PlayerShip, Projectile, Space, SquareEnemy, FollowEnemy } from "shooter"
+import  { PlayerShip, Projectile, Space, SquareEnemy, FollowEnemy, ClawEnemy } from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
@@ -15,22 +15,36 @@ ctx.fillRect(0,0,canvas.width,canvas.height)
 
 const strokeWidth=5
 const strokeColor='purple'
-const fillColor='skyblue'
 
 let projectileArray = []
 let squareEnemyArray = []
 let followEnemyArray = []
-let canShoot = true
+let clawEnemyArray = []
+let keys = []
 let velX = 0
 let velY = 0
 let rotationSpeed = 0
-let keys = []
+let delay = 0
 
-const canShootProjectile = () => {
-  setInterval(() => {
-    canShoot = !canShoot
-  }, 100)
+const drawPlayerShip = (centerX,centerY,strokeWidth,strokeColor,rotationDegrees) => {
+  const radians=rotationDegrees*Math.PI/180;
+  ctx.translate(centerX,centerY)
+  ctx.rotate(radians)
+  ctx.beginPath()
+  ctx.moveTo (playerShip.generate_new_x(), playerShip.generate_new_y())   
+  for (let i = 1; i <= playerShip.get_side_count();i += 1) {
+    ctx.lineTo (playerShip.draw_line_x(i), playerShip.draw_line_y(i))
+  }
+  ctx.closePath()
+  ctx.strokeStyle = strokeColor
+  ctx.lineWidth = strokeWidth
+  ctx.stroke()
+  ctx.fill()
+  ctx.rotate(-radians)
+  ctx.translate(-centerX,-centerY) 
 }
+    
+
 
 const drawProjectiles = () => {
   projectileArray.forEach(projectile => {
@@ -52,15 +66,35 @@ const drawSquareEnemy = () => {
 const drawFollowEnemy = () => {
   followEnemyArray.forEach(followEnemy => {
     const numberOfSides = 6
-    ctx.beginPath();
-    ctx.moveTo (followEnemy.get_x() +  followEnemy.get_size() * Math.cos(0), 
+    ctx.beginPath()
+    ctx.moveTo (followEnemy.get_x() + followEnemy.get_size() * Math.cos(0), 
     followEnemy.get_y() +  followEnemy.get_size() *  Math.sin(0))         
     for (var i = 1; i <= numberOfSides; i += 1) {
       ctx.lineTo (followEnemy.get_x() + followEnemy.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
       followEnemy.get_y() + followEnemy.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
     }
     ctx.strokeStyle = "red";
-    ctx.stroke();
+    ctx.stroke()
+  })
+}
+
+const drawClawEnemy = () => {
+  clawEnemyArray.forEach(enemy => {
+    const centerX = enemy.get_x() + enemy.get_size() / 2
+    const centerY = enemy.get_y() + enemy.get_size() / 2
+    const numberOfSides = 4.5
+    ctx.translate(centerX, centerY)
+    ctx.rotate(enemy.get_radians())
+    ctx.beginPath()
+    ctx.moveTo (0 +  enemy.get_size() * Math.cos(0), 0 +  enemy.get_size() *  Math.sin(0))         
+    for (var i = 1; i <= numberOfSides; i += 1) {
+      ctx.lineTo (0 + enemy.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
+      0 + enemy.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
+    }
+    ctx.strokeStyle = "blue";
+    ctx.stroke()
+    ctx.rotate(-enemy.get_radians())
+    ctx.translate(-centerX, -centerY)
   })
 }
 
@@ -80,12 +114,12 @@ const addSquareEnemies = () => {
         squareEnemy,
       ]
     }
-  }, 500)
+  }, 2000)
 }
 
 const addFollowEnemies = () => {
   setInterval(() => {
-    if(followEnemyArray.length < 10){
+    if(followEnemyArray.length < 5){
       const followEnemy = FollowEnemy
         .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       followEnemyArray = [
@@ -93,7 +127,20 @@ const addFollowEnemies = () => {
         followEnemy,
       ]
     }
-  }, 500)
+  }, 2000)
+}
+
+const addClawEnemies = () => {
+  setInterval(() => {
+    if(clawEnemyArray.length < 1){
+      const clawEnemy = ClawEnemy
+        .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+      clawEnemyArray = [
+        ...clawEnemyArray,
+        clawEnemy,
+      ]
+    }
+  }, 5000)
 }
 
 const updatePlayerShip = () => {
@@ -124,6 +171,10 @@ const updateEnemies = () => {
   followEnemyArray.forEach(followEnemy => {
     followEnemy.move_enemy(playerShip)
   })
+  clawEnemyArray.forEach(clawEnemy => {
+    space.check_claw_enemy_at_edge(clawEnemy)
+    clawEnemy.move_enemy(playerShip)
+  })
 }
 
 const checkProjectileHit = () => {
@@ -136,32 +187,30 @@ const checkProjectileHit = () => {
       enemy.check_dead(projectile)
       enemy.blow_up()
     })
+    clawEnemyArray.forEach(enemy => {
+      enemy.avoid_projectile(projectile)
+      enemy.check_dead(projectile)
+      enemy.blow_up()
+    })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.is_active())
   followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.is_active())
+  clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.is_active())
   
 }
- 
-const drawPolygon = (centerX,centerY,strokeWidth,strokeColor,rotationDegrees) => {
-  const radians=rotationDegrees*Math.PI/180;
-  ctx.translate(centerX,centerY)
-  ctx.rotate(radians)
-  ctx.beginPath()
-  ctx.moveTo (playerShip.generate_new_x(), playerShip.generate_new_y())   
-  for (let i = 1; i <= playerShip.get_side_count();i += 1) {
-    ctx.lineTo (playerShip.draw_line_x(i), playerShip.draw_line_y(i))
-  }
-  ctx.closePath()
-  ctx.strokeStyle = strokeColor
-  ctx.lineWidth = strokeWidth
-  ctx.stroke()
-  ctx.fill()
-  ctx.rotate(-radians)
-  ctx.translate(-centerX,-centerY) 
-  }
-    
 
- window.addEventListener("keydown", (e) => {
+const shootProjectile = () => {
+  const projectile = Projectile.new(
+    playerShip.get_centre_x(), 
+    playerShip.get_centre_y(),
+    playerShip.get_rotation_degrees(),
+    10.0
+    )
+  projectileArray = [ ...projectileArray, projectile ]
+}
+ 
+
+window.addEventListener("keydown", (e) => {
   if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault()
   }
@@ -175,12 +224,10 @@ document.body.addEventListener("keyup", (e) => {
   keys[e.keyCode] = false;
 })
 
-// canShootProjectile() 
-
 const controlShip = () => {
-  if(keys[37] && rotationSpeed > -playerShip.get_speed()){
+  if(keys[37] && rotationSpeed > -2){
     rotationSpeed -= 1
-  } if (keys[39] && rotationSpeed < playerShip.get_speed()){
+  } if (keys[39] && rotationSpeed < 2){
     rotationSpeed += 1
   } if(keys[65] && velX > -playerShip.get_speed()){
     velX -= 1
@@ -190,15 +237,12 @@ const controlShip = () => {
     velY -= 1
   }  if(keys[83] && velY < playerShip.get_speed()){
     velY += 1
-  }  if (keys[32]){ 
-    if(canShoot){
-      const projectile = Projectile.new(
-        playerShip.get_centre_x(), 
-        playerShip.get_centre_y(),
-        playerShip.get_rotation_degrees(),
-        10.0
-      )
-      projectileArray = [ ...projectileArray, projectile ]
+  }  if (keys[32]){
+    if(delay > 5){
+        shootProjectile()
+        delay = 0
+    } else {
+        delay += 1
     }
   }
 }
@@ -206,6 +250,7 @@ const controlShip = () => {
 
 addSquareEnemies()
 addFollowEnemies()
+addClawEnemies()
 
 const animate = window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
@@ -229,11 +274,12 @@ const render = () => {
   ctx.clearRect(0,0,cw,ch)
   ctx.fillStyle='black'
   ctx.fillRect(0,0,canvas.width,canvas.height) 
-  drawPolygon(playerShip.get_centre_x(),playerShip.get_centre_y(),
+  drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(),
   strokeWidth,strokeColor, playerShip.get_rotation_degrees())
   drawSquareEnemy()
   drawProjectiles()
   drawFollowEnemy()
+  drawClawEnemy()
 }
                 
 

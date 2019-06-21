@@ -15,7 +15,7 @@ macro_rules! log {
 
 #[wasm_bindgen]
 #[derive(Debug)]
-pub struct FollowEnemy {
+pub struct ClawEnemy {
     size: f64,
     x: f64,
     y: f64,
@@ -26,14 +26,14 @@ pub struct FollowEnemy {
 }
 
 #[wasm_bindgen]
-impl FollowEnemy {
-    pub fn new(x: f64, y: f64) -> FollowEnemy {
+impl ClawEnemy {
+    pub fn new(x: f64, y: f64) -> ClawEnemy {
         utils::set_panic_hook();
-        FollowEnemy {
+        ClawEnemy {
             size: 25.0,
             x,
             y,
-            speed: 1.5,
+            speed: 2.5,
             active: true,
             ready_to_remove: false,
             radians: 0.0,
@@ -109,6 +109,25 @@ impl FollowEnemy {
         && projectile.get_y() >= self.get_y()
         {
             self.ready_to_remove = true
+        }
+    }
+
+    pub fn avoid_projectile(&mut self, projectile: &Projectile) {
+        let delta_x = projectile.get_x() - self.x;
+        let delta_y = projectile.get_y() - self.y;
+        if delta_x < 50.0 && delta_x > -50.0 {
+            if projectile.get_x() < self.get_x() {
+                self.x += 5.0
+            } else {
+                self.x -= 5.0
+            }
+        }
+        if delta_y < 50.0 && delta_y > -50.0 {
+            if projectile.get_y() < self.get_y() {
+                self.y += 5.0
+            } else {
+                self.y -= 5.0
+            }
         }
     }
 

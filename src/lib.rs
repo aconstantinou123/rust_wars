@@ -4,6 +4,7 @@ pub mod projectile;
 pub mod space;
 pub mod square_enemy;
 pub mod follow_enemy;
+pub mod claw_enemy;
 
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global

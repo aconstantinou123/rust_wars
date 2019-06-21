@@ -3,6 +3,7 @@ use crate::utils;
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
 use crate::square_enemy::SquareEnemy;
+use crate::claw_enemy::ClawEnemy;
 
 extern crate web_sys;
 
@@ -77,6 +78,22 @@ impl Space {
         if square_enemy.get_y() as f64 + square_enemy.get_size() >= self.get_height() {
             square_enemy.set_y(self.get_height() as i32 - square_enemy.get_size() as i32);
             square_enemy.reverse_y_speed();
+        }
+    }
+
+
+     pub fn check_claw_enemy_at_edge(&self, claw_enemy: &mut ClawEnemy) {
+        if claw_enemy.get_x() <= 0.0 {
+            claw_enemy.set_x(1.0);
+        } 
+        if claw_enemy.get_x() + claw_enemy.get_size() >= self.get_width() {
+            claw_enemy.set_x(self.get_width() - claw_enemy.get_size());
+        }
+        if claw_enemy.get_y() as f64 <= 0.0 {
+            claw_enemy.set_y(1.0);
+        }
+        if claw_enemy.get_y() + claw_enemy.get_size() >= self.get_height() {
+            claw_enemy.set_y(self.get_height() - claw_enemy.get_size());
         }
     }
 
