@@ -118,13 +118,13 @@ const drawFollowEnemy = () => {
   followEnemyArray.forEach(followEnemy => {
     const numberOfSides = 6
     ctx.beginPath()
-    ctx.moveTo (followEnemy.get_x() + followEnemy.get_size() * Math.cos(0), 
-    followEnemy.get_y() +  followEnemy.get_size() *  Math.sin(0))         
+    ctx.moveTo (followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(0), 
+    followEnemy.base.get_y() +  followEnemy.base.get_size() *  Math.sin(0))         
     for (var i = 1; i <= numberOfSides; i += 1) {
-      ctx.lineTo (followEnemy.get_x() + followEnemy.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
-      followEnemy.get_y() + followEnemy.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
+      ctx.lineTo (followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
+      followEnemy.base.get_y() + followEnemy.base.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
     }
-    ctx.strokeStyle = "red";
+    ctx.strokeStyle = "red"
     ctx.stroke()
   })
 }
@@ -156,7 +156,6 @@ const addSquareEnemies = () => {
   const x = getRandomInt(patrolWidth) + buffer
   const y = getRandomInt(patrolHeight) + buffer
   const squareEnemy = SquareEnemy.new(x, y)
-  console.log('here')
   // const squareEnemy = SquareEnemy
   //       .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       squareEnemyArray = [
@@ -259,7 +258,7 @@ const checkProjectileHit = () => {
     })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
-  followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.is_active())
+  followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.base.is_active())
   clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.base.is_active())
   spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.is_active())
   
@@ -343,7 +342,7 @@ const render = () => {
   drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
   drawSquareEnemy()
   drawProjectiles()
-  // drawFollowEnemy()
+  drawFollowEnemy()
   drawClawEnemy()
   // drawSpiral()
 }
