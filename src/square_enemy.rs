@@ -130,20 +130,34 @@ impl SquareEnemy {
     }
 
 
+    pub fn get_can_shoot(&self) -> bool {
+        self.laser.get_can_shoot()
+    }
 
-    pub fn move_enemy(&mut self, space: &Space) {
-        log!("{}", self.laser.get_shoot_timer());
-        self.laser.align_with_enemy_position(self.x, self.y);
+    pub fn get_laser_x(&self) -> f64 {
+        self.laser.get_x()
+    }
+
+    pub fn get_laser_y(&self) -> f64 {
+        self.laser.get_y()
+    }
+
+    pub fn move_enemy(&mut self, space: &Space, player_ship: &PlayerShip) {
+        // log!("{}", self.laser.get_x());
+        // log!("{}", self.laser.get_y());
         if self.in_x_position == false || self.in_y_position == false {
+            self.laser.align_with_enemy_position(self.x, self.y);
             self.move_to_position(space)
         } else if self.laser.get_shoot_timer() <= 500 && self.laser.get_can_shoot() == false {
-            self.laser.delay_shot();
+            if self.laser.get_radians() != 0.0 {
+                self.laser.reset_radians();
+                log!("here")
+            }
+            self.laser.align_with_enemy_position(self.x, self.y);
+            self.laser.delay_shot(player_ship);
             self.patrol_edges(space)
         } else {
-            self.laser.delay_shot();
-            // if self.laser.get_shoot_timer() <= 0 {
-            //     self.laser.set_can_shoot(false)
-            // }
+            self.laser.delay_shot(player_ship);
         }
     }
 
@@ -159,14 +173,7 @@ impl SquareEnemy {
         }
     }
 
-    pub fn shoot_laser(&mut self, player_ship: PlayerShip) {
-
-    }
-
-
-
     pub fn move_to_position(&mut self, space: &Space) {
-
         if self.x < space.get_width() *  0.5 && self.x > 100.0 {
             self.x -= self.x_speed;
         } else if self.x > space.get_width() *  0.5 && self.x < space.get_width() - 100.0 {

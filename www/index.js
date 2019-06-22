@@ -97,7 +97,20 @@ const drawSquareEnemy = () => {
     ctx.strokeStyle = "green";
     ctx.strokeRect(squareEnemy.get_x(), squareEnemy.get_y(),
     squareEnemy.get_size(), squareEnemy.get_size())
+    drawEnemyProjectile(squareEnemy)
   })
+}
+
+const drawEnemyProjectile = (squareEnemy) => {
+  // console.log(squareEnemy.get_laser_y())
+  console.log(squareEnemy.get_laser_x())
+  if(squareEnemy.get_can_shoot()){
+    ctx.beginPath()
+    ctx.moveTo(squareEnemy.get_x() + (squareEnemy.get_size() / 2), squareEnemy.get_y() + (squareEnemy.get_size() / 2))
+    ctx.lineTo(squareEnemy.get_laser_x(), 
+    squareEnemy.get_laser_y())
+    ctx.stroke()
+  }
 }
 
 const drawFollowEnemy = () => {
@@ -212,7 +225,7 @@ const updateEnemies = () => {
   })
   squareEnemyArray.forEach(squareEnemy => {
     space.check_enemy_at_edge(squareEnemy)
-    squareEnemy.move_enemy(space)
+    squareEnemy.move_enemy(space, playerShip)
     // squareEnemy.patrol_edges(space)
   })
   followEnemyArray.forEach(followEnemy => {
