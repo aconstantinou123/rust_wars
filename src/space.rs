@@ -5,6 +5,7 @@ use crate::player_ship::PlayerShip;
 use crate::square_enemy::SquareEnemy;
 use crate::claw_enemy::ClawEnemy;
 use crate::spiral_enemy::SpiralEnemy;
+use crate::basic_enemy::BasicEnemy;
 
 extern crate web_sys;
 
@@ -114,6 +115,25 @@ impl Space {
         if spiral_enemy.base.get_y() + spiral_enemy.base.get_size() >= self.get_height() {
             spiral_enemy.base.set_y(self.get_height() - spiral_enemy.base.get_size());
             spiral_enemy.base.reverse_y_speed();
+        }
+    }
+
+     pub fn check_basic_enemy_at_edge(&self, basic_enemy: &mut BasicEnemy) {
+        if basic_enemy.base.get_x() <= 0.0 {
+            basic_enemy.base.set_x(1.0);
+            basic_enemy.base.reverse_x_speed();
+        } 
+        if basic_enemy.base.get_x() + basic_enemy.base.get_size() >= self.get_width() {
+            basic_enemy.base.set_x(self.get_width() - basic_enemy.base.get_size());
+            basic_enemy.base.reverse_x_speed()
+        }
+        if basic_enemy.base.get_y() <= 0.0 {
+            basic_enemy.base.set_y(1.0);
+            basic_enemy.base.reverse_y_speed();
+        }
+        if basic_enemy.base.get_y() + basic_enemy.base.get_size() >= self.get_height() {
+            basic_enemy.base.set_y(self.get_height() - basic_enemy.base.get_size());
+            basic_enemy.base.reverse_y_speed();
         }
     }
 

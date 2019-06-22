@@ -28,7 +28,6 @@ pub struct Enemy {
 impl Enemy {
     pub fn new(size: f64, x: f64, y: f64, x_speed: f64, y_speed: f64) -> Enemy {
         utils::set_panic_hook();
-        log!("in const");
         Enemy {
             size,
             x,

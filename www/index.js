@@ -240,7 +240,7 @@ const updateEnemies = () => {
     squareEnemy.move_enemy(space, playerShip)
   })
   basicEnemyArray.forEach(basicEnemy => {
-    // space.check_enemy_at_edge(basicEnemy)
+    space.check_basic_enemy_at_edge(basicEnemy)
     basicEnemy.move_enemy()
   })
   followEnemyArray.forEach(followEnemy => {
