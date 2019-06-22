@@ -84,17 +84,17 @@ impl Space {
 
 
      pub fn check_claw_enemy_at_edge(&self, claw_enemy: &mut ClawEnemy) {
-        if claw_enemy.get_x() <= 0.0 {
-            claw_enemy.set_x(1.0);
+        if claw_enemy.base.get_x() <= 0.0 {
+            claw_enemy.base.set_x(1.0);
         } 
-        if claw_enemy.get_x() + claw_enemy.get_size() >= self.get_width() {
-            claw_enemy.set_x(self.get_width() - claw_enemy.get_size());
+        if claw_enemy.base.get_x() + claw_enemy.base.get_size() >= self.get_width() {
+            claw_enemy.base.set_x(self.get_width() - claw_enemy.base.get_size());
         }
-        if claw_enemy.get_y() as f64 <= 0.0 {
-            claw_enemy.set_y(1.0);
+        if claw_enemy.base.get_y() as f64 <= 0.0 {
+            claw_enemy.base.set_y(1.0);
         }
-        if claw_enemy.get_y() + claw_enemy.get_size() >= self.get_height() {
-            claw_enemy.set_y(self.get_height() - claw_enemy.get_size());
+        if claw_enemy.base.get_y() + claw_enemy.base.get_size() >= self.get_height() {
+            claw_enemy.base.set_y(self.get_height() - claw_enemy.base.get_size());
         }
     }
 

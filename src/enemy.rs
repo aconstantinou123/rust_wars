@@ -26,15 +26,15 @@ pub struct Enemy {
 
 #[wasm_bindgen]
 impl Enemy {
-    pub fn new(x: f64, y: f64) -> Enemy {
+    pub fn new(size: f64, x: f64, y: f64, x_speed: f64, y_speed: f64) -> Enemy {
         utils::set_panic_hook();
         log!("in const");
         Enemy {
-            size: 15.0,
+            size,
             x,
             y,
-            x_speed: 1.0,
-            y_speed: 1.0,
+            x_speed,
+            y_speed,
             active: true,
             ready_to_remove: false,
         }
@@ -109,15 +109,12 @@ impl Enemy {
         && projectile.get_y() <= bottom_y 
         && projectile.get_y() >= self.get_y()
         {
-            // log!("{}", self.ready_to_remove);
             self.ready_to_remove = true;
-            // log!("{}", self.ready_to_remove);
         }
     }
 
     pub fn blow_up(&mut self){
         if self.ready_to_remove == true && self.size < 50.0 {
-             log!("{}", self.ready_to_remove);
             self.size += 0.03
         }  else if self.ready_to_remove {
             self.set_active()

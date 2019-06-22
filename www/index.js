@@ -131,16 +131,16 @@ const drawFollowEnemy = () => {
 
 const drawClawEnemy = () => {
   clawEnemyArray.forEach(enemy => {
-    const centerX = enemy.get_x() + enemy.get_size() / 2
-    const centerY = enemy.get_y() + enemy.get_size() / 2
+    const centerX = enemy.base.get_x() + enemy.base.get_size() / 2
+    const centerY = enemy.base.get_y() + enemy.base.get_size() / 2
     const numberOfSides = 4.5
     ctx.translate(centerX, centerY)
     ctx.rotate(enemy.get_radians())
     ctx.beginPath()
-    ctx.moveTo (0 +  enemy.get_size() * Math.cos(0), 0 +  enemy.get_size() *  Math.sin(0))         
+    ctx.moveTo (0 +  enemy.base.get_size() * Math.cos(0), 0 +  enemy.base.get_size() *  Math.sin(0))         
     for (var i = 1; i <= numberOfSides; i += 1) {
-      ctx.lineTo (0 + enemy.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
-      0 + enemy.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
+      ctx.lineTo (0 + enemy.base.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
+      0 + enemy.base.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
     }
     ctx.strokeStyle = "blue";
     ctx.stroke()
@@ -260,7 +260,7 @@ const checkProjectileHit = () => {
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
   followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.is_active())
-  clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.is_active())
+  clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.base.is_active())
   spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.is_active())
   
 }
@@ -344,7 +344,7 @@ const render = () => {
   drawSquareEnemy()
   drawProjectiles()
   // drawFollowEnemy()
-  // drawClawEnemy()
+  drawClawEnemy()
   // drawSpiral()
 }
                 
