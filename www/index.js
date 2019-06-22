@@ -365,10 +365,10 @@ const render = () => {
   drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
   drawSquareEnemy()
   drawProjectiles()
-  // drawFollowEnemy()
-  // drawClawEnemy()
-  // drawSpiral()
-  // drawBasicEnemy()
+  drawFollowEnemy()
+  drawClawEnemy()
+  drawSpiral()
+  drawBasicEnemy()
 }
                 
 
