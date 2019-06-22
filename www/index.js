@@ -36,6 +36,7 @@ let delay = 0
 let drawSpirals = true
 let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
+let radians
 
 const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   const radians=rotationDegrees*Math.PI/180;
@@ -115,6 +116,7 @@ const drawEnemyProjectile = (squareEnemy) => {
     squareEnemy.base.get_y() + (squareEnemy.base.get_size() / 2))
     ctx.lineTo(squareEnemy.get_laser_x(), 
     squareEnemy.get_laser_y())
+    ctx.strokeStyle = "#F47120"
     ctx.stroke()
   }
 }
