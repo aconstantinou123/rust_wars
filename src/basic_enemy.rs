@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
 use crate::enemy::Enemy;
+use crate::projectile::Projectile;
 use std::f64;
 
 extern crate web_sys;
@@ -26,4 +27,17 @@ impl BasicEnemy {
             base: Enemy::new(15.0, x, y, 1.0, 1.0)
         }
     }
+
+    pub fn check_dead(&mut self, projectile: &Projectile) {
+       self.base.check_dead(projectile)
+    }
+
+    pub fn blow_up(&mut self){
+       self.base.blow_up()
+    }
+
+    pub fn move_enemy(&mut self){
+        self.base.move_enemy()
+    }
+
 }
