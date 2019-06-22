@@ -66,14 +66,18 @@ impl SquareEnemy {
     }
 
     pub fn patrol_edges(&mut self, space: &Space) {
-        if self.base.get_x() < space.get_width() - 100.0 && self.base.get_y() == 100.0 {
+        if self.base.get_x() < (space.get_width() - self.base.get_size() - 105.0) 
+            && self.base.get_y() <= 105.0 {
             self.base.increment_x(self.base.get_x_speed())
-        } else if self.base.get_y() < space.get_height() - 100.0 && self.base.get_x() == space.get_width() - 100.0 {
+        } else if self.base.get_y() < (space.get_height() - self.base.get_size() - 105.0) 
+            && self.base.get_x() >= (space.get_width() - self.base.get_size() - 105.0) {
             self.base.increment_y(self.base.get_x_speed())
-        } else if self.base.get_x() > 100.0 && self.base.get_y() == space.get_height() - 100.0 {
+        } else if self.base.get_x() > 105.0 
+            && self.base.get_y() >= (space.get_height() - self.base.get_size() - 105.0) {
             self.base.increment_x(-self.base.get_x_speed())
-        } else if self.base.get_y() > 100.0 && self.base.get_x() == 100.0 {
-           self.base.increment_y(-self.base.get_x_speed())
+        } else if self.base.get_y() > 105.0 
+            && self.base.get_x() <= 105.0 {
+            self.base.increment_y(-self.base.get_x_speed())
         }
     }
 
