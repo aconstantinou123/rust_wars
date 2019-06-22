@@ -6,7 +6,7 @@ pub mod square_enemy;
 pub mod follow_enemy;
 pub mod claw_enemy;
 pub mod spiral_enemy;
-
+pub mod laser;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.

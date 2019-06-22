@@ -38,7 +38,7 @@ let drawSpirals = true
 let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 
-const drawPlayerShip = (centerX,centerY,strokeWidth,strokeColor,rotationDegrees) => {
+const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   const radians=rotationDegrees*Math.PI/180;
   ctx.translate(centerX,centerY)
   ctx.rotate(radians)
@@ -136,22 +136,28 @@ const drawClawEnemy = () => {
 }
 
 const addSquareEnemies = () => {
-  const squareEnemy = SquareEnemy
-        .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+  const buffer = 120
+  const patrolWidth = space.get_width() - 240
+  const patrolHeight = space.get_height() - 240
+  const x = getRandomInt(patrolWidth) + buffer
+  const y = getRandomInt(patrolHeight) + buffer
+  const squareEnemy = SquareEnemy.new(x, y)
+  // const squareEnemy = SquareEnemy
+  //       .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       squareEnemyArray = [
         ...squareEnemyArray,
         squareEnemy,
       ]
-  setInterval(() => {
-    if(squareEnemyArray.length < 10){
-      const squareEnemy = SquareEnemy
-        .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
-      squareEnemyArray = [
-        ...squareEnemyArray,
-        squareEnemy,
-      ]
-    }
-  }, 2000)
+  // setInterval(() => {
+  //   if(squareEnemyArray.length < 10){
+  //     const squareEnemy = SquareEnemy
+  //       .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+  //     squareEnemyArray = [
+  //       ...squareEnemyArray,
+  //       squareEnemy,
+  //     ]
+  //   }
+  // }, 2000)
 }
 
 const addFollowEnemies = () => {
@@ -206,7 +212,8 @@ const updateEnemies = () => {
   })
   squareEnemyArray.forEach(squareEnemy => {
     space.check_enemy_at_edge(squareEnemy)
-    squareEnemy.move_enemy()
+    squareEnemy.move_enemy(space)
+    // squareEnemy.patrol_edges(space)
   })
   followEnemyArray.forEach(followEnemy => {
     followEnemy.move_enemy(playerShip)
@@ -319,13 +326,12 @@ const render = () => {
   ctx.clearRect(0,0,cw,ch)
   ctx.fillStyle='black'
   ctx.fillRect(0,0,canvas.width,canvas.height) 
-  drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(),
-  strokeWidth,strokeColor, playerShip.get_rotation_degrees())
+  drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
   drawSquareEnemy()
   drawProjectiles()
-  drawFollowEnemy()
-  drawClawEnemy()
-  drawSpiral()
+  // drawFollowEnemy()
+  // drawClawEnemy()
+  // drawSpiral()
 }
                 
 

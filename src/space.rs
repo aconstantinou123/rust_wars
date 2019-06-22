@@ -64,20 +64,20 @@ impl Space {
     }
 
     pub fn check_enemy_at_edge(&self, square_enemy: &mut SquareEnemy) {
-        if square_enemy.get_x() as f64 <= 0.0 {
-            square_enemy.set_x(1);
+        if square_enemy.get_x() <= 0.0 {
+            square_enemy.set_x(1.0);
             square_enemy.reverse_x_speed();
         } 
-        if square_enemy.get_x() as f64 + square_enemy.get_size() >= self.get_width() {
-            square_enemy.set_x(self.get_width() as i32 - square_enemy.get_size() as i32);
+        if square_enemy.get_x() + square_enemy.get_size() >= self.get_width() {
+            square_enemy.set_x(self.get_width() - square_enemy.get_size());
             square_enemy.reverse_x_speed()
         }
-        if square_enemy.get_y() as f64 <= 0.0 {
-            square_enemy.set_y(1);
+        if square_enemy.get_y() <= 0.0 {
+            square_enemy.set_y(1.0);
             square_enemy.reverse_y_speed();
         }
-        if square_enemy.get_y() as f64 + square_enemy.get_size() >= self.get_height() {
-            square_enemy.set_y(self.get_height() as i32 - square_enemy.get_size() as i32);
+        if square_enemy.get_y() + square_enemy.get_size() >= self.get_height() {
+            square_enemy.set_y(self.get_height() - square_enemy.get_size());
             square_enemy.reverse_y_speed();
         }
     }
