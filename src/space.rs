@@ -99,21 +99,21 @@ impl Space {
     }
 
     pub fn check_spiral_enemy_at_edge(&self, spiral_enemy: &mut SpiralEnemy) {
-        if spiral_enemy.get_x() <= 0.0 {
-            spiral_enemy.set_x(1.0);
-            spiral_enemy.reverse_x_speed();
+        if spiral_enemy.base.get_x() <= 0.0 {
+            spiral_enemy.base.set_x(1.0);
+            spiral_enemy.base.reverse_x_speed();
         } 
-        if spiral_enemy.get_x() + spiral_enemy.get_size() >= self.get_width() {
-            spiral_enemy.set_x(self.get_width() - spiral_enemy.get_size());
-            spiral_enemy.reverse_x_speed()
+        if spiral_enemy.base.get_x() + spiral_enemy.base.get_size() >= self.get_width() {
+            spiral_enemy.base.set_x(self.get_width() - spiral_enemy.base.get_size());
+            spiral_enemy.base.reverse_x_speed()
         }
-        if spiral_enemy.get_y() <= 0.0 {
-            spiral_enemy.set_y(1.0);
-            spiral_enemy.reverse_y_speed();
+        if spiral_enemy.base.get_y() <= 0.0 {
+            spiral_enemy.base.set_y(1.0);
+            spiral_enemy.base.reverse_y_speed();
         }
-        if spiral_enemy.get_y() + spiral_enemy.get_size() >= self.get_height() {
-            spiral_enemy.set_y(self.get_height() - spiral_enemy.get_size());
-            spiral_enemy.reverse_y_speed();
+        if spiral_enemy.base.get_y() + spiral_enemy.base.get_size() >= self.get_height() {
+            spiral_enemy.base.set_y(self.get_height() - spiral_enemy.base.get_size());
+            spiral_enemy.base.reverse_y_speed();
         }
     }
 

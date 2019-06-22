@@ -78,7 +78,7 @@ const drawSpiral = () => {
     spiralEnemy.spiral_movement()
     ctx.beginPath()
     ctx.strokeStyle="#8D33FF"
-    ctx.arc(spiralEnemy.get_x(),spiralEnemy.get_y(), 10,0, 2*Math.PI,false);
+    ctx.arc(spiralEnemy.base.get_x(),spiralEnemy.base.get_y(), 10,0, 2*Math.PI,false);
     ctx.closePath()
     ctx.stroke()
   })
@@ -142,7 +142,7 @@ const drawClawEnemy = () => {
       ctx.lineTo (0 + enemy.base.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
       0 + enemy.base.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
     }
-    ctx.strokeStyle = "blue";
+    ctx.strokeStyle = "blue"
     ctx.stroke()
     ctx.rotate(-enemy.get_radians())
     ctx.translate(-centerX, -centerY)
@@ -260,7 +260,7 @@ const checkProjectileHit = () => {
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
   followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.base.is_active())
   clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.base.is_active())
-  spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.is_active())
+  spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.base.is_active())
   
 }
 
@@ -344,7 +344,7 @@ const render = () => {
   drawProjectiles()
   drawFollowEnemy()
   drawClawEnemy()
-  // drawSpiral()
+  drawSpiral()
 }
                 
 
