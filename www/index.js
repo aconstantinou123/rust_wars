@@ -6,12 +6,14 @@ import  {
   FollowEnemy, 
   ClawEnemy, 
   SpiralEnemy,
+  BasicEnemy,
 } from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
 const playerShip = PlayerShip.new()
 const space = Space.new()
+const basicEnemy = BasicEnemy.new(500, 500)
 
 const canvas=document.getElementById("space")
 const ctx=canvas.getContext("2d")
@@ -95,18 +97,17 @@ const drawProjectiles = () => {
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
     ctx.strokeStyle = "green";
-    ctx.strokeRect(squareEnemy.get_x(), squareEnemy.get_y(),
-    squareEnemy.get_size(), squareEnemy.get_size())
+    ctx.strokeRect(squareEnemy.base.get_x(), squareEnemy.base.get_y(),
+    squareEnemy.base.get_size(), squareEnemy.base.get_size())
     drawEnemyProjectile(squareEnemy)
   })
 }
 
 const drawEnemyProjectile = (squareEnemy) => {
-  // console.log(squareEnemy.get_laser_y())
-  console.log(squareEnemy.get_laser_x())
   if(squareEnemy.get_can_shoot()){
     ctx.beginPath()
-    ctx.moveTo(squareEnemy.get_x() + (squareEnemy.get_size() / 2), squareEnemy.get_y() + (squareEnemy.get_size() / 2))
+    ctx.moveTo(squareEnemy.base.get_x() + (squareEnemy.base.get_size() / 2),
+    squareEnemy.base.get_y() + (squareEnemy.base.get_size() / 2))
     ctx.lineTo(squareEnemy.get_laser_x(), 
     squareEnemy.get_laser_y())
     ctx.stroke()
@@ -155,6 +156,7 @@ const addSquareEnemies = () => {
   const x = getRandomInt(patrolWidth) + buffer
   const y = getRandomInt(patrolHeight) + buffer
   const squareEnemy = SquareEnemy.new(x, y)
+  console.log('here')
   // const squareEnemy = SquareEnemy
   //       .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       squareEnemyArray = [
@@ -226,7 +228,6 @@ const updateEnemies = () => {
   squareEnemyArray.forEach(squareEnemy => {
     space.check_enemy_at_edge(squareEnemy)
     squareEnemy.move_enemy(space, playerShip)
-    // squareEnemy.patrol_edges(space)
   })
   followEnemyArray.forEach(followEnemy => {
     followEnemy.move_enemy(playerShip)
@@ -257,7 +258,7 @@ const checkProjectileHit = () => {
       enemy.blow_up()
     })
   })
-  squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.is_active())
+  squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
   followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.is_active())
   clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.is_active())
   spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.is_active())

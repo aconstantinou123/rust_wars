@@ -64,21 +64,21 @@ impl Space {
     }
 
     pub fn check_enemy_at_edge(&self, square_enemy: &mut SquareEnemy) {
-        if square_enemy.get_x() <= 0.0 {
-            square_enemy.set_x(1.0);
-            square_enemy.reverse_x_speed();
+        if square_enemy.base.get_x() <= 0.0 {
+            square_enemy.base.set_x(1.0);
+            square_enemy.base.reverse_x_speed();
         } 
-        if square_enemy.get_x() + square_enemy.get_size() >= self.get_width() {
-            square_enemy.set_x(self.get_width() - square_enemy.get_size());
-            square_enemy.reverse_x_speed()
+        if square_enemy.base.get_x() + square_enemy.base.get_size() >= self.get_width() {
+            square_enemy.base.set_x(self.get_width() - square_enemy.base.get_size());
+            square_enemy.base.reverse_x_speed()
         }
-        if square_enemy.get_y() <= 0.0 {
-            square_enemy.set_y(1.0);
-            square_enemy.reverse_y_speed();
+        if square_enemy.base.get_y() <= 0.0 {
+            square_enemy.base.set_y(1.0);
+            square_enemy.base.reverse_y_speed();
         }
-        if square_enemy.get_y() + square_enemy.get_size() >= self.get_height() {
-            square_enemy.set_y(self.get_height() - square_enemy.get_size());
-            square_enemy.reverse_y_speed();
+        if square_enemy.base.get_y() + square_enemy.base.get_size() >= self.get_height() {
+            square_enemy.base.set_y(self.get_height() - square_enemy.base.get_size());
+            square_enemy.base.reverse_y_speed();
         }
     }
 

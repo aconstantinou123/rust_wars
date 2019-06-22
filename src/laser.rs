@@ -1,6 +1,5 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
-use crate::space::Space;
 use crate::player_ship::PlayerShip;
 use std::f64;
 
