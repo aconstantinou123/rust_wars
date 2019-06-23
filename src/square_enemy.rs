@@ -50,14 +50,16 @@ impl SquareEnemy {
     }
 
     pub fn move_enemy(&mut self, space: &Space, player_ship: &PlayerShip) {
+        let laser_x = self.base.get_x() + (self.base.get_size() / 2.0);
+        let laser_y = self.base.get_y() + (self.base.get_size() / 2.0);
         if self.in_x_position == false || self.in_y_position == false {
-            self.laser.align_with_enemy_position(self.base.get_x(), self.base.get_y());
+            self.laser.align_with_enemy_position(laser_x, laser_y);
             self.move_to_position(space)
         } else if self.laser.get_shoot_timer() <= 500 && self.laser.get_can_shoot() == false {
             if self.laser.get_radians() != 0.0 {
                 self.laser.reset_radians();
             }
-            self.laser.align_with_enemy_position(self.base.get_x(), self.base.get_y());
+            self.laser.align_with_enemy_position(laser_x, laser_y);
             self.laser.delay_shot(player_ship);
             self.patrol_edges(space)
         } else {

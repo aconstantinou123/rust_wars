@@ -112,7 +112,8 @@ const drawProjectiles = () => {
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
     ctx.strokeStyle = "green";
-    ctx.strokeRect(squareEnemy.base.get_x(), squareEnemy.base.get_y(),
+    ctx.strokeRect(squareEnemy.base.get_x() - (squareEnemy.base.get_size() / 2), 
+    squareEnemy.base.get_y() - (squareEnemy.base.get_size() / 2),
     squareEnemy.base.get_size(), squareEnemy.base.get_size())
     drawEnemyProjectile(squareEnemy)
   })
@@ -121,7 +122,8 @@ const drawSquareEnemy = () => {
 const drawBasicEnemy = () => {
   basicEnemyArray.forEach(basicEnemy => {
     ctx.strokeStyle = "yellow";
-    ctx.strokeRect(basicEnemy.base.get_x(), basicEnemy.base.get_y(),
+    ctx.strokeRect(basicEnemy.base.get_x()  - (basicEnemy.base.get_size() / 2.0), 
+    basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0),
     basicEnemy.base.get_size(), basicEnemy.base.get_size())
     // let right_x = basicEnemy.base.get_x() + (basicEnemy.base.get_size() / 2.0)
     // let left_x = basicEnemy.base.get_x() - (basicEnemy.base.get_size() / 2.0)
