@@ -50,4 +50,9 @@ impl FollowEnemy {
     pub fn blow_up(&mut self){
        self.base.blow_up()
     }
+
+    pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){
+         self.base.check_player_ship_collision(player_ship)
+    }
+
 }

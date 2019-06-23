@@ -54,6 +54,23 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   ctx.fill()
   ctx.rotate(-radians)
   ctx.translate(-centerX,-centerY) 
+
+  // let left_side_of_ship = playerShip.get_centre_x() - (playerShip.get_size() / 2.0)
+  // let right_side_of_ship = playerShip.get_centre_x() + (playerShip.get_size() / 2.0)
+  // let top_of_ship = playerShip.get_centre_y() - (playerShip.get_size() / 2.0)
+  // let bottom_of_ship = playerShip.get_centre_y() + (playerShip.get_size() / 2.0)
+  // ctx.moveTo(centerX, centerY)
+  // ctx.lineTo(left_side_of_ship, top_of_ship)
+  // ctx.moveTo(left_side_of_ship, top_of_ship)
+  // ctx.lineTo(right_side_of_ship, top_of_ship)
+  // ctx.moveTo(right_side_of_ship, top_of_ship)
+  // ctx.lineTo(right_side_of_ship, bottom_of_ship)
+  // ctx.moveTo(right_side_of_ship, bottom_of_ship)
+  // ctx.lineTo(left_side_of_ship, bottom_of_ship)
+  // ctx.moveTo(left_side_of_ship, bottom_of_ship)
+  // ctx.lineTo(left_side_of_ship, top_of_ship)
+  // ctx.strokeStyle = "#F47120"
+  // ctx.stroke()
 }
 
 const drawSpiral = () => {
@@ -106,6 +123,19 @@ const drawBasicEnemy = () => {
     ctx.strokeStyle = "yellow";
     ctx.strokeRect(basicEnemy.base.get_x(), basicEnemy.base.get_y(),
     basicEnemy.base.get_size(), basicEnemy.base.get_size())
+    // let right_x = basicEnemy.base.get_x() + (basicEnemy.base.get_size() / 2.0)
+    // let left_x = basicEnemy.base.get_x() - (basicEnemy.base.get_size() / 2.0)
+    // let bottom_y = basicEnemy.base.get_y() + (basicEnemy.base.get_size() / 2.0)
+    // let top_y = basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0)
+    // ctx.moveTo(basicEnemy.base.get_x(), basicEnemy.base.get_y())
+    // ctx.lineTo(left_x, top_y)
+    // ctx.lineTo(right_x, top_y)
+    // ctx.lineTo(right_x, bottom_y)
+    // ctx.lineTo(left_x, bottom_y)
+    // ctx.lineTo(left_x, top_y)
+    // ctx.strokeStyle = "#F47120"
+    // ctx.stroke()
+    
   })
 }
 
@@ -131,6 +161,9 @@ const drawFollowEnemy = () => {
       ctx.lineTo (followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
       followEnemy.base.get_y() + followEnemy.base.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
     }
+    // ctx.moveTo(followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(0), 
+    // followEnemy.base.get_y() +  followEnemy.base.get_size() *  Math.sin(0))
+    // ctx.lineTo(followEnemy.base.get_x(), followEnemy.base.get_y())
     ctx.strokeStyle = "red"
     ctx.stroke()
   })
@@ -210,7 +243,7 @@ const addClawEnemies = () => {
         clawEnemy,
       ]
     }
-  }, 5000)
+  }, 1000)
 }
 
 const updatePlayerShip = () => {
@@ -235,20 +268,25 @@ const updateProjectiles = () => {
 
 const updateEnemies = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
+    spiralEnemy.check_player_ship_collision(playerShip)
     space.check_spiral_enemy_at_edge(spiralEnemy)
   })
   squareEnemyArray.forEach(squareEnemy => {
+    squareEnemy.check_player_ship_collision(playerShip)
     space.check_enemy_at_edge(squareEnemy)
     squareEnemy.move_enemy(space, playerShip)
   })
   basicEnemyArray.forEach(basicEnemy => {
+    basicEnemy.check_player_ship_collision(playerShip)
     space.check_basic_enemy_at_edge(basicEnemy)
     basicEnemy.move_enemy()
   })
   followEnemyArray.forEach(followEnemy => {
+    followEnemy.check_player_ship_collision(playerShip)
     followEnemy.move_enemy(playerShip)
   })
   clawEnemyArray.forEach(clawEnemy => {
+    clawEnemy.check_player_ship_collision(playerShip)
     space.check_claw_enemy_at_edge(clawEnemy)
     clawEnemy.move_enemy(playerShip)
   })

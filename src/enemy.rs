@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
 use crate::projectile::Projectile;
+use crate::player_ship::PlayerShip;
 use std::f64;
 
 extern crate web_sys;
@@ -109,6 +110,59 @@ impl Enemy {
         && projectile.get_y() >= self.get_y()
         {
             self.ready_to_remove = true;
+        }
+    }
+
+     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip) {
+        let delta_x = player_ship.get_centre_x() - self.get_x();
+        let delta_y = player_ship.get_centre_y() - self.get_y();
+        let radians = delta_y.atan2(delta_x);
+
+        let right_x = self.get_x() + (self.get_size() / 2.0);
+        let left_x = self.get_x() - (self.get_size() / 2.0);
+        let bottom_y = self.get_y() + (self.get_size() / 2.0);
+        let top_y = self.get_y() - (self.get_size() / 2.0);
+
+        let left_side_of_ship = player_ship.get_centre_x() - (player_ship.get_size() / 2.0);
+        let right_side_of_ship = player_ship.get_centre_x() + (player_ship.get_size() / 2.0);
+        let top_of_ship = player_ship.get_centre_y() - (player_ship.get_size() / 2.0);
+        let bottom_of_ship = player_ship.get_centre_y() + (player_ship.get_size() / 2.0);
+
+        if left_side_of_ship <= right_x
+        && left_side_of_ship >= left_x 
+        && player_ship.get_centre_y() <= bottom_y 
+        && player_ship.get_centre_y() >= top_y {
+            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+        } 
+        if right_side_of_ship >= left_x
+        && right_side_of_ship <= right_x
+        && player_ship.get_centre_y() <= bottom_y 
+        && player_ship.get_centre_y() >= top_y {
+            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+        }
+        if bottom_of_ship >= top_y
+        && bottom_of_ship <= bottom_y
+        && player_ship.get_centre_x() >= left_x
+        && player_ship.get_centre_x() <= right_x {
+            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+        }
+        if top_of_ship <= bottom_y
+        && top_of_ship >= self.get_y()
+        && player_ship.get_centre_x() >= left_x
+        && player_ship.get_centre_x() <= right_x {
+            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
         }
     }
 

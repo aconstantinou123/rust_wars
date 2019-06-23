@@ -51,16 +51,16 @@ impl Space {
 
     pub fn check_player_ship_out_of_bounds(&self, player_ship: &mut PlayerShip) {
         if player_ship.get_centre_x() as f64 - player_ship.get_size() <= 0.0 {
-            player_ship.set_centre_x(player_ship.get_size() as i32);
+            player_ship.set_centre_x(player_ship.get_size());
         } 
         if player_ship.get_centre_x() as f64 + player_ship.get_size() >= self.get_width() {
-            player_ship.set_centre_x(self.get_width() as i32 - player_ship.get_size() as i32);
+            player_ship.set_centre_x(self.get_width() - player_ship.get_size());
         }
         if player_ship.get_centre_y() as f64 - player_ship.get_size() <= 0.0 {
-            player_ship.set_centre_y(player_ship.get_size() as i32)
+            player_ship.set_centre_y(player_ship.get_size())
         }
         if player_ship.get_centre_y() as f64 + player_ship.get_size() >= self.get_height() {
-            player_ship.set_centre_y(self.get_height() as i32 - player_ship.get_size() as i32);
+            player_ship.set_centre_y(self.get_height() - player_ship.get_size());
         }
     }
 

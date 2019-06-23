@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 use crate::utils;
 use crate::projectile::Projectile;
 use crate::enemy::Enemy;
+use crate::player_ship::PlayerShip;
 use std::f64;
 
 extern crate web_sys;
@@ -63,5 +64,9 @@ impl SpiralEnemy {
         } else {
             self.reverse = false
         }
+    }
+
+    pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){
+         self.base.check_player_ship_collision(player_ship)
     }
 }

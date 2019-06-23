@@ -17,8 +17,8 @@ pub struct PlayerShip {
     side_count: i32,
     size: f64,
     rotation_degress: f64,
-    centre_x: i32,
-    centre_y: i32,
+    centre_x: f64,
+    centre_y: f64,
     radians: f64,
     speed: i32,
 }
@@ -32,8 +32,8 @@ impl PlayerShip {
             side_count: 3,
             size: 30.0,
             rotation_degress,
-            centre_x: 440,
-            centre_y: 440,
+            centre_x: 440.0,
+            centre_y: 440.0,
             radians: rotation_degress * f64::consts::PI / 180.0,
             speed: 5
         }
@@ -55,11 +55,11 @@ impl PlayerShip {
         self.rotation_degress
     }
 
-    pub fn get_centre_x(&self) -> i32 {
+    pub fn get_centre_x(&self) -> f64 {
         self.centre_x
     }
 
-    pub fn get_centre_y(&self) -> i32 {
+    pub fn get_centre_y(&self) -> f64 {
         self.centre_y
     }
 
@@ -67,19 +67,19 @@ impl PlayerShip {
         self.radians
     }
 
-    pub fn increment_centre_x(&mut self, x: i32) {
+    pub fn increment_centre_x(&mut self, x: f64) {
         self.centre_x += x
     }
 
-    pub fn set_centre_x(&mut self, x: i32) {
+    pub fn set_centre_x(&mut self, x: f64) {
         self.centre_x = x
     }
 
-    pub fn set_centre_y(&mut self, y: i32) {
+    pub fn set_centre_y(&mut self, y: f64) {
         self.centre_y = y
     }
 
-    pub fn increment_centre_y(&mut self, y: i32) {
+    pub fn increment_centre_y(&mut self, y: f64) {
         self.centre_y += y
     }
 
