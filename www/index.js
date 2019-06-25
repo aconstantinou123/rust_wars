@@ -47,6 +47,11 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   for (let i = 1; i <= playerShip.get_side_count();i += 1) {
     ctx.lineTo (playerShip.draw_line_x(i), playerShip.draw_line_y(i))
   }
+  
+  ctx.moveTo(0, 0)
+  ctx.lineTo(40, 0)
+  ctx.moveTo(0, 0)
+  ctx.lineTo(-30, 0)
   ctx.closePath()
   ctx.strokeStyle = '#33F0FF'
   ctx.lineWidth = 3
