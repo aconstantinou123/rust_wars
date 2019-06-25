@@ -130,13 +130,10 @@ const drawEnemyProjectile = (squareEnemy) => {
 
 const drawFollowEnemy = () => {
   followEnemyArray.forEach(followEnemy => {
-    const numberOfSides = 6
     ctx.beginPath()
-    ctx.moveTo (followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(0), 
-    followEnemy.base.get_y() +  followEnemy.base.get_size() *  Math.sin(0))         
-    for (var i = 1; i <= numberOfSides; i += 1) {
-      ctx.lineTo (followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
-      followEnemy.base.get_y() + followEnemy.base.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
+    ctx.moveTo (followEnemy.x_draw_position(), followEnemy.y_draw_position())         
+    for (let i = 1; i <= followEnemy.get_number_of_sides(); i += 1) {
+      ctx.lineTo (followEnemy.draw_x(i), followEnemy.draw_y(i))
     }
     ctx.strokeStyle = "red"
     ctx.stroke()
@@ -147,14 +144,12 @@ const drawClawEnemy = () => {
   clawEnemyArray.forEach(enemy => {
     const centerX = enemy.base.get_x() + enemy.base.get_size() / 2
     const centerY = enemy.base.get_y() + enemy.base.get_size() / 2
-    const numberOfSides = 4.5
     ctx.translate(centerX, centerY)
     ctx.rotate(enemy.get_radians())
     ctx.beginPath()
-    ctx.moveTo (0 +  enemy.base.get_size() * Math.cos(0), 0 +  enemy.base.get_size() *  Math.sin(0))         
-    for (var i = 1; i <= numberOfSides; i += 1) {
-      ctx.lineTo (0 + enemy.base.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
-      0 + enemy.base.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
+    ctx.moveTo (enemy.x_draw_position(), enemy.y_draw_position())         
+    for (let i = 1; i <= enemy.get_number_of_sides(); i += 1) {
+      ctx.lineTo (enemy.draw_x(i), enemy.draw_y(i))
     }
     ctx.strokeStyle = "blue"
     ctx.stroke()

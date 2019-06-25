@@ -19,6 +19,7 @@ macro_rules! log {
 pub struct FollowEnemy {
     pub base: Enemy,
     radians: f64,
+    number_of_sides: f64,
 }
 
 #[wasm_bindgen]
@@ -28,7 +29,12 @@ impl FollowEnemy {
         FollowEnemy {
             base: Enemy::new(25.0, x, y, 1.5, 1.5),
             radians: 0.0,
+            number_of_sides: 6.0,
         }
+    }
+
+    pub fn get_number_of_sides(&self) -> f64 {
+        self.number_of_sides
     }
 
     pub fn get_radians(&self) -> f64 {
@@ -54,5 +60,26 @@ impl FollowEnemy {
     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){
          self.base.check_player_ship_collision(player_ship)
     }
+
+    pub fn x_draw_position(&mut self) -> f64 {
+        let zero: f64 = 0.0;
+        self.base.get_x() + self.base.get_size() * zero.cos()
+    }
+
+     pub fn y_draw_position(&mut self) -> f64 {
+        let zero: f64 = 0.0;
+        self.base.get_y() + self.base.get_size() * zero.sin()
+    }
+
+    pub fn draw_x(&self, i: f64) -> f64 {
+        let x = i * 2.0 * f64::consts::PI / self.number_of_sides;
+        self.base.get_x() + self.base.get_size() * x.cos()
+    }
+
+    pub fn draw_y(&self, i: f64) -> f64 {
+        let x = i * 2.0 * f64::consts::PI / self.number_of_sides;
+        self.base.get_y() + self.base.get_size() * x.sin()
+    }
+
 
 }

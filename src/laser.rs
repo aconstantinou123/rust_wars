@@ -77,7 +77,6 @@ impl Laser {
         let right_side_of_ship = player_ship.get_centre_x() + (player_ship.get_size() / 2.0);
         let top_of_ship = player_ship.get_centre_y() - (player_ship.get_size() / 2.0);
         let bottom_of_ship = player_ship.get_centre_y() + (player_ship.get_size() / 2.0);
-
         for (x, y) in self.current_x_and_y_positions.iter() {
             if *x <= right_side_of_ship  
             && *x >= left_side_of_ship
@@ -129,7 +128,6 @@ impl Laser {
         self.y += self.radians.sin() * self.speed;
         let x_y = (self.x, self.y);
         self.current_x_and_y_positions.push(x_y);
-        // log!("{:?}", self.current_x_and_y_positions)
     }
 }
 
