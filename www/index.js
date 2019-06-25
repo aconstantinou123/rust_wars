@@ -58,24 +58,7 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   ctx.stroke()
   ctx.fill()
   ctx.rotate(-radians)
-  ctx.translate(-centerX,-centerY) 
-
-  // let left_side_of_ship = playerShip.get_centre_x() - (playerShip.get_size() / 2.0)
-  // let right_side_of_ship = playerShip.get_centre_x() + (playerShip.get_size() / 2.0)
-  // let top_of_ship = playerShip.get_centre_y() - (playerShip.get_size() / 2.0)
-  // let bottom_of_ship = playerShip.get_centre_y() + (playerShip.get_size() / 2.0)
-  // ctx.moveTo(centerX, centerY)
-  // ctx.lineTo(left_side_of_ship, top_of_ship)
-  // ctx.moveTo(left_side_of_ship, top_of_ship)
-  // ctx.lineTo(right_side_of_ship, top_of_ship)
-  // ctx.moveTo(right_side_of_ship, top_of_ship)
-  // ctx.lineTo(right_side_of_ship, bottom_of_ship)
-  // ctx.moveTo(right_side_of_ship, bottom_of_ship)
-  // ctx.lineTo(left_side_of_ship, bottom_of_ship)
-  // ctx.moveTo(left_side_of_ship, bottom_of_ship)
-  // ctx.lineTo(left_side_of_ship, top_of_ship)
-  // ctx.strokeStyle = "#F47120"
-  // ctx.stroke()
+  ctx.translate(-centerX,-centerY)
 }
 
 const drawSpiral = () => {
@@ -129,20 +112,7 @@ const drawBasicEnemy = () => {
     ctx.strokeStyle = "yellow";
     ctx.strokeRect(basicEnemy.base.get_x()  - (basicEnemy.base.get_size() / 2.0), 
     basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0),
-    basicEnemy.base.get_size(), basicEnemy.base.get_size())
-    // let right_x = basicEnemy.base.get_x() + (basicEnemy.base.get_size() / 2.0)
-    // let left_x = basicEnemy.base.get_x() - (basicEnemy.base.get_size() / 2.0)
-    // let bottom_y = basicEnemy.base.get_y() + (basicEnemy.base.get_size() / 2.0)
-    // let top_y = basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0)
-    // ctx.moveTo(basicEnemy.base.get_x(), basicEnemy.base.get_y())
-    // ctx.lineTo(left_x, top_y)
-    // ctx.lineTo(right_x, top_y)
-    // ctx.lineTo(right_x, bottom_y)
-    // ctx.lineTo(left_x, bottom_y)
-    // ctx.lineTo(left_x, top_y)
-    // ctx.strokeStyle = "#F47120"
-    // ctx.stroke()
-    
+    basicEnemy.base.get_size(), basicEnemy.base.get_size())  
   })
 }
 
@@ -168,9 +138,6 @@ const drawFollowEnemy = () => {
       ctx.lineTo (followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(i * 2 * Math.PI / numberOfSides), 
       followEnemy.base.get_y() + followEnemy.base.get_size() * Math.sin(i * 2 * Math.PI / numberOfSides));
     }
-    // ctx.moveTo(followEnemy.base.get_x() + followEnemy.base.get_size() * Math.cos(0), 
-    // followEnemy.base.get_y() +  followEnemy.base.get_size() *  Math.sin(0))
-    // ctx.lineTo(followEnemy.base.get_x(), followEnemy.base.get_y())
     ctx.strokeStyle = "red"
     ctx.stroke()
   })
@@ -262,6 +229,19 @@ const updatePlayerHealthDisplay = () => {
   }
 }
 
+const updateScoreDisplay = () => {
+  const scoreElement = document.getElementById("score")
+  scoreElement.innerText = `Score: ${playerShip.get_score()}` 
+}
+
+const renderGameOverText = () => {
+  ctx.font = "70px Impact"
+  ctx.fillStyle = "white"
+  ctx.textAlign = "center"
+  ctx.fillText("Game Over", canvas.width/2, canvas.height/2)
+  ctx.fillText(`Final Score: ${playerShip.get_score()}`, canvas.width/2, (canvas.height/2) + 70)
+}
+
 const updatePlayerShip = () => {
   velX *= 0.98
   velY *= 0.98
@@ -313,24 +293,24 @@ const checkProjectileHit = () => {
   projectileArray.forEach(projectile => {
     squareEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up()
+      enemy.blow_up(playerShip)
     })
     followEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up()
+      enemy.blow_up(playerShip)
     })
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
       enemy.check_dead(projectile)
-      enemy.blow_up()
+      enemy.blow_up(playerShip)
     })
     spiralEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up()
+      enemy.blow_up(playerShip)
     })
     basicEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up()
+      enemy.blow_up(playerShip)
     })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
@@ -367,24 +347,26 @@ document.body.addEventListener("keyup", (e) => {
 })
 
 const controlShip = () => {
-  if(keys[37] && rotationSpeed > -2){
-    rotationSpeed -= 1
-  } if (keys[39] && rotationSpeed < 2){
-    rotationSpeed += 1
-  } if(keys[65] && velX > -playerShip.get_speed()){
-    velX -= 1
-  } if (keys[68] && velX < playerShip.get_speed()){
-    velX += 1
-  }  if(keys[87] && velY > -playerShip.get_speed()){
-    velY -= 1
-  }  if(keys[83] && velY < playerShip.get_speed()){
-    velY += 1
-  }  if (keys[32]){
-    if(delay > 5){
-        shootProjectile()
-        delay = 0
-    } else {
-        delay += 1
+  if(playerShip.get_is_alive()) {
+    if(keys[37] && rotationSpeed > -2){
+      rotationSpeed -= 1
+    } if (keys[39] && rotationSpeed < 2){
+      rotationSpeed += 1
+    } if(keys[65] && velX > -playerShip.get_speed()){
+      velX -= 1
+    } if (keys[68] && velX < playerShip.get_speed()){
+      velX += 1
+    }  if(keys[87] && velY > -playerShip.get_speed()){
+      velY -= 1
+    }  if(keys[83] && velY < playerShip.get_speed()){
+      velY += 1
+    }  if (keys[32]){
+      if(delay > 5){
+          shootProjectile()
+          delay = 0
+      } else {
+          delay += 1
+      }
     }
   }
 }
@@ -412,6 +394,7 @@ const update = () => {
   updateEnemies()
   checkProjectileHit()
   updatePlayerHealthDisplay()
+  updateScoreDisplay()
 }
 
 const render = () => {
@@ -420,6 +403,8 @@ const render = () => {
   ctx.fillRect(0,0,canvas.width,canvas.height)
   if(playerShip.get_is_alive()){
     drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
+  } else {
+    renderGameOverText()
   }
   drawSquareEnemy()
   drawProjectiles()

@@ -137,7 +137,6 @@ impl Enemy {
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.set_health(-5);
-            log!("{}", player_ship.get_health())
         } 
         if right_side_of_ship >= left_x
         && right_side_of_ship <= right_x
@@ -148,7 +147,6 @@ impl Enemy {
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.set_health(-5);
-            log!("{}", player_ship.get_health())
         }
         if bottom_of_ship >= top_y
         && bottom_of_ship <= bottom_y
@@ -159,7 +157,6 @@ impl Enemy {
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.set_health(-5);
-            log!("{}", player_ship.get_health())
         }
         if top_of_ship <= bottom_y
         && top_of_ship >= self.get_y()
@@ -170,15 +167,15 @@ impl Enemy {
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.set_health(-5);
-            log!("{}", player_ship.get_health())
         }
     }
 
-    pub fn blow_up(&mut self){
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip){
         if self.ready_to_remove == true && self.size < 50.0 {
             self.size += 0.03
-        }  else if self.ready_to_remove {
-            self.set_active()
+        }  else if self.ready_to_remove && self.active == true {
+            self.set_active();
+            player_ship.set_score(100)
         }
     }
 

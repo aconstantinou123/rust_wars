@@ -23,6 +23,7 @@ pub struct PlayerShip {
     speed: i32,
     health: i32,
     is_alive: bool,
+    score: i32,
 }
 
 #[wasm_bindgen]
@@ -40,7 +41,16 @@ impl PlayerShip {
             speed: 5,
             health: 100,
             is_alive: true,
+            score: 0,
         }
+    }
+
+    pub fn get_score(&self) -> i32 {
+        self.score
+    }
+
+    pub fn set_score(&mut self, points: i32) {
+        self.score += points
     }
 
     pub fn get_is_alive(&self) -> bool {

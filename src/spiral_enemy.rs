@@ -43,8 +43,8 @@ impl SpiralEnemy {
        self.base.check_dead(projectile)
     }
 
-    pub fn blow_up(&mut self){
-       self.base.blow_up()
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip){
+       self.base.blow_up(player_ship)
     }
 
 

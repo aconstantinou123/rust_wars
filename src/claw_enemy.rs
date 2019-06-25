@@ -66,8 +66,8 @@ impl ClawEnemy {
         }
     }
 
-    pub fn blow_up(&mut self){
-       self.base.blow_up()
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip){
+       self.base.blow_up(player_ship)
     }
 
     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){
