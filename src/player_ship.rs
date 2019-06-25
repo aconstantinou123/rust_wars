@@ -21,6 +21,8 @@ pub struct PlayerShip {
     centre_y: f64,
     radians: f64,
     speed: i32,
+    health: i32,
+    is_alive: bool,
 }
 
 #[wasm_bindgen]
@@ -35,8 +37,26 @@ impl PlayerShip {
             centre_x: 440.0,
             centre_y: 440.0,
             radians: rotation_degress * f64::consts::PI / 180.0,
-            speed: 5
+            speed: 5,
+            health: 100,
+            is_alive: true,
         }
+    }
+
+    pub fn get_is_alive(&self) -> bool {
+        self.is_alive
+    }
+
+    pub fn set_is_alive(&mut self) {
+        self.is_alive = !self.is_alive
+    }
+
+    pub fn get_health(&self) -> i32 {
+        self.health
+    }
+
+    pub fn set_health(&mut self, health: i32) {
+        self.health += health
     }
 
     pub fn get_speed(&self) -> i32 {
@@ -105,5 +125,13 @@ impl PlayerShip {
 
     pub fn draw_line_y(&self, i: f64) -> f64 {
         self.size * (i * 2.0 * f64::consts::PI / self.side_count as f64).sin()
+    }
+
+    pub fn check_is_dead(&mut self){
+        if self.size >= 100.0 {
+            self.is_alive = false;
+        } else if self.health <= 0 {
+            self.size += 2.0
+        } 
     }
 }

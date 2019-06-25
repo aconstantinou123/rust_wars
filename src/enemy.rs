@@ -136,6 +136,8 @@ impl Enemy {
             self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.set_health(-5);
+            log!("{}", player_ship.get_health())
         } 
         if right_side_of_ship >= left_x
         && right_side_of_ship <= right_x
@@ -145,6 +147,8 @@ impl Enemy {
             self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.set_health(-5);
+            log!("{}", player_ship.get_health())
         }
         if bottom_of_ship >= top_y
         && bottom_of_ship <= bottom_y
@@ -154,6 +158,8 @@ impl Enemy {
             self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.set_health(-5);
+            log!("{}", player_ship.get_health())
         }
         if top_of_ship <= bottom_y
         && top_of_ship >= self.get_y()
@@ -163,6 +169,8 @@ impl Enemy {
             self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
             player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
             player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+            player_ship.set_health(-5);
+            log!("{}", player_ship.get_health())
         }
     }
 

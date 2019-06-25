@@ -253,6 +253,15 @@ const addClawEnemies = () => {
   }, 1000)
 }
 
+const updatePlayerHealthDisplay = () => {
+  const playerHealthElement = document.getElementById("player-health")
+  if(playerShip.get_health() >= 1){
+    playerHealthElement.innerText = `Ship armor: ${playerShip.get_health()}`
+  } else {
+    playerHealthElement.innerText = 'Game Over'
+  }
+}
+
 const updatePlayerShip = () => {
   velX *= 0.98
   velY *= 0.98
@@ -262,6 +271,7 @@ const updatePlayerShip = () => {
   playerShip.increment_centre_x(velX)
   playerShip.increment_centre_y(velY)
   space.check_player_ship_out_of_bounds(playerShip)
+  playerShip.check_is_dead()
 }
 
 const updateProjectiles = () => {
@@ -381,9 +391,9 @@ const controlShip = () => {
 
 
 addSquareEnemies()
-// addFollowEnemies()
-// addClawEnemies()
-// addBasicEnemies()
+addFollowEnemies()
+addClawEnemies()
+addBasicEnemies()
 
 const animate = window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
@@ -401,19 +411,22 @@ const update = () => {
   updateProjectiles()
   updateEnemies()
   checkProjectileHit()
+  updatePlayerHealthDisplay()
 }
 
 const render = () => {
   ctx.clearRect(0,0,cw,ch)
   ctx.fillStyle='black'
-  ctx.fillRect(0,0,canvas.width,canvas.height) 
-  drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
+  ctx.fillRect(0,0,canvas.width,canvas.height)
+  if(playerShip.get_is_alive()){
+    drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
+  }
   drawSquareEnemy()
   drawProjectiles()
-  // drawFollowEnemy()
-  // drawClawEnemy()
-  // drawSpiral()
-  // drawBasicEnemy()
+  drawFollowEnemy()
+  drawClawEnemy()
+  drawSpiral()
+  drawBasicEnemy()
 }
                 
 
