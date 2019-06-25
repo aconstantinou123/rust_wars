@@ -49,7 +49,7 @@ impl SquareEnemy {
         self.laser.get_y()
     }
 
-    pub fn move_enemy(&mut self, space: &Space, player_ship: &PlayerShip) {
+    pub fn move_enemy(&mut self, space: &Space, player_ship: &mut PlayerShip) {
         let laser_x = self.base.get_x() + (self.base.get_size() / 2.0);
         let laser_y = self.base.get_y() + (self.base.get_size() / 2.0);
         if self.in_x_position == false || self.in_y_position == false {

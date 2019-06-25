@@ -22,6 +22,7 @@ pub struct Laser {
     shoot_timer: i32,
     can_shoot: bool,
     speed: f64,
+    current_x_and_y_positions: Vec<(f64, f64)>
 }
 
 
@@ -30,6 +31,7 @@ impl Laser {
 
     pub fn new(radians: f64, x: f64, y: f64) -> Laser {
         utils::set_panic_hook();
+        let current_x_and_y_positions: Vec<(f64, f64)> = Vec::new();
         Laser {
             radians,
             x,
@@ -38,6 +40,7 @@ impl Laser {
             shoot_timer: 0,
             can_shoot: false,
             speed: 10.0,
+            current_x_and_y_positions,
         }
     }
 
@@ -69,10 +72,32 @@ impl Laser {
         self.radians = 0.0
     }
 
-    pub fn delay_shot(&mut self, player_ship: &PlayerShip) {
+    pub fn check_laser_hit(&self, player_ship: &mut PlayerShip) {
+        let left_side_of_ship = player_ship.get_centre_x() - (player_ship.get_size() / 2.0);
+        let right_side_of_ship = player_ship.get_centre_x() + (player_ship.get_size() / 2.0);
+        let top_of_ship = player_ship.get_centre_y() - (player_ship.get_size() / 2.0);
+        let bottom_of_ship = player_ship.get_centre_y() + (player_ship.get_size() / 2.0);
+
+        for (x, y) in self.current_x_and_y_positions.iter() {
+            if *x <= right_side_of_ship  
+            && *x >= left_side_of_ship
+            && *y <= bottom_of_ship 
+            && *y >= top_of_ship
+            {
+                player_ship.increment_centre_x(player_ship.get_radians().cos() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.increment_centre_y(player_ship.get_radians().sin() * (player_ship.get_speed() as f64 * 5.0));
+            }
+        }
+    }
+
+    pub fn delay_shot(&mut self, player_ship: &mut PlayerShip) {
         if self.shoot_timer <= 500 && self.can_shoot == false {
             self.shoot_timer += 1
         } else if self.shoot_timer <= 0 {
+            if self.current_x_and_y_positions.len() >= 1 {
+                let empty_x_and_y_positions: Vec<(f64, f64)> = Vec::new();
+                self.current_x_and_y_positions = empty_x_and_y_positions;
+            }
             self.can_shoot = false;
             self.shoot_timer += 1
         } else {
@@ -82,7 +107,8 @@ impl Laser {
                 self.set_ship_postion(player_ship)
             }
             if self.radians != 0.0  {
-                self.shoot_laser()
+                self.shoot_laser();
+                self.check_laser_hit(player_ship)
             }
         }
     }
@@ -101,6 +127,9 @@ impl Laser {
     fn shoot_laser(&mut self) {
         self.x += self.radians.cos() * self.speed;
         self.y += self.radians.sin() * self.speed;
+        let x_y = (self.x, self.y);
+        self.current_x_and_y_positions.push(x_y);
+        // log!("{:?}", self.current_x_and_y_positions)
     }
 }
 
