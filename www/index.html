@@ -3,10 +3,32 @@
   <head>
     <meta charset="utf-8">
     <title>Shooter</title>
+    <style>
+      body {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      #player-info {
+          background-color: SlateBlue;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      #score {
+        display: inline-block;
+        padding-right: 20px;
+      } 
+       #player-health {
+        display: inline-block;
+        padding-left: 20px;
+      }
+    </style>
   </head>
   <body>
     <canvas style="border: 1px solid black;" id="space"></canvas>
-    <h3 id="player-health">Player Health</h3>
+    <div id="player-info">
+      <h3 id="player-health"></h3>
+      <h3 id="score">Score</h3>
+    </div>
     <script src="./bootstrap.js"></script>
   </body>
 </html>
