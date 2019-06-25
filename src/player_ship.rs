@@ -30,12 +30,12 @@ pub struct PlayerShip {
 impl PlayerShip {
     pub fn new() -> PlayerShip {
         utils::set_panic_hook();
-        let rotation_degress = 0.0;
+        let rotation_degress = 270.0;
         PlayerShip {
             side_count: 3,
             size: 30.0,
             rotation_degress,
-            centre_x: 440.0,
+            centre_x: 840.0,
             centre_y: 440.0,
             radians: rotation_degress * f64::consts::PI / 180.0,
             speed: 5,

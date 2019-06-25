@@ -53,8 +53,8 @@ impl FollowEnemy {
        self.base.check_dead(projectile)
     }
 
-    pub fn blow_up(&mut self, player_ship: &mut PlayerShip){
-       self.base.blow_up(player_ship)
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
+       self.base.blow_up(player_ship, score_to_add)
     }
 
     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){

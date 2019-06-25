@@ -21,6 +21,7 @@ macro_rules! log {
 pub struct Space {
     height: f64,
     width: f64,
+    intensity_level: i32,
 }
 
 #[wasm_bindgen]
@@ -31,7 +32,16 @@ impl Space {
         Space {
             height: 860.0,
             width: 1660.0,
+            intensity_level: 0,
         }
+    }
+
+    pub fn get_intensity_level(&self) -> i32 {
+        self.intensity_level
+    }
+
+    pub fn increment_intensity_level(&mut self) {
+        self.intensity_level += 1
     }
 
     pub fn get_height(&self) -> f64 {

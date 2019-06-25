@@ -114,68 +114,70 @@ impl Enemy {
     }
 
      pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip) {
-        let delta_x = player_ship.get_centre_x() - self.get_x();
-        let delta_y = player_ship.get_centre_y() - self.get_y();
-        let radians = delta_y.atan2(delta_x);
+        if self.ready_to_remove == false {
+            let delta_x = player_ship.get_centre_x() - self.get_x();
+            let delta_y = player_ship.get_centre_y() - self.get_y();
+            let radians = delta_y.atan2(delta_x);
 
-        let right_x = self.get_x() + (self.get_size() / 2.0);
-        let left_x = self.get_x() - (self.get_size() / 2.0);
-        let bottom_y = self.get_y() + (self.get_size() / 2.0);
-        let top_y = self.get_y() - (self.get_size() / 2.0);
+            let right_x = self.get_x() + (self.get_size() / 2.0);
+            let left_x = self.get_x() - (self.get_size() / 2.0);
+            let bottom_y = self.get_y() + (self.get_size() / 2.0);
+            let top_y = self.get_y() - (self.get_size() / 2.0);
 
-        let left_side_of_ship = player_ship.get_centre_x() - (player_ship.get_size() / 2.0);
-        let right_side_of_ship = player_ship.get_centre_x() + (player_ship.get_size() / 2.0);
-        let top_of_ship = player_ship.get_centre_y() - (player_ship.get_size() / 2.0);
-        let bottom_of_ship = player_ship.get_centre_y() + (player_ship.get_size() / 2.0);
+            let left_side_of_ship = player_ship.get_centre_x() - (player_ship.get_size() / 2.0);
+            let right_side_of_ship = player_ship.get_centre_x() + (player_ship.get_size() / 2.0);
+            let top_of_ship = player_ship.get_centre_y() - (player_ship.get_size() / 2.0);
+            let bottom_of_ship = player_ship.get_centre_y() + (player_ship.get_size() / 2.0);
 
-        if left_side_of_ship <= right_x
-        && left_side_of_ship >= left_x 
-        && player_ship.get_centre_y() <= bottom_y 
-        && player_ship.get_centre_y() >= top_y {
-            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
-            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
-            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.set_health(-5);
-        } 
-        if right_side_of_ship >= left_x
-        && right_side_of_ship <= right_x
-        && player_ship.get_centre_y() <= bottom_y 
-        && player_ship.get_centre_y() >= top_y {
-            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
-            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
-            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.set_health(-5);
-        }
-        if bottom_of_ship >= top_y
-        && bottom_of_ship <= bottom_y
-        && player_ship.get_centre_x() >= left_x
-        && player_ship.get_centre_x() <= right_x {
-            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
-            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
-            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.set_health(-5);
-        }
-        if top_of_ship <= bottom_y
-        && top_of_ship >= self.get_y()
-        && player_ship.get_centre_x() >= left_x
-        && player_ship.get_centre_x() <= right_x {
-            self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
-            self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
-            player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-            player_ship.set_health(-5);
+            if left_side_of_ship <= right_x
+            && left_side_of_ship >= left_x 
+            && player_ship.get_centre_y() <= bottom_y 
+            && player_ship.get_centre_y() >= top_y {
+                self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+                self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+                player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.set_health(-5);
+            } 
+            if right_side_of_ship >= left_x
+            && right_side_of_ship <= right_x
+            && player_ship.get_centre_y() <= bottom_y 
+            && player_ship.get_centre_y() >= top_y {
+                self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+                self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+                player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.set_health(-5);
+            }
+            if bottom_of_ship >= top_y
+            && bottom_of_ship <= bottom_y
+            && player_ship.get_centre_x() >= left_x
+            && player_ship.get_centre_x() <= right_x {
+                self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+                self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+                player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.set_health(-5);
+            }
+            if top_of_ship <= bottom_y
+            && top_of_ship >= self.get_y()
+            && player_ship.get_centre_x() >= left_x
+            && player_ship.get_centre_x() <= right_x {
+                self.increment_x(-(radians.cos() * (self.x_speed * 10.0)));
+                self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
+                player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.set_health(-5);
+            }
         }
     }
 
-    pub fn blow_up(&mut self, player_ship: &mut PlayerShip){
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
         if self.ready_to_remove == true && self.size < 50.0 {
             self.size += 0.03
         }  else if self.ready_to_remove && self.active == true {
             self.set_active();
-            player_ship.set_score(100)
+            player_ship.set_score(score_to_add)
         }
     }
 

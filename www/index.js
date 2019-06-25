@@ -36,7 +36,6 @@ let delay = 0
 let drawSpirals = true
 let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
-let radians
 
 const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   const radians=rotationDegrees*Math.PI/180;
@@ -61,31 +60,6 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   ctx.translate(-centerX,-centerY)
 }
 
-const drawSpiral = () => {
-  if(spiralEnemyArray.length == 30){
-    drawSpirals = false
-  } else if (spiralEnemyArray.length == 0){
-    drawSpirals = true
-    spiralX = getRandomInt(space.get_width() - 30)
-    spiralY = getRandomInt(space.get_height() - 30)
-  }
-  if(spiralEnemyArray.length <= 30 && drawSpirals){
-    const spiralEnemy = SpiralEnemy
-      .new(spiralX, spiralY)
-    spiralEnemyArray = [
-      ...spiralEnemyArray,
-      spiralEnemy
-    ]
-  }
-  spiralEnemyArray.forEach(spiralEnemy => {
-    spiralEnemy.spiral_movement()
-    ctx.beginPath()
-    ctx.strokeStyle="#8D33FF"
-    ctx.arc(spiralEnemy.base.get_x(),spiralEnemy.base.get_y(), 10,0, 2*Math.PI,false);
-    ctx.closePath()
-    ctx.stroke()
-  })
-}    
 
 
 const drawProjectiles = () => {
@@ -94,6 +68,17 @@ const drawProjectiles = () => {
     ctx.fillStyle='red'
     ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
     ctx.fill()
+  })
+}
+
+const drawSpiralEnemy = () => {
+  spiralEnemyArray.forEach(spiralEnemy => {
+    spiralEnemy.spiral_movement()
+    ctx.beginPath()
+    ctx.strokeStyle="#8D33FF"
+    ctx.arc(spiralEnemy.base.get_x(),spiralEnemy.base.get_y(), 10,0, 2*Math.PI,false);
+    ctx.closePath()
+    ctx.stroke()
   })
 }
 
@@ -158,14 +143,14 @@ const drawClawEnemy = () => {
   })
 }
 
-const addSquareEnemies = () => {
+const addSquareEnemies = (amountToAdd) => {
   const buffer = 120
   const patrolWidth = space.get_width() - 240
   const patrolHeight = space.get_height() - 240
   const x = getRandomInt(patrolWidth) + buffer
   const y = getRandomInt(patrolHeight) + buffer
   setInterval(() => {
-    if(squareEnemyArray.length < 1){
+    if(squareEnemyArray.length < amountToAdd){
       const squareEnemy = SquareEnemy.new(x, y)
       squareEnemyArray = [
         ...squareEnemyArray,
@@ -175,11 +160,11 @@ const addSquareEnemies = () => {
   }, 5000)
 }
 
-const addFollowEnemies = () => {
+const addFollowEnemies = (amountToAdd) => {
   setInterval(() => {
-    if(followEnemyArray.length < 5){
+    if(followEnemyArray.length < amountToAdd){
       const followEnemy = FollowEnemy
-        .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       followEnemyArray = [
         ...followEnemyArray,
         followEnemy,
@@ -188,11 +173,11 @@ const addFollowEnemies = () => {
   }, 2000)
 }
 
-const addBasicEnemies = () => {
+const addBasicEnemies = (amountToAdd) => {
   setInterval(() => {
-    if(basicEnemyArray.length < 5){
+    if(basicEnemyArray.length < amountToAdd){
       const basicEnemy = BasicEnemy
-        .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       basicEnemyArray = [
         ...basicEnemyArray,
         basicEnemy,
@@ -201,10 +186,29 @@ const addBasicEnemies = () => {
   }, 2000)
 }
 
-
-const addClawEnemies = () => {
+const updateSpiralEnemies = () => {
   setInterval(() => {
-    if(clawEnemyArray.length < 1){
+  if(spiralEnemyArray.length == 30){
+    drawSpirals = false
+  } else if (spiralEnemyArray.length == 0){
+    drawSpirals = true
+    spiralX = getRandomInt(space.get_width() - 30)
+    spiralY = getRandomInt(space.get_height() - 30)
+  }
+    if(spiralEnemyArray.length <= 30 && drawSpirals){
+      const spiralEnemy = SpiralEnemy
+        .new(spiralX, spiralY)
+      spiralEnemyArray = [
+        ...spiralEnemyArray,
+        spiralEnemy
+      ]
+    }
+  }, 10)
+}    
+
+const addClawEnemies = (amountToAdd) => {
+  setInterval(() => {
+    if(clawEnemyArray.length < amountToAdd){
       const clawEnemy = ClawEnemy
         .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
       clawEnemyArray = [
@@ -230,7 +234,7 @@ const updateScoreDisplay = () => {
 }
 
 const renderGameOverText = () => {
-  ctx.font = "70px Impact"
+  ctx.font = "70px Verdana"
   ctx.fillStyle = "white"
   ctx.textAlign = "center"
   ctx.fillText("Game Over", canvas.width/2, canvas.height/2)
@@ -288,24 +292,24 @@ const checkProjectileHit = () => {
   projectileArray.forEach(projectile => {
     squareEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip)
+      enemy.blow_up(playerShip, 300)
     })
     followEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip)
+      enemy.blow_up(playerShip, 200)
     })
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip)
+      enemy.blow_up(playerShip, 500)
     })
     spiralEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip)
+      enemy.blow_up(playerShip, 15)
     })
     basicEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip)
+      enemy.blow_up(playerShip, 100)
     })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
@@ -334,11 +338,11 @@ window.addEventListener("keydown", (e) => {
 }, false)
 
 document.body.addEventListener("keydown", (e) => {
-  keys[e.keyCode] = true;
+  keys[e.keyCode] = true
 })
 
 document.body.addEventListener("keyup", (e) => {
-  keys[e.keyCode] = false;
+  keys[e.keyCode] = false
 })
 
 const controlShip = () => {
@@ -366,16 +370,52 @@ const controlShip = () => {
   }
 }
 
-
-addSquareEnemies()
-addFollowEnemies()
-addClawEnemies()
-addBasicEnemies()
+const enemyRampUp = () => {
+  if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
+    space.increment_intensity_level()
+    addBasicEnemies(5)
+  }
+  if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
+    space.increment_intensity_level()
+    addBasicEnemies(5)
+    addFollowEnemies(5)
+    addSquareEnemies(1)
+  }
+  if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
+    space.increment_intensity_level()
+    addBasicEnemies(8)
+    addFollowEnemies(5)
+    addClawEnemies(1)
+  }
+  if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
+    space.increment_intensity_level()
+    addBasicEnemies(5)
+    addFollowEnemies(5)
+    addClawEnemies(2)
+    updateSpiralEnemies()
+  }
+  if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
+    space.increment_intensity_level()
+    addBasicEnemies(5)
+    addFollowEnemies(8)
+    addClawEnemies(2)
+    updateSpiralEnemies()
+    addSquareEnemies(2)
+  }
+  if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
+    space.increment_intensity_level()
+    addBasicEnemies(5)
+    addFollowEnemies(8)
+    addClawEnemies(2)
+    updateSpiralEnemies()
+    addSquareEnemies(3)
+  }
+}
 
 const animate = window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                function(callback) { window.setTimeout(callback, 1000/60) }
+window.webkitRequestAnimationFrame ||
+window.mozRequestAnimationFrame ||
+function(callback) { window.setTimeout(callback, 1000/60) }
 
 const step = () => {
   update()
@@ -384,6 +424,7 @@ const step = () => {
 }
 
 const update = () => {
+  enemyRampUp()
   updatePlayerShip()
   updateProjectiles()
   updateEnemies()
@@ -405,7 +446,7 @@ const render = () => {
   drawProjectiles()
   drawFollowEnemy()
   drawClawEnemy()
-  drawSpiral()
+  drawSpiralEnemy()
   drawBasicEnemy()
 }
                 
