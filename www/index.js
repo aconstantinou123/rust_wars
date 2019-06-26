@@ -58,6 +58,28 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   ctx.fill()
   ctx.rotate(-radians)
   ctx.translate(-centerX,-centerY)
+  drawShockwave()
+}
+
+const drawShockwave = () => {
+  ctx.strokeStyle = "#FFFF00";
+  ctx.strokeRect(
+    playerShip.shockwave.get_x(), 
+    playerShip.shockwave.get_y(),
+    playerShip.shockwave.get_width(), 
+    playerShip.shockwave.get_height())
+  if(playerShip.shockwave.get_x() !== 0){
+    ctx.strokeRect(
+      playerShip.shockwave.get_x() + 25, 
+      playerShip.shockwave.get_y() + 25,
+      playerShip.shockwave.get_width() - 50, 
+      playerShip.shockwave.get_height() -50)
+    ctx.strokeRect(
+      playerShip.shockwave.get_x() + 50, 
+      playerShip.shockwave.get_y() + 50,
+      playerShip.shockwave.get_width() - 100, 
+      playerShip.shockwave.get_height() -100)
+  }
 }
 
 
@@ -249,6 +271,7 @@ const updatePlayerShip = () => {
   playerShip.increment_rotation_degrees(rotationSpeed)
   playerShip.increment_centre_x(velX)
   playerShip.increment_centre_y(velY)
+  playerShip.detonate(space)
   space.check_player_ship_out_of_bounds(playerShip)
   playerShip.check_is_dead()
 }
@@ -359,7 +382,10 @@ const controlShip = () => {
       velY -= 1
     }  if(keys[83] && velY < playerShip.get_speed()){
       velY += 1
-    }  if (keys[32]){
+    } 
+    if (keys[70] && !playerShip.shockwave.get_is_active()) {
+      playerShip.activate_shockwave()
+    } if (keys[32]){
       if(delay > 5){
           shootProjectile()
           delay = 0

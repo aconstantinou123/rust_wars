@@ -1,6 +1,8 @@
 use wasm_bindgen::prelude::*;
-use crate::utils;
 use std::f64;
+use crate::utils;
+use crate::shockwave::Shockwave;
+use crate::space::Space;
 
 extern crate web_sys;
 
@@ -24,6 +26,7 @@ pub struct PlayerShip {
     health: i32,
     is_alive: bool,
     score: i32,
+    pub shockwave: Shockwave,
 }
 
 #[wasm_bindgen]
@@ -42,8 +45,10 @@ impl PlayerShip {
             health: 100,
             is_alive: true,
             score: 0,
+            shockwave: Shockwave::new(0.0, 0.0)
         }
     }
+
 
     pub fn get_score(&self) -> i32 {
         self.score
@@ -143,5 +148,13 @@ impl PlayerShip {
         } else if self.health <= 0 {
             self.size += 2.0
         } 
+    }
+
+    pub fn activate_shockwave(&mut self) {
+        self.shockwave.activate_shockwave(self.centre_x, self.centre_y);
+    }
+
+    pub fn detonate(&mut self, space: &Space) {
+        self.shockwave.detonate(space)
     }
 }
