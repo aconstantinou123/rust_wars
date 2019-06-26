@@ -85,6 +85,7 @@ impl Laser {
             {
                 player_ship.increment_centre_x(player_ship.get_radians().cos() * (player_ship.get_speed() as f64 * 5.0));
                 player_ship.increment_centre_y(player_ship.get_radians().sin() * (player_ship.get_speed() as f64 * 5.0));
+                player_ship.set_health(-5);
             }
         }
     }

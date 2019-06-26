@@ -65,7 +65,7 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
 const drawProjectiles = () => {
   projectileArray.forEach(projectile => {
     ctx.beginPath()
-    ctx.fillStyle='red'
+    ctx.fillStyle='#FF0000'
     ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
     ctx.fill()
   })
@@ -75,7 +75,7 @@ const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     spiralEnemy.spiral_movement()
     ctx.beginPath()
-    ctx.strokeStyle="#8D33FF"
+    ctx.strokeStyle="#0033FF"
     ctx.arc(spiralEnemy.base.get_x(),spiralEnemy.base.get_y(), 10,0, 2*Math.PI,false);
     ctx.closePath()
     ctx.stroke()
@@ -84,7 +84,7 @@ const drawSpiralEnemy = () => {
 
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
-    ctx.strokeStyle = "green";
+    ctx.strokeStyle = "#FFFF00";
     ctx.strokeRect(squareEnemy.base.get_x() - (squareEnemy.base.get_size() / 2), 
     squareEnemy.base.get_y() - (squareEnemy.base.get_size() / 2),
     squareEnemy.base.get_size(), squareEnemy.base.get_size())
@@ -94,7 +94,7 @@ const drawSquareEnemy = () => {
 
 const drawBasicEnemy = () => {
   basicEnemyArray.forEach(basicEnemy => {
-    ctx.strokeStyle = "yellow";
+    ctx.strokeStyle = "#00FF00";
     ctx.strokeRect(basicEnemy.base.get_x()  - (basicEnemy.base.get_size() / 2.0), 
     basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0),
     basicEnemy.base.get_size(), basicEnemy.base.get_size())  
@@ -108,7 +108,7 @@ const drawEnemyProjectile = (squareEnemy) => {
     squareEnemy.base.get_y() + (squareEnemy.base.get_size() / 2))
     ctx.lineTo(squareEnemy.get_laser_x(), 
     squareEnemy.get_laser_y())
-    ctx.strokeStyle = "#F47120"
+    ctx.strokeStyle = "#FF00FF"
     ctx.stroke()
   }
 }
@@ -120,7 +120,7 @@ const drawFollowEnemy = () => {
     for (let i = 1; i <= followEnemy.get_number_of_sides(); i += 1) {
       ctx.lineTo (followEnemy.draw_x(i), followEnemy.draw_y(i))
     }
-    ctx.strokeStyle = "red"
+    ctx.strokeStyle = "#9D00FF"
     ctx.stroke()
   })
 }
@@ -136,7 +136,7 @@ const drawClawEnemy = () => {
     for (let i = 1; i <= enemy.get_number_of_sides(); i += 1) {
       ctx.lineTo (enemy.draw_x(i), enemy.draw_y(i))
     }
-    ctx.strokeStyle = "blue"
+    ctx.strokeStyle = "#FF0000"
     ctx.stroke()
     ctx.rotate(-enemy.get_radians())
     ctx.translate(-centerX, -centerY)
