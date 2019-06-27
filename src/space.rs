@@ -27,11 +27,11 @@ pub struct Space {
 #[wasm_bindgen]
 impl Space {
 
-    pub fn new() -> Space {
+    pub fn new(width: f64, height: f64) -> Space {
         utils::set_panic_hook();
         Space {
-            height: 860.0,
-            width: 1660.0,
+            width,
+            height,
             intensity_level: 0,
         }
     }
@@ -55,6 +55,8 @@ impl Space {
     pub fn check_projectile_out_of_bounds(&self, projectile: &mut Projectile) {
         if projectile.get_x() <= 0.0 || projectile.get_x() >= self.width 
         || projectile.get_y() <= 0.0 || projectile.get_y() >= self.height {
+            // log!("here {}", projectile.get_x());
+            // log!("here {}", projectile.get_y());
             projectile.set_active()
         }
     }

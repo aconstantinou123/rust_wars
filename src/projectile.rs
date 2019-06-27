@@ -64,6 +64,6 @@ impl Projectile {
     }
 
     pub fn set_active(&mut self) {
-        self.active = !self.active
+        self.active = false
     }
 }

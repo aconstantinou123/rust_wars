@@ -12,7 +12,7 @@ import  {
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
 const playerShip = PlayerShip.new()
-const space = Space.new()
+const space = Space.new(window.innerWidth - 20, 860)
 
 const canvas=document.getElementById("space")
 const ctx=canvas.getContext("2d")
@@ -23,6 +23,8 @@ const ch=canvas.height
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
 let projectileArray = []
+let powerUpProjectileArray1 = []
+let powerUpProjectileArray2 = []
 let squareEnemyArray = []
 let followEnemyArray = []
 let clawEnemyArray = []
@@ -86,8 +88,8 @@ const drawShockwave = () => {
 
 
 
-const drawProjectiles = () => {
-  projectileArray.forEach(projectile => {
+const drawProjectiles = (array) => {
+  array.forEach(projectile => {
     ctx.beginPath()
     ctx.fillStyle='#FF0000'
     ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
@@ -285,13 +287,13 @@ const updatePlayerShip = () => {
   playerShip.check_is_dead()
 }
 
-const updateProjectiles = () => {
-  projectileArray.forEach(projectile => {
+const updateProjectiles = (array) => {
+  array.forEach(projectile => {
     space.check_projectile_out_of_bounds(projectile)
     projectile.calculate_new_x()
     projectile.calculate_new_y()
   })
-  projectileArray = projectileArray.filter(projectile => projectile.is_active())
+  return array.filter(projectile => projectile.is_active())
 }
 
 const updateEnemies = () => {
@@ -357,14 +359,13 @@ const checkProjectileHit = () => {
   
 }
 
-const shootProjectile = () => {
+const shootProjectile = (arrayToUpdate, degreesToModify) => {
   const projectile = Projectile.new(
     playerShip.get_centre_x(), 
     playerShip.get_centre_y(),
-    playerShip.get_rotation_degrees(),
-    10.0
+    playerShip.get_rotation_degrees() + degreesToModify,
     )
-  projectileArray = [ ...projectileArray, projectile ]
+  return [ ...arrayToUpdate, projectile ]
 }
  
 
@@ -401,8 +402,10 @@ const controlShip = () => {
       playerShip.activate_shockwave()
     } 
     if (keys[32]){
-      if(delay > 5){
-          shootProjectile()
+      if(delay > 0 ){
+          projectileArray = shootProjectile(projectileArray, 0)
+          powerUpProjectileArray1 = shootProjectile(powerUpProjectileArray1, -10)
+          powerUpProjectileArray2 = shootProjectile(powerUpProjectileArray2,10)
           delay = 0
       } else {
           delay += 1
@@ -467,7 +470,9 @@ const step = () => {
 const update = () => {
   enemyRampUp()
   updatePlayerShip()
-  updateProjectiles()
+  projectileArray = updateProjectiles(projectileArray)
+  powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
+  powerUpProjectileArray2 = updateProjectiles(powerUpProjectileArray2)
   updateEnemies()
   checkProjectileHit()
   updatePlayerHealthDisplay()
@@ -485,7 +490,9 @@ const render = () => {
     renderGameOverText()
   }
   drawSquareEnemy()
-  drawProjectiles()
+  drawProjectiles(projectileArray)
+  drawProjectiles(powerUpProjectileArray1)
+  drawProjectiles(powerUpProjectileArray2)
   drawFollowEnemy()
   drawClawEnemy()
   drawSpiralEnemy()
