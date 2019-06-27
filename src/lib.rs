@@ -10,6 +10,7 @@ pub mod laser;
 pub mod enemy;
 pub mod basic_enemy;
 pub mod shockwave;
+pub mod power_up;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.

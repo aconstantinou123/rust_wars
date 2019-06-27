@@ -7,12 +7,15 @@ import  {
   ClawEnemy, 
   SpiralEnemy,
   BasicEnemy,
+  PowerUp,
 } from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
 const playerShip = PlayerShip.new()
 const space = Space.new(window.innerWidth - 20, 860)
+const powerUp = PowerUp.new()
+
 
 const canvas=document.getElementById("space")
 const ctx=canvas.getContext("2d")
@@ -95,6 +98,13 @@ const drawProjectiles = (array) => {
     ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
     ctx.fill()
   })
+}
+
+const drawPowerUp = () => {
+  ctx.beginPath()
+  ctx.fillStyle='#FF0000'
+  ctx.arc(powerUp.get_x(), powerUp.get_y(), powerUp.get_size(), 2 * Math.PI, false)
+  ctx.fill()
 }
 
 const drawSpiralEnemy = () => {
@@ -296,6 +306,10 @@ const updateProjectiles = (array) => {
   return array.filter(projectile => projectile.is_active())
 }
 
+const updatePowerUp = () => {
+  powerUp.generate_random_position(space)
+}
+
 const updateEnemies = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     spiralEnemy.check_player_ship_collision(playerShip)
@@ -478,6 +492,7 @@ const update = () => {
   updatePlayerHealthDisplay()
   updateScoreDisplay()
   updateShockwavesDisplay()
+  updatePowerUp()
 }
 
 const render = () => {
@@ -497,6 +512,7 @@ const render = () => {
   drawClawEnemy()
   drawSpiralEnemy()
   drawBasicEnemy()
+  drawPowerUp()
 }
                 
 
