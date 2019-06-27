@@ -3,6 +3,7 @@ use crate::utils;
 use crate::enemy::Enemy;
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
+use crate::shockwave::Shockwave;
 use std::f64;
 
 extern crate web_sys;
@@ -43,6 +44,10 @@ impl BasicEnemy {
 
     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){
          self.base.check_player_ship_collision(player_ship)
+    }
+
+    pub fn check_shockwave_collision(&mut self, shockwave: &Shockwave) {
+        self.base.check_shockwave_collision(shockwave)
     }
 
 }

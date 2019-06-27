@@ -58,7 +58,9 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   ctx.fill()
   ctx.rotate(-radians)
   ctx.translate(-centerX,-centerY)
-  drawShockwave()
+  if(playerShip.shockwave.get_is_active()){
+    drawShockwave()
+  }
 }
 
 const drawShockwave = () => {
@@ -255,6 +257,11 @@ const updateScoreDisplay = () => {
   scoreElement.innerText = `Score: ${playerShip.get_score()}` 
 }
 
+const updateShockwavesDisplay = () => {
+  const shockwavesElement = document.getElementById("shockwaves")
+  shockwavesElement.innerText = `Shockwaves Remaining: ${playerShip.shockwave.get_shockwaves_remaining()}` 
+}
+
 const renderGameOverText = () => {
   ctx.font = "70px Verdana"
   ctx.fillStyle = "white"
@@ -271,7 +278,9 @@ const updatePlayerShip = () => {
   playerShip.increment_rotation_degrees(rotationSpeed)
   playerShip.increment_centre_x(velX)
   playerShip.increment_centre_y(velY)
-  playerShip.detonate(space)
+  if(playerShip.shockwave.get_is_active()){
+    playerShip.detonate(space)
+  }
   space.check_player_ship_out_of_bounds(playerShip)
   playerShip.check_is_dead()
 }
@@ -289,25 +298,30 @@ const updateEnemies = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     spiralEnemy.check_player_ship_collision(playerShip)
     space.check_spiral_enemy_at_edge(spiralEnemy)
+    spiralEnemy.check_shockwave_collision(playerShip.shockwave)
   })
   squareEnemyArray.forEach(squareEnemy => {
     squareEnemy.check_player_ship_collision(playerShip)
     space.check_enemy_at_edge(squareEnemy)
     squareEnemy.move_enemy(space, playerShip)
+    squareEnemy.check_shockwave_collision(playerShip.shockwave)
   })
   basicEnemyArray.forEach(basicEnemy => {
     basicEnemy.check_player_ship_collision(playerShip)
     space.check_basic_enemy_at_edge(basicEnemy)
     basicEnemy.move_enemy()
+    basicEnemy.check_shockwave_collision(playerShip.shockwave)
   })
   followEnemyArray.forEach(followEnemy => {
     followEnemy.check_player_ship_collision(playerShip)
     followEnemy.move_enemy(playerShip)
+    followEnemy.check_shockwave_collision(playerShip.shockwave)
   })
   clawEnemyArray.forEach(clawEnemy => {
     clawEnemy.check_player_ship_collision(playerShip)
     space.check_claw_enemy_at_edge(clawEnemy)
     clawEnemy.move_enemy(playerShip)
+    clawEnemy.check_shockwave_collision(playerShip.shockwave)
   })
 }
 
@@ -385,7 +399,8 @@ const controlShip = () => {
     } 
     if (keys[70] && !playerShip.shockwave.get_is_active()) {
       playerShip.activate_shockwave()
-    } if (keys[32]){
+    } 
+    if (keys[32]){
       if(delay > 5){
           shootProjectile()
           delay = 0
@@ -457,6 +472,7 @@ const update = () => {
   checkProjectileHit()
   updatePlayerHealthDisplay()
   updateScoreDisplay()
+  updateShockwavesDisplay()
 }
 
 const render = () => {

@@ -1,11 +1,12 @@
 use wasm_bindgen::prelude::*;
+use std::f64;
 use crate::utils;
 use crate::projectile::Projectile;
 use crate::space::Space;
 use crate::player_ship::PlayerShip;
 use crate::laser::Laser;
 use crate::enemy::Enemy;
-use std::f64;
+use crate::shockwave::Shockwave;
 
 extern crate web_sys;
 
@@ -112,4 +113,9 @@ impl SquareEnemy {
     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){
          self.base.check_player_ship_collision(player_ship)
     }
+
+    pub fn check_shockwave_collision(&mut self, shockwave: &Shockwave) {
+        self.base.check_shockwave_collision(shockwave)
+    }
+
 }

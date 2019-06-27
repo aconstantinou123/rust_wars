@@ -1,9 +1,10 @@
 use wasm_bindgen::prelude::*;
+use std::f64;
 use crate::utils;
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
+use crate::shockwave::Shockwave;
 use crate::enemy::Enemy;
-use std::f64;
 
 extern crate web_sys;
 
@@ -99,5 +100,10 @@ impl ClawEnemy {
         let x = i * 2.0 * f64::consts::PI / self.number_of_sides;
         self.base.get_size() * x.sin()
     }
+
+    pub fn check_shockwave_collision(&mut self, shockwave: &Shockwave) {
+        self.base.check_shockwave_collision(shockwave)
+    }
+
 
 }

@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 use crate::utils;
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
+use crate::shockwave::Shockwave;
 use std::f64;
 
 extern crate web_sys;
@@ -96,6 +97,10 @@ impl Enemy {
         self.ready_to_remove = !self.ready_to_remove
     }
 
+    pub fn get_is_ready_to_remove(&self) -> bool {
+        self.ready_to_remove
+    }
+
     pub fn move_enemy(&mut self) {
         self.x += self.x_speed;
         self.y += self.y_speed;
@@ -169,6 +174,18 @@ impl Enemy {
                 player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
                 player_ship.set_health(-5);
             }
+        }
+    }
+
+    pub fn check_shockwave_collision(&mut self, shockwave: &Shockwave){
+        let right_x = self.get_x() + (self.get_size() / 2.0);
+        let left_x = self.get_x() - (self.get_size() / 2.0);
+        if shockwave.get_x() <= right_x && shockwave.get_x() >= left_x {
+            self.active = false;
+        }
+        if shockwave.get_x() + (shockwave.get_x() * 2.0) >= left_x 
+        && shockwave.get_x() + (shockwave.get_x() * 2.0) <= right_x {
+            self.active = false;
         }
     }
 

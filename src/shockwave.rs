@@ -19,7 +19,8 @@ pub struct Shockwave {
     height: f64,
     width: f64,
     speed: f64,
-    is_active: bool
+    is_active: bool,
+    shockwaves_remaining: i32,
 }
 
 #[wasm_bindgen]
@@ -33,6 +34,7 @@ impl Shockwave {
             width: 0.0,
             speed: 10.0,
             is_active: false,
+            shockwaves_remaining: 3,
         }
     }
 
@@ -56,10 +58,17 @@ impl Shockwave {
         self.is_active
     }
 
+    pub fn get_shockwaves_remaining(&self) -> i32 {
+        self.shockwaves_remaining
+    }
+
     pub fn activate_shockwave(&mut self, x: f64, y: f64) {
-        self.x = x;
-        self.y = y;
-        self.is_active = true;
+        if self.shockwaves_remaining > 0 {
+            self.x = x;
+            self.y = y;
+            self.is_active = true;
+            self.shockwaves_remaining -= 1;
+        }
     }
 
     pub fn detonate(&mut self, space: &Space) {
