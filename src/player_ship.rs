@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 use std::f64;
 use crate::utils;
 use crate::shockwave::Shockwave;
+use crate::power_up::PowerUpType;
 use crate::space::Space;
 
 extern crate web_sys;
@@ -27,7 +28,7 @@ pub struct PlayerShip {
     is_alive: bool,
     score: i32,
     pub shockwave: Shockwave,
-    projectile_power_up: bool,
+    power_up: PowerUpType,
 }
 
 #[wasm_bindgen]
@@ -47,16 +48,21 @@ impl PlayerShip {
             is_alive: true,
             score: 0,
             shockwave: Shockwave::new(0.0, 0.0),
-            projectile_power_up: false,
+            power_up: PowerUpType::Normal,
         }
     }
 
-    pub fn get_projectile_power_up(&self) -> bool {
-        self.projectile_power_up
+    pub fn get_power_up(&self) -> String {
+        match self.power_up {
+            PowerUpType::Normal => String::from("normal"),
+            PowerUpType::ExtraFirePower => String::from("projectile"),
+            PowerUpType::Invincible => String::from("invincible"),
+            PowerUpType::EnemySlowDown => String::from("slowdown"),
+        }
     }
 
-    pub fn set_projectile_power_up(&mut self, a: bool) {
-        self.projectile_power_up = a
+    pub fn set_power_up(&mut self, power_up: PowerUpType) {
+        self.power_up = power_up
     }
 
     pub fn get_score(&self) -> i32 {

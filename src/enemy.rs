@@ -198,4 +198,8 @@ impl Enemy {
         }
     }
 
+     pub fn slow_down(&mut self, player_ship: &PlayerShip, speed: f64) {
+         
+     }
+
 }

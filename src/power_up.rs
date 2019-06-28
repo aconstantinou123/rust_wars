@@ -15,10 +15,12 @@ macro_rules! log {
 }
 
 #[wasm_bindgen]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum PowerUpType {
     ExtraFirePower,
+    EnemySlowDown,
     Invincible,
+    Normal,
 }
 
 #[wasm_bindgen]
@@ -86,14 +88,16 @@ impl PowerUp {
     }
 
     pub fn power_up_countdown(&mut self, player_ship: &mut PlayerShip){
-        if self.set_new_timer == true && player_ship.get_projectile_power_up() == true {
+        if self.set_new_timer == true && player_ship.get_power_up() != "normal" {
             self.timer = 1200;
             self.set_new_timer = false
-        } else if player_ship.get_projectile_power_up() == true
+        } else if player_ship.get_power_up() != "normal"
         && self.current_milisecond < self.timer {
             self.current_milisecond += 1;
-        } else if player_ship.get_projectile_power_up() == true {
-            player_ship.set_projectile_power_up(false);
+        } else if player_ship.get_power_up() != "normal" {
+
+            player_ship.set_power_up(PowerUpType::Normal);
+
             self.set_new_timer = true;
             self.current_milisecond = 0;
             self.is_active = true;
@@ -118,7 +122,7 @@ impl PowerUp {
             self.y = -50.0;
             self.set_new_timer = true;
             self.current_milisecond = 0;
-            player_ship.set_projectile_power_up(true)
+            player_ship.set_power_up(PowerUpType::ExtraFirePower);
         }
     }
 

@@ -326,7 +326,7 @@ const updateProjectiles = (array) => {
 }
 
 const updatePowerUp = () => {
-  if(playerShip.get_projectile_power_up()){
+  if(playerShip.get_power_up() === 'projectile'){
     powerUp.power_up_countdown(playerShip)
   } else {
     powerUp.generate_random_position(space)
@@ -442,10 +442,10 @@ const controlShip = () => {
       playerShip.activate_shockwave()
     } 
     if (keys[32]){
-      const amountToDelay =  playerShip.get_projectile_power_up() ? 0 : 5
+      const amountToDelay =  playerShip.get_power_up() === 'projectile' ? 0 : 5
       if(delay > amountToDelay ){
           projectileArray = shootProjectile(projectileArray, 0)
-          if(playerShip.get_projectile_power_up()){
+          if(playerShip.get_power_up() === 'projectile'){
             powerUpProjectileArray1 = shootProjectile(powerUpProjectileArray1, -10)
             powerUpProjectileArray2 = shootProjectile(powerUpProjectileArray2,10)
           }
@@ -527,7 +527,7 @@ const update = () => {
   enemyRampUp()
   updatePlayerShip()
   projectileArray = updateProjectiles(projectileArray)
-  if(playerShip.get_projectile_power_up()){
+  if(playerShip.get_power_up() === 'projectile'){
     powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
     powerUpProjectileArray2 = updateProjectiles(powerUpProjectileArray2)
   }
@@ -551,7 +551,7 @@ const render = () => {
   }
   drawSquareEnemy()
   drawProjectiles(projectileArray)
-  if(playerShip.get_projectile_power_up()){
+  if(playerShip.get_power_up() === 'projectile'){
     drawProjectiles(powerUpProjectileArray1)
     drawProjectiles(powerUpProjectileArray2)
   }
