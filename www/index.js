@@ -47,9 +47,9 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
   ctx.translate(centerX,centerY)
   ctx.rotate(radians)
   ctx.beginPath()
-  ctx.moveTo (playerShip.generate_new_x(), playerShip.generate_new_y())   
+  ctx.moveTo (Math.floor(playerShip.generate_new_x()),  Math.floor(playerShip.generate_new_y()))   
   for (let i = 1; i <= playerShip.get_side_count();i += 1) {
-    ctx.lineTo (playerShip.draw_line_x(i), playerShip.draw_line_y(i))
+    ctx.lineTo ( Math.floor(playerShip.draw_line_x(i)),  Math.floor(playerShip.draw_line_y(i)))
   }
   
   ctx.moveTo(0, 0)
@@ -71,19 +71,19 @@ const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
 const drawShockwave = () => {
   ctx.strokeStyle = "#FFFF00";
   ctx.strokeRect(
-    playerShip.shockwave.get_x(), 
-    playerShip.shockwave.get_y(),
+    Math.floor(playerShip.shockwave.get_x()), 
+    Math.floor(playerShip.shockwave.get_y()),
     playerShip.shockwave.get_width(), 
     playerShip.shockwave.get_height())
   if(playerShip.shockwave.get_x() !== 0){
     ctx.strokeRect(
-      playerShip.shockwave.get_x() + 25, 
-      playerShip.shockwave.get_y() + 25,
+      Math.floor(playerShip.shockwave.get_x() + 25), 
+      Math.floor(playerShip.shockwave.get_y() + 25),
       playerShip.shockwave.get_width() - 50, 
       playerShip.shockwave.get_height() -50)
     ctx.strokeRect(
-      playerShip.shockwave.get_x() + 50, 
-      playerShip.shockwave.get_y() + 50,
+      Math.floor(playerShip.shockwave.get_x() + 50), 
+      Math.floor(playerShip.shockwave.get_y() + 50),
       playerShip.shockwave.get_width() - 100, 
       playerShip.shockwave.get_height() -100)
   }
@@ -95,16 +95,24 @@ const drawProjectiles = (array) => {
   array.forEach(projectile => {
     ctx.beginPath()
     ctx.fillStyle='#FF0000'
-    ctx.arc(projectile.get_x(), projectile.get_y(), 5, 2 * Math.PI, false)
+    ctx.arc(Math.floor(projectile.get_x()),  Math.floor(projectile.get_y()), 5, 2 * Math.PI, false)
     ctx.fill()
   })
 }
 
 const drawPowerUp = () => {
   ctx.beginPath()
-  ctx.fillStyle='#FF0000'
+  ctx.strokeStyle = '#0062FF'
   ctx.arc(powerUp.get_x(), powerUp.get_y(), powerUp.get_size(), 2 * Math.PI, false)
-  ctx.fill()
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.strokeStyle = '#099FFF'
+  ctx.arc(powerUp.get_x(), powerUp.get_y(), powerUp.get_size() * 0.6, 2 * Math.PI, false)
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.strokeStyle = '#00FFFF'
+  ctx.arc(powerUp.get_x(), powerUp.get_y(), powerUp.get_size() * 0.3, 2 * Math.PI, false)
+  ctx.stroke()
 }
 
 const drawSpiralEnemy = () => {
@@ -112,7 +120,7 @@ const drawSpiralEnemy = () => {
     spiralEnemy.spiral_movement()
     ctx.beginPath()
     ctx.strokeStyle="#0033FF"
-    ctx.arc(spiralEnemy.base.get_x(),spiralEnemy.base.get_y(), 10,0, 2*Math.PI,false);
+    ctx.arc( Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 10,0, 2*Math.PI,false);
     ctx.closePath()
     ctx.stroke()
   })
@@ -121,8 +129,8 @@ const drawSpiralEnemy = () => {
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
     ctx.strokeStyle = "#FFFF00";
-    ctx.strokeRect(squareEnemy.base.get_x() - (squareEnemy.base.get_size() / 2), 
-    squareEnemy.base.get_y() - (squareEnemy.base.get_size() / 2),
+    ctx.strokeRect(Math.floor(squareEnemy.base.get_x() - (squareEnemy.base.get_size() / 2)), 
+    Math.floor(squareEnemy.base.get_y() - (squareEnemy.base.get_size() / 2)),
     squareEnemy.base.get_size(), squareEnemy.base.get_size())
     drawEnemyProjectile(squareEnemy)
   })
@@ -131,8 +139,8 @@ const drawSquareEnemy = () => {
 const drawBasicEnemy = () => {
   basicEnemyArray.forEach(basicEnemy => {
     ctx.strokeStyle = "#00FF00";
-    ctx.strokeRect(basicEnemy.base.get_x()  - (basicEnemy.base.get_size() / 2.0), 
-    basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0),
+    ctx.strokeRect( Math.floor(basicEnemy.base.get_x()  - (basicEnemy.base.get_size() / 2.0)), 
+    Math.floor(basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0)),
     basicEnemy.base.get_size(), basicEnemy.base.get_size())  
   })
 }
@@ -140,10 +148,10 @@ const drawBasicEnemy = () => {
 const drawEnemyProjectile = (squareEnemy) => {
   if(squareEnemy.get_can_shoot()){
     ctx.beginPath()
-    ctx.moveTo(squareEnemy.base.get_x() + (squareEnemy.base.get_size() / 2),
-    squareEnemy.base.get_y() + (squareEnemy.base.get_size() / 2))
-    ctx.lineTo(squareEnemy.get_laser_x(), 
-    squareEnemy.get_laser_y())
+    ctx.moveTo(Math.floor(squareEnemy.base.get_x() + (squareEnemy.base.get_size() / 2)),
+    Math.floor(squareEnemy.base.get_y() + (squareEnemy.base.get_size() / 2)))
+    ctx.lineTo(Math.floor(squareEnemy.get_laser_x()), 
+    Math.floor(squareEnemy.get_laser_y()))
     ctx.strokeStyle = "#FF00FF"
     ctx.stroke()
   }
@@ -152,9 +160,9 @@ const drawEnemyProjectile = (squareEnemy) => {
 const drawFollowEnemy = () => {
   followEnemyArray.forEach(followEnemy => {
     ctx.beginPath()
-    ctx.moveTo (followEnemy.x_draw_position(), followEnemy.y_draw_position())         
+    ctx.moveTo (Math.floor(followEnemy.x_draw_position()),  Math.floor(followEnemy.y_draw_position()))       
     for (let i = 1; i <= followEnemy.get_number_of_sides(); i += 1) {
-      ctx.lineTo (followEnemy.draw_x(i), followEnemy.draw_y(i))
+      ctx.lineTo ( Math.floor(followEnemy.draw_x(i)),  Math.floor(followEnemy.draw_y(i)))
     }
     ctx.strokeStyle = "#9D00FF"
     ctx.stroke()
@@ -168,9 +176,9 @@ const drawClawEnemy = () => {
     ctx.translate(centerX, centerY)
     ctx.rotate(enemy.get_radians())
     ctx.beginPath()
-    ctx.moveTo (enemy.x_draw_position(), enemy.y_draw_position())         
+    ctx.moveTo ( Math.floor(enemy.x_draw_position()),  Math.floor(enemy.y_draw_position()))        
     for (let i = 1; i <= enemy.get_number_of_sides(); i += 1) {
-      ctx.lineTo (enemy.draw_x(i), enemy.draw_y(i))
+      ctx.lineTo ( Math.floor(enemy.draw_x(i)),  Math.floor(enemy.draw_y(i)))
     }
     ctx.strokeStyle = "#FF0000"
     ctx.stroke()
@@ -307,7 +315,14 @@ const updateProjectiles = (array) => {
 }
 
 const updatePowerUp = () => {
-  powerUp.generate_random_position(space)
+  if(playerShip.get_projectile_power_up()){
+    powerUp.power_up_countdown(playerShip)
+  } else {
+    powerUp.generate_random_position(space)
+    powerUpProjectileArray1 = []
+    powerUpProjectileArray2 = []
+  }
+  powerUp.check_collision_with_player_ship(playerShip)
 }
 
 const updateEnemies = () => {
@@ -416,10 +431,13 @@ const controlShip = () => {
       playerShip.activate_shockwave()
     } 
     if (keys[32]){
-      if(delay > 0 ){
+      const amountToDelay =  playerShip.get_projectile_power_up() ? 0 : 5
+      if(delay > amountToDelay ){
           projectileArray = shootProjectile(projectileArray, 0)
-          powerUpProjectileArray1 = shootProjectile(powerUpProjectileArray1, -10)
-          powerUpProjectileArray2 = shootProjectile(powerUpProjectileArray2,10)
+          if(playerShip.get_projectile_power_up()){
+            powerUpProjectileArray1 = shootProjectile(powerUpProjectileArray1, -10)
+            powerUpProjectileArray2 = shootProjectile(powerUpProjectileArray2,10)
+          }
           delay = 0
       } else {
           delay += 1
@@ -485,8 +503,10 @@ const update = () => {
   enemyRampUp()
   updatePlayerShip()
   projectileArray = updateProjectiles(projectileArray)
-  powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
-  powerUpProjectileArray2 = updateProjectiles(powerUpProjectileArray2)
+  if(playerShip.get_projectile_power_up()){
+    powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
+    powerUpProjectileArray2 = updateProjectiles(powerUpProjectileArray2)
+  }
   updateEnemies()
   checkProjectileHit()
   updatePlayerHealthDisplay()
@@ -506,8 +526,10 @@ const render = () => {
   }
   drawSquareEnemy()
   drawProjectiles(projectileArray)
-  drawProjectiles(powerUpProjectileArray1)
-  drawProjectiles(powerUpProjectileArray2)
+  if(playerShip.get_projectile_power_up()){
+    drawProjectiles(powerUpProjectileArray1)
+    drawProjectiles(powerUpProjectileArray2)
+  }
   drawFollowEnemy()
   drawClawEnemy()
   drawSpiralEnemy()

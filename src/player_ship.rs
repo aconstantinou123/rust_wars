@@ -27,6 +27,7 @@ pub struct PlayerShip {
     is_alive: bool,
     score: i32,
     pub shockwave: Shockwave,
+    projectile_power_up: bool,
 }
 
 #[wasm_bindgen]
@@ -45,10 +46,18 @@ impl PlayerShip {
             health: 100,
             is_alive: true,
             score: 0,
-            shockwave: Shockwave::new(0.0, 0.0)
+            shockwave: Shockwave::new(0.0, 0.0),
+            projectile_power_up: false,
         }
     }
 
+    pub fn get_projectile_power_up(&self) -> bool {
+        self.projectile_power_up
+    }
+
+    pub fn set_projectile_power_up(&mut self, a: bool) {
+        self.projectile_power_up = a
+    }
 
     pub fn get_score(&self) -> i32 {
         self.score

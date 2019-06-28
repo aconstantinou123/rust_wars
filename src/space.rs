@@ -55,8 +55,6 @@ impl Space {
     pub fn check_projectile_out_of_bounds(&self, projectile: &mut Projectile) {
         if projectile.get_x() <= 0.0 || projectile.get_x() >= self.width 
         || projectile.get_y() <= 0.0 || projectile.get_y() >= self.height {
-            // log!("here {}", projectile.get_x());
-            // log!("here {}", projectile.get_y());
             projectile.set_active()
         }
     }
