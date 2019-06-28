@@ -17,14 +17,20 @@ const space = Space.new(window.innerWidth - 20, 860)
 const powerUp = PowerUp.new()
 
 
+const offscreen=document.createElement('canvas');
 const canvas=document.getElementById("space")
-const ctx=canvas.getContext("2d")
+const ctx=offscreen.getContext("2d")
+const primaryCtx = canvas.getContext("2d")
 canvas.height = space.get_height()
 canvas.width = space.get_width()
+offscreen.height = space.get_height()
+offscreen.width = space.get_width()
 const cw=canvas.width
 const ch=canvas.height
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
+const times = []
+let fps
 let projectileArray = []
 let powerUpProjectileArray1 = []
 let powerUpProjectileArray2 = []
@@ -43,7 +49,7 @@ let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 
 const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
-  const radians=rotationDegrees*Math.PI/180;
+  const radians=rotationDegrees*Math.PI/180
   ctx.translate(centerX,centerY)
   ctx.rotate(radians)
   ctx.beginPath()
@@ -282,6 +288,11 @@ const updateShockwavesDisplay = () => {
   shockwavesElement.innerText = `Shockwaves Remaining: ${playerShip.shockwave.get_shockwaves_remaining()}` 
 }
 
+const updateFPSDisplay = () => {
+  const shockwavesElement = document.getElementById("fps")
+  shockwavesElement.innerText = `FPS: ${fps}` 
+}
+
 const renderGameOverText = () => {
   ctx.font = "70px Verdana"
   ctx.fillStyle = "white"
@@ -488,15 +499,28 @@ const enemyRampUp = () => {
   }
 }
 
-const animate = window.requestAnimationFrame ||
-window.webkitRequestAnimationFrame ||
-window.mozRequestAnimationFrame ||
-function(callback) { window.setTimeout(callback, 1000/60) }
+
+const animate = requestAnimationFrame
+
+function refreshLoop() {
+  window.requestAnimationFrame(() => {
+    const now = performance.now()
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift()
+    }
+    times.push(now)
+    fps = times.length
+    refreshLoop()
+  });
+}
+
+refreshLoop()
 
 const step = () => {
   update()
   render()
   animate(step)
+  primaryCtx.drawImage(offscreen, 0, 0)
 }
 
 const update = () => {
@@ -513,6 +537,7 @@ const update = () => {
   updateScoreDisplay()
   updateShockwavesDisplay()
   updatePowerUp()
+  updateFPSDisplay()
 }
 
 const render = () => {
