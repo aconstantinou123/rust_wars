@@ -7,6 +7,17 @@ use crate::player_ship::PlayerShip;
 use crate::shockwave::Shockwave;
 
 extern crate web_sys;
+// use wasm_bindgen::convert::RefFromWasmAbi;
+
+
+// impl RefFromWasmAbi for SpiralEnemy {
+//     type Abi = <[u8] as RefFromWasmAbi>::Abi;
+//     type Anchor = &'static str;
+
+//     unsafe fn ref_from_abi(js: Self::Abi, extra: &mut Stack) -> Self::Anchor {
+//         str::from_utf8_unchecked(<[u8]>::ref_from_abi(js, extra))
+//     }
+// }
 
 #[allow(unused_macros)]
 macro_rules! log {

@@ -8,6 +8,9 @@ import  {
   SpiralEnemy,
   BasicEnemy,
   PowerUp,
+  draw_projectile,
+  draw_spiral_enemy,
+  draw_player_ship,
 } from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
@@ -19,6 +22,7 @@ const powerUp = PowerUp.new()
 
 const offscreen=document.createElement('canvas')
 const offscreen2=document.createElement('canvas')
+offscreen2.setAttribute("id", "off-screen-2")
 const offscreen3=document.createElement('canvas')
 const offscreen4=document.createElement('canvas')
 const offscreen5=document.createElement('canvas')
@@ -70,26 +74,27 @@ let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 
 const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
-  const radians=rotationDegrees*Math.PI/180
-  ctx3.translate(centerX,centerY)
-  ctx3.rotate(radians)
-  ctx3.beginPath()
-  ctx3.moveTo (Math.floor(playerShip.generate_new_x()),  Math.floor(playerShip.generate_new_y()))   
-  for (let i = 1; i <= playerShip.get_side_count();i += 1) {
-    ctx3.lineTo ( Math.floor(playerShip.draw_line_x(i)),  Math.floor(playerShip.draw_line_y(i)))
-  }
+  draw_player_ship(playerShip, '#33F0FF', ctx3, rotationDegrees)
+  // const radians=rotationDegrees*Math.PI/180
+  // ctx3.translate(centerX,centerY)
+  // ctx3.rotate(radians)
+  // ctx3.beginPath()
+  // ctx3.moveTo (Math.floor(playerShip.generate_new_x()),  Math.floor(playerShip.generate_new_y()))   
+  // for (let i = 1; i <= playerShip.get_side_count();i += 1) {
+  //   ctx3.lineTo ( Math.floor(playerShip.draw_line_x(i)),  Math.floor(playerShip.draw_line_y(i)))
+  // }
   
-  ctx3.moveTo(0, 0)
-  ctx3.lineTo(40, 0)
-  ctx3.moveTo(0, 0)
-  ctx3.lineTo(-30, 0)
-  ctx3.closePath()
-  ctx3.strokeStyle = '#33F0FF'
-  ctx3.lineWidth = 3
-  ctx3.stroke()
-  ctx3.fill()
-  ctx3.rotate(-radians)
-  ctx3.translate(-centerX,-centerY)
+  // ctx3.moveTo(0, 0)
+  // ctx3.lineTo(40, 0)
+  // ctx3.moveTo(0, 0)
+  // ctx3.lineTo(-30, 0)
+  // ctx3.closePath()
+  // ctx3.strokeStyle = '#33F0FF'
+  // ctx3.lineWidth = 3
+  // ctx3.stroke()
+  // ctx3.fill()
+  // ctx3.rotate(-radians)
+  // ctx3.translate(-centerX,-centerY)
   if(playerShip.shockwave.get_is_active()){
     drawShockwave()
   }
@@ -120,10 +125,7 @@ const drawShockwave = () => {
 
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
-    ctx2.beginPath()
-    ctx2.fillStyle='#FF0000'
-    ctx2.arc(Math.floor(projectile.get_x()),  Math.floor(projectile.get_y()), 5, 2 * Math.PI, false)
-    ctx2.fill()
+    draw_projectile(projectile.get_x(), projectile.get_y(), '#FF0000', ctx2)
   })
 }
 
@@ -145,13 +147,15 @@ const drawPowerUp = () => {
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     spiralEnemy.spiral_movement()
-    ctx4.beginPath()
-    ctx4.strokeStyle="#0033FF"
-    // ctx4.strokeRect(Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 
-    // spiralEnemy.base.get_size(), spiralEnemy.base.get_size())
-    ctx4.arc( Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 10,0, 2*Math.PI,false)
-    ctx4.closePath()
-    ctx4.stroke()
+    // ctx4.beginPath()
+    // ctx4.strokeStyle="#0033FF"
+    // // ctx4.strokeRect(Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 
+    // // spiralEnemy.base.get_size(), spiralEnemy.base.get_size())
+    // ctx4.arc( Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 10,0, 2*Math.PI,false)
+    // ctx4.closePath()
+    // ctx4.stroke()
+    draw_spiral_enemy(Math.floor(spiralEnemy.base.get_x()), 
+    Math.floor(spiralEnemy.base.get_y()), "#0033FF", ctx4)
   })
 }
 
@@ -489,6 +493,7 @@ const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
     addBasicEnemies(5)
+    updateSpiralEnemies()
   }
   if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
@@ -578,8 +583,8 @@ const render = () => {
   ctx4.clearRect(0,0,cw,ch)
   ctx5.clearRect(0,0,cw,ch)
   primaryCtx.clearRect(0,0,cw,ch)
-  ctx.fillStyle='black'
-  ctx.fillRect(0,0,canvas.width,canvas.height)
+  // ctx.fillStyle='black'
+  // ctx.fillRect(0,0,canvas.width,canvas.height)
   if(playerShip.get_is_alive()){
     drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
   } else {
