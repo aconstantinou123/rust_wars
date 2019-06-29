@@ -3,6 +3,10 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use crate::player_ship::PlayerShip;
 use crate::power_up::PowerUp;
+use crate::square_enemy::SquareEnemy;
+use crate::basic_enemy::BasicEnemy;
+use crate::follow_enemy::FollowEnemy;
+use crate::claw_enemy::ClawEnemy;
 extern crate web_sys;
 
 #[allow(unused_macros)]
@@ -98,4 +102,72 @@ color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
     context.arc(x,  y, 10.0, 0.0, f64::consts::PI * 2.0).unwrap();
     context.close_path();
     context.stroke();
+}
+
+#[wasm_bindgen]
+pub fn draw_square_enemy(square_enemy: &SquareEnemy, color: &JsValue,  context: &web_sys::CanvasRenderingContext2d){
+    context.set_stroke_style(color);
+    context.stroke_rect(square_enemy.base.get_x().round() - (square_enemy.base.get_size() / 2.0).round(),
+    square_enemy.base.get_y().round() - (square_enemy.base.get_size() / 2.0).round(),
+    square_enemy.base.get_size(),
+    square_enemy.base.get_size())
+}
+
+#[wasm_bindgen]
+pub fn draw_enemy_projectile(square_enemy: &SquareEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
+    context.begin_path();
+    context.move_to(square_enemy.base.get_x().round() + (square_enemy.base.get_size() / 2.0).round(),
+    square_enemy.base.get_y().round() + (square_enemy.base.get_size() / 2.0).round());
+    context.line_to(square_enemy.get_laser_x().round(), square_enemy.get_laser_y().round());
+    context.set_stroke_style(color);
+    context.stroke();
+}
+
+#[wasm_bindgen]
+pub fn draw_basic_enemy(basic_enemy: &BasicEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
+    context.set_stroke_style(color);
+    context.stroke_rect(basic_enemy.base.get_x().round() - (basic_enemy.base.get_size() / 2.0).round(),
+    basic_enemy.base.get_y().round() - (basic_enemy.base.get_size() / 2.0).round(),
+    basic_enemy.base.get_size(),
+    basic_enemy.base.get_size())
+}
+
+#[wasm_bindgen]
+pub fn draw_follow_enemy(follow_enemy: &mut FollowEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
+    context.begin_path();
+    context.move_to(
+        follow_enemy.x_draw_position().round(),
+        follow_enemy.y_draw_position().round()
+    );
+    for i in 0..follow_enemy.get_number_of_sides() as i32 + 1 {
+        context.line_to(
+            follow_enemy.draw_x(i as f64).round(),
+            follow_enemy.draw_y(i as f64).round()
+        )
+    }
+    context.set_stroke_style(color);
+    context.stroke();
+}
+
+#[wasm_bindgen]
+pub fn draw_claw_enemy(claw_enemy: &mut ClawEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
+    let center_x = claw_enemy.base.get_x() + claw_enemy.base.get_size() / 2.0;
+    let center_y = claw_enemy.base.get_y() + claw_enemy.base.get_size() / 2.0;
+    context.translate(center_x, center_y).unwrap();
+    context.rotate(claw_enemy.get_radians()).unwrap();
+    context.begin_path();
+    context.move_to(
+        claw_enemy.x_draw_position().round(),
+        claw_enemy.y_draw_position().round()
+    );
+    for i in 0..claw_enemy.get_number_of_sides() as i32 + 1 {
+        context.line_to(
+            claw_enemy.draw_x(i as f64).round(),
+            claw_enemy.draw_y(i as f64).round()
+        )
+    } 
+    context.set_stroke_style(color);
+    context.stroke();
+    context.rotate(-claw_enemy.get_radians()).unwrap();
+    context.translate(-center_x, -center_y).unwrap();
 }

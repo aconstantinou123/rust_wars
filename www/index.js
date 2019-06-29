@@ -13,6 +13,11 @@ import  {
   draw_player_ship,
   draw_shockwave,
   draw_power_up,
+  draw_square_enemy,
+  draw_basic_enemy,
+  draw_enemy_projectile,
+  draw_follow_enemy,
+  draw_claw_enemy,
 } from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
@@ -86,8 +91,6 @@ const drawShockwave = () => {
   draw_shockwave(playerShip, "#FFFF00", ctx3)
 }
 
-
-
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
     draw_projectile(projectile.get_x(), projectile.get_y(), '#FF0000', ctx2)
@@ -108,62 +111,32 @@ const drawSpiralEnemy = () => {
 
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
-    ctx4.strokeStyle = "#FFFF00";
-    ctx4.strokeRect(Math.floor(squareEnemy.base.get_x() - (squareEnemy.base.get_size() / 2)), 
-    Math.floor(squareEnemy.base.get_y() - (squareEnemy.base.get_size() / 2)),
-    squareEnemy.base.get_size(), squareEnemy.base.get_size())
+    draw_square_enemy(squareEnemy, "#FFFF00", ctx4)
     drawEnemyProjectile(squareEnemy)
   })
 }
 
 const drawBasicEnemy = () => {
   basicEnemyArray.forEach(basicEnemy => {
-    ctx5.strokeStyle = "#00FF00";
-    ctx5.strokeRect( Math.floor(basicEnemy.base.get_x()  - (basicEnemy.base.get_size() / 2.0)), 
-    Math.floor(basicEnemy.base.get_y() - (basicEnemy.base.get_size() / 2.0)),
-    basicEnemy.base.get_size(), basicEnemy.base.get_size())  
+    draw_basic_enemy(basicEnemy,  "#00FF00", ctx5)
   })
 }
 
 const drawEnemyProjectile = (squareEnemy) => {
   if(squareEnemy.get_can_shoot()){
-    ctx5.beginPath()
-    ctx5.moveTo(Math.floor(squareEnemy.base.get_x() + (squareEnemy.base.get_size() / 2)),
-    Math.floor(squareEnemy.base.get_y() + (squareEnemy.base.get_size() / 2)))
-    ctx5.lineTo(Math.floor(squareEnemy.get_laser_x()), 
-    Math.floor(squareEnemy.get_laser_y()))
-    ctx5.strokeStyle = "#FF00FF"
-    ctx5.stroke()
+    draw_enemy_projectile(squareEnemy, "#FF00FF", ctx5)
   }
 }
 
 const drawFollowEnemy = () => {
   followEnemyArray.forEach(followEnemy => {
-    ctx5.beginPath()
-    ctx5.moveTo (Math.floor(followEnemy.x_draw_position()),  Math.floor(followEnemy.y_draw_position()))       
-    for (let i = 1; i <= followEnemy.get_number_of_sides(); i += 1) {
-      ctx5.lineTo ( Math.floor(followEnemy.draw_x(i)),  Math.floor(followEnemy.draw_y(i)))
-    }
-    ctx5.strokeStyle = "#9D00FF"
-    ctx5.stroke()
+    draw_follow_enemy(followEnemy, "#9D00FF", ctx5)
   })
 }
 
 const drawClawEnemy = () => {
-  clawEnemyArray.forEach(enemy => {
-    const centerX = enemy.base.get_x() + enemy.base.get_size() / 2
-    const centerY = enemy.base.get_y() + enemy.base.get_size() / 2
-    ctx5.translate(centerX, centerY)
-    ctx5.rotate(enemy.get_radians())
-    ctx5.beginPath()
-    ctx5.moveTo ( Math.floor(enemy.x_draw_position()),  Math.floor(enemy.y_draw_position()))        
-    for (let i = 1; i <= enemy.get_number_of_sides(); i += 1) {
-      ctx5.lineTo ( Math.floor(enemy.draw_x(i)),  Math.floor(enemy.draw_y(i)))
-    }
-    ctx5.strokeStyle = "#FF0000"
-    ctx5.stroke()
-    ctx5.rotate(-enemy.get_radians())
-    ctx5.translate(-centerX, -centerY)
+  clawEnemyArray.forEach(clawEnemy => {
+    draw_claw_enemy(clawEnemy, "#FF0000", ctx5)
   })
 }
 
@@ -311,63 +284,34 @@ const updatePowerUp = () => {
 }
 
 const updateEnemies = () => {
-  spiralEnemyArray.forEach(spiralEnemy => {
-    spiralEnemy.check_player_ship_collision(playerShip)
-    space.check_spiral_enemy_at_edge(spiralEnemy)
-    spiralEnemy.check_shockwave_collision(playerShip.shockwave)
-    spiralEnemy.change_speed(playerShip, 0.5)
-  })
-  squareEnemyArray.forEach(squareEnemy => {
-    squareEnemy.check_player_ship_collision(playerShip)
-    space.check_enemy_at_edge(squareEnemy)
-    squareEnemy.move_enemy(space, playerShip)
-    squareEnemy.check_shockwave_collision(playerShip.shockwave)
-    squareEnemy.change_speed(playerShip, 0.2)
-  })
-  basicEnemyArray.forEach(basicEnemy => {
-    basicEnemy.check_player_ship_collision(playerShip)
-    space.check_basic_enemy_at_edge(basicEnemy)
-    basicEnemy.move_enemy()
-    basicEnemy.check_shockwave_collision(playerShip.shockwave)
-    basicEnemy.change_speed(playerShip, 0.2)
-  })
-  followEnemyArray.forEach(followEnemy => {
-    followEnemy.check_player_ship_collision(playerShip)
-    followEnemy.move_enemy(playerShip)
-    followEnemy.check_shockwave_collision(playerShip.shockwave)
-    followEnemy.change_speed(playerShip, 0.2)
-  })
-  clawEnemyArray.forEach(clawEnemy => {
-    clawEnemy.check_player_ship_collision(playerShip)
-    space.check_claw_enemy_at_edge(clawEnemy)
-    clawEnemy.move_enemy(playerShip)
-    clawEnemy.check_shockwave_collision(playerShip.shockwave)
-    clawEnemy.change_speed(playerShip, 0.2)
+  [
+    ...spiralEnemyArray,
+    ...squareEnemyArray,
+    ...basicEnemyArray,
+    ...clawEnemyArray,
+    ...followEnemyArray
+  ].forEach(enemy => {
+    enemy.update(playerShip, space)
   })
 }
 
 const checkProjectileHit = () => {
+  const enemyArray = [
+    ...spiralEnemyArray,
+    ...squareEnemyArray,
+    ...basicEnemyArray,
+    // ...clawEnemyArray,
+    ...followEnemyArray
+  ]
   projectileArray.forEach(projectile => {
-    squareEnemyArray.forEach(enemy => {
+    enemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 300)
-    })
-    followEnemyArray.forEach(enemy => {
-      enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 200)
+      enemy.blow_up(playerShip, 500)
     })
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 500)
-    })
-    spiralEnemyArray.forEach(enemy => {
-      enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 15)
-    })
-    basicEnemyArray.forEach(enemy => {
-      enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 100)
     })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
@@ -439,8 +383,13 @@ const controlShip = () => {
 const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
+    // addBasicEnemies(5)
+    //
     addBasicEnemies(5)
+    addFollowEnemies(8)
+    addClawEnemies(2)
     updateSpiralEnemies()
+    addSquareEnemies(3)
   }
   if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
@@ -530,8 +479,6 @@ const render = () => {
   ctx4.clearRect(0,0,cw,ch)
   ctx5.clearRect(0,0,cw,ch)
   primaryCtx.clearRect(0,0,cw,ch)
-  // ctx.fillStyle='black'
-  // ctx.fillRect(0,0,canvas.width,canvas.height)
   if(playerShip.get_is_alive()){
     drawPlayerShip()
   } else {

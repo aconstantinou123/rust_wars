@@ -3,6 +3,7 @@ use crate::utils;
 use crate::enemy::Enemy;
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
+use crate::space::Space;
 use crate::shockwave::Shockwave;
 use std::f64;
 
@@ -52,6 +53,14 @@ impl BasicEnemy {
 
     pub fn change_speed(&mut self, player_ship: &PlayerShip, speed: f64) {
         self.base.change_speed(player_ship, speed)
+    }
+
+    pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
+        self.check_player_ship_collision(player_ship);
+        space.check_basic_enemy_at_edge(self);
+        self.check_shockwave_collision(&player_ship.shockwave);
+        self.change_speed(player_ship, 0.2);
+        self.move_enemy();
     }
 
 }
