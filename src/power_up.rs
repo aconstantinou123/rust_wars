@@ -15,7 +15,7 @@ macro_rules! log {
 }
 
 #[wasm_bindgen]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum PowerUpType {
     ExtraFirePower,
     EnemySlowDown,
@@ -40,6 +40,13 @@ pub struct PowerUp {
 impl PowerUp {
     pub fn new() -> PowerUp {
         utils::set_panic_hook();
+        let mut rng = thread_rng();
+        let num = rng.gen_range(0, 2);
+        let power_up_type = match num {
+            0 => PowerUpType::EnemySlowDown,
+            1 => PowerUpType::ExtraFirePower,
+            _ => PowerUpType::ExtraFirePower,
+        };
         PowerUp {
             x: -50.0,
             y: -50.0,
@@ -48,7 +55,7 @@ impl PowerUp {
             timer: 0,
             set_new_timer: true,
             is_active: true,
-            power_up_type: PowerUpType::ExtraFirePower,
+            power_up_type,
         }
     }
 
@@ -95,12 +102,17 @@ impl PowerUp {
         && self.current_milisecond < self.timer {
             self.current_milisecond += 1;
         } else if player_ship.get_power_up() != "normal" {
-
             player_ship.set_power_up(PowerUpType::Normal);
-
             self.set_new_timer = true;
             self.current_milisecond = 0;
             self.is_active = true;
+            let mut rng = thread_rng();
+            let num = rng.gen_range(0, 2);
+            self.power_up_type = match num {
+                0 => PowerUpType::EnemySlowDown,
+                1 => PowerUpType::ExtraFirePower,
+                _ => PowerUpType::ExtraFirePower,
+            };
         }
     }
 
@@ -122,7 +134,12 @@ impl PowerUp {
             self.y = -50.0;
             self.set_new_timer = true;
             self.current_milisecond = 0;
-            player_ship.set_power_up(PowerUpType::ExtraFirePower);
+            match self.power_up_type {
+                PowerUpType::EnemySlowDown => player_ship.set_power_up(PowerUpType::EnemySlowDown),
+                PowerUpType::ExtraFirePower => player_ship.set_power_up(PowerUpType::ExtraFirePower),
+                PowerUpType::Invincible => player_ship.set_power_up(PowerUpType::Invincible),
+                _ => ()
+            }
         }
     }
 

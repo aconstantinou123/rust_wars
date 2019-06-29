@@ -22,6 +22,8 @@ pub struct Enemy {
     y: f64,
     x_speed: f64,
     y_speed: f64,
+    original_x_speed: f64,
+    original_y_speed: f64,
     active: bool,
     ready_to_remove: bool,
 }
@@ -36,6 +38,8 @@ impl Enemy {
             y,
             x_speed,
             y_speed,
+            original_x_speed: x_speed,
+            original_y_speed: y_speed,
             active: true,
             ready_to_remove: false,
         }
@@ -198,8 +202,14 @@ impl Enemy {
         }
     }
 
-     pub fn slow_down(&mut self, player_ship: &PlayerShip, speed: f64) {
-         
+     pub fn change_speed(&mut self, player_ship: &PlayerShip, speed: f64) {
+         if player_ship.get_power_up() == "slowdown" {
+             self.x_speed = speed;
+             self.y_speed = speed;
+        } else {
+            self.x_speed = self.original_x_speed;
+            self.y_speed = self.original_y_speed;
+        }
      }
 
 }

@@ -105,5 +105,8 @@ impl ClawEnemy {
         self.base.check_shockwave_collision(shockwave)
     }
 
+    pub fn change_speed(&mut self, player_ship: &PlayerShip, speed: f64) {
+        self.base.change_speed(player_ship, speed)
+    }
 
 }
