@@ -147,7 +147,9 @@ const drawSpiralEnemy = () => {
     spiralEnemy.spiral_movement()
     ctx4.beginPath()
     ctx4.strokeStyle="#0033FF"
-    ctx4.arc( Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 10,0, 2*Math.PI,false);
+    // ctx4.strokeRect(Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 
+    // spiralEnemy.base.get_size(), spiralEnemy.base.get_size())
+    ctx4.arc( Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 10,0, 2*Math.PI,false)
     ctx4.closePath()
     ctx4.stroke()
   })
@@ -505,14 +507,14 @@ const enemyRampUp = () => {
     addBasicEnemies(5)
     addFollowEnemies(5)
     addClawEnemies(2)
-    updateSpiralEnemies()
+    // updateSpiralEnemies()
   }
   if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
     space.increment_intensity_level()
     addBasicEnemies(5)
     addFollowEnemies(8)
     addClawEnemies(2)
-    updateSpiralEnemies()
+    // updateSpiralEnemies()
     addSquareEnemies(2)
   }
   if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
@@ -520,7 +522,7 @@ const enemyRampUp = () => {
     addBasicEnemies(5)
     addFollowEnemies(8)
     addClawEnemies(2)
-    updateSpiralEnemies()
+    // updateSpiralEnemies()
     addSquareEnemies(3)
   }
 }
@@ -575,7 +577,7 @@ const render = () => {
   ctx3.clearRect(0,0,cw,ch)
   ctx4.clearRect(0,0,cw,ch)
   ctx5.clearRect(0,0,cw,ch)
-  // primaryCtx.clearRect(0,0,cw,ch)
+  primaryCtx.clearRect(0,0,cw,ch)
   ctx.fillStyle='black'
   ctx.fillRect(0,0,canvas.width,canvas.height)
   if(playerShip.get_is_alive()){
