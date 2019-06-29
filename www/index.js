@@ -11,6 +11,8 @@ import  {
   draw_projectile,
   draw_spiral_enemy,
   draw_player_ship,
+  draw_shockwave,
+  draw_power_up,
 } from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
@@ -73,52 +75,15 @@ let drawSpirals = true
 let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 
-const drawPlayerShip = (centerX,centerY,rotationDegrees) => {
-  draw_player_ship(playerShip, '#33F0FF', ctx3, rotationDegrees)
-  // const radians=rotationDegrees*Math.PI/180
-  // ctx3.translate(centerX,centerY)
-  // ctx3.rotate(radians)
-  // ctx3.beginPath()
-  // ctx3.moveTo (Math.floor(playerShip.generate_new_x()),  Math.floor(playerShip.generate_new_y()))   
-  // for (let i = 1; i <= playerShip.get_side_count();i += 1) {
-  //   ctx3.lineTo ( Math.floor(playerShip.draw_line_x(i)),  Math.floor(playerShip.draw_line_y(i)))
-  // }
-  
-  // ctx3.moveTo(0, 0)
-  // ctx3.lineTo(40, 0)
-  // ctx3.moveTo(0, 0)
-  // ctx3.lineTo(-30, 0)
-  // ctx3.closePath()
-  // ctx3.strokeStyle = '#33F0FF'
-  // ctx3.lineWidth = 3
-  // ctx3.stroke()
-  // ctx3.fill()
-  // ctx3.rotate(-radians)
-  // ctx3.translate(-centerX,-centerY)
+const drawPlayerShip = () => {
+  draw_player_ship(playerShip, '#33F0FF', ctx3)
   if(playerShip.shockwave.get_is_active()){
     drawShockwave()
   }
 }
 
 const drawShockwave = () => {
-  ctx3.strokeStyle = "#FFFF00";
-  ctx3.strokeRect(
-    Math.floor(playerShip.shockwave.get_x()), 
-    Math.floor(playerShip.shockwave.get_y()),
-    playerShip.shockwave.get_width(), 
-    playerShip.shockwave.get_height())
-  if(playerShip.shockwave.get_x() !== 0){
-    ctx3.strokeRect(
-      Math.floor(playerShip.shockwave.get_x() + 25), 
-      Math.floor(playerShip.shockwave.get_y() + 25),
-      playerShip.shockwave.get_width() - 50, 
-      playerShip.shockwave.get_height() -50)
-    ctx3.strokeRect(
-      Math.floor(playerShip.shockwave.get_x() + 50), 
-      Math.floor(playerShip.shockwave.get_y() + 50),
-      playerShip.shockwave.get_width() - 100, 
-      playerShip.shockwave.get_height() -100)
-  }
+  draw_shockwave(playerShip, "#FFFF00", ctx3)
 }
 
 
@@ -130,30 +95,12 @@ const drawProjectiles = (array) => {
 }
 
 const drawPowerUp = () => {
-  ctx3.beginPath()
-  ctx3.strokeStyle = '#0062FF'
-  ctx3.arc(powerUp.get_x(), powerUp.get_y(), powerUp.get_size(), 2 * Math.PI, false)
-  ctx3.stroke()
-  ctx3.beginPath()
-  ctx3.strokeStyle = '#099FFF'
-  ctx3.arc(powerUp.get_x(), powerUp.get_y(), powerUp.get_size() * 0.6, 2 * Math.PI, false)
-  ctx3.stroke()
-  ctx3.beginPath()
-  ctx3.strokeStyle = '#00FFFF'
-  ctx3.arc(powerUp.get_x(), powerUp.get_y(), powerUp.get_size() * 0.3, 2 * Math.PI, false)
-  ctx3.stroke()
+  draw_power_up(powerUp, '#0062FF', '#099FFF', '#00FFFF', ctx3)
 }
 
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     spiralEnemy.spiral_movement()
-    // ctx4.beginPath()
-    // ctx4.strokeStyle="#0033FF"
-    // // ctx4.strokeRect(Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 
-    // // spiralEnemy.base.get_size(), spiralEnemy.base.get_size())
-    // ctx4.arc( Math.floor(spiralEnemy.base.get_x()), Math.floor(spiralEnemy.base.get_y()), 10,0, 2*Math.PI,false)
-    // ctx4.closePath()
-    // ctx4.stroke()
     draw_spiral_enemy(Math.floor(spiralEnemy.base.get_x()), 
     Math.floor(spiralEnemy.base.get_y()), "#0033FF", ctx4)
   })
@@ -586,7 +533,7 @@ const render = () => {
   // ctx.fillStyle='black'
   // ctx.fillRect(0,0,canvas.width,canvas.height)
   if(playerShip.get_is_alive()){
-    drawPlayerShip(playerShip.get_centre_x(),playerShip.get_centre_y(), playerShip.get_rotation_degrees())
+    drawPlayerShip()
   } else {
     renderGameOverText()
   }
