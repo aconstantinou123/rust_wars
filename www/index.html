@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Shooter</title>
+    <title>Rust Wars</title>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
       body {
@@ -36,9 +36,82 @@
       #space {
         border: 1px solid black;
       }
+    .modal-header {
+      padding: 2px 16px;
+      background-color: #6E0DD0;
+      color: white;
+    }
+    .modal-header h2 {
+      text-align: center;
+    }
+    .modal-body {
+      background-color: #00FFFF;
+      padding: 2px 16px;
+      z-index: 1;
+      height: 100%;
+    }
+    .modal-body p {
+      text-align: center;
+    }
+    .modal-wrapper {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    .modal-content {
+      position: absolute;
+      top: 15%;
+      left: 25%;
+      background-color: #fefefe;
+      margin: auto;
+      padding: 0;
+      border: 1px solid #888;
+      width: 50%;
+      height: 50%;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+      z-index: 2;
+    }
+    .play-button-wrapper {
+      padding-top: 15px;
+      text-align: center;
+    }
+    .play-button {
+      width: 200px;
+      font-size: 20px;
+      font-family: 'Press Start 2P', cursive;
+      color: white;
+      border: none;
+      background-color: #6E0DD0;
+      height: 50px;
+    }
     </style>
   </head>
   <body>
+    <div class="modal-wrapper">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h2>Rust Wars</h2>
+          </div>
+          <div class="modal-body">
+            <p class="controls">Controls</p>
+            <p>W: up</p>
+            <p>A: left</p>
+            <p>S: down</p>
+            <p>D: right</p>
+            <p>&#8592: spin ship anti-clockwise</p>
+            <p>&#8594: spin ship clockwise</p>
+            <p>Spacebar: press or hold to shoot</p>
+            <p>F: fire shockwave</p>
+            <br/>
+            <p>Shoot enemies, pick up power ups, survive</p>
+            <div class="play-button-wrapper">
+              <button class="play-button">Play</button>
+            </div>
+          </div>
+        </div>
+    </div>
     <canvas id="space"></canvas>
     <div id="player-info">
       <h4 id="player-health"></h4>
