@@ -5,12 +5,13 @@
     <title>Shooter</title>
     <style>
       body {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        /* background-color: black; */
+        font-family:Arial, Helvetica, sans-serif;
+        background-color: black;
+        color: #5970fe;
       }
       #player-info {
           border: solid black 3px;
-          background-color: SlateBlue;
+          background-color: #33F0FF;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
@@ -31,10 +32,13 @@
         display: inline-block;
         padding-left: 20px;
       }
+      #space {
+        border: 1px solid black;
+      }
     </style>
   </head>
   <body>
-    <canvas style="border: 1px solid black;" id="space"></canvas>
+    <canvas id="space"></canvas>
     <div id="player-info">
       <h3 id="player-health"></h3>
       <h3 id="shockwaves">Shockwaves Remaining: </h3>

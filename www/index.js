@@ -29,7 +29,6 @@ const powerUp = PowerUp.new()
 
 const offscreen=document.createElement('canvas')
 const offscreen2=document.createElement('canvas')
-offscreen2.setAttribute("id", "off-screen-2")
 const offscreen3=document.createElement('canvas')
 const offscreen4=document.createElement('canvas')
 const offscreen5=document.createElement('canvas')
@@ -445,11 +444,15 @@ refreshLoop()
 const step = () => {
   update()
   render()
+  // primaryCtx.save();
+  // primaryCtx.translate(playerShip.get_centre_x() - space.get_width() / 2, 
+  // playerShip.get_centre_y() - space.get_height() / 2)
   primaryCtx.drawImage(offscreen, 0, 0)
   primaryCtx.drawImage(offscreen2, 0, 0)
   primaryCtx.drawImage(offscreen3, 0, 0)
   primaryCtx.drawImage(offscreen4, 0, 0)
   primaryCtx.drawImage(offscreen5, 0, 0)
+  // primaryCtx.restore()
   animate(step)
 }
 
