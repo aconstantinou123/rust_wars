@@ -18,8 +18,7 @@ macro_rules! log {
 }
 
 #[wasm_bindgen]
-pub fn draw_player_ship(player_ship: &PlayerShip, 
-color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
+pub fn draw_player_ship(player_ship: &PlayerShip, context: &web_sys::CanvasRenderingContext2d){
     let radians = player_ship.get_rotation_degrees() * f64::consts::PI / 180.0;
     context.translate(player_ship.get_centre_x(), player_ship.get_centre_y())
         .unwrap();
@@ -35,7 +34,7 @@ color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
     context.move_to(0.0, 0.0);
     context.line_to(-30.0, 0.0);
     context.close_path();
-    context.set_stroke_style(color);
+    context.set_stroke_style(&player_ship.get_color());
     context.set_line_width(3.0);
     context.stroke();
     context.fill();

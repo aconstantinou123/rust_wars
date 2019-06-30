@@ -80,7 +80,7 @@ let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 
 const drawPlayerShip = () => {
-  draw_player_ship(playerShip, '#33F0FF', ctx3)
+  draw_player_ship(playerShip, ctx3)
   if(playerShip.shockwave.get_is_active()){
     drawShockwave()
   }

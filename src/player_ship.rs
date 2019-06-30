@@ -29,6 +29,7 @@ pub struct PlayerShip {
     score: i32,
     pub shockwave: Shockwave,
     power_up: PowerUpType,
+    color: JsValue,
 }
 
 #[wasm_bindgen]
@@ -49,6 +50,7 @@ impl PlayerShip {
             score: 0,
             shockwave: Shockwave::new(0.0, 0.0),
             power_up: PowerUpType::Normal,
+            color: JsValue::from("#33F0FF"),
         }
     }
 
@@ -59,6 +61,14 @@ impl PlayerShip {
             PowerUpType::Invincible => String::from("invincible"),
             PowerUpType::EnemySlowDown => String::from("slowdown"),
         }
+    }
+
+    pub fn get_color(&self) -> JsValue {
+        self.color.clone()
+    }
+
+    pub fn set_color(&mut self, new_color: JsValue) {
+        self.color = new_color
     }
 
     pub fn set_power_up(&mut self, power_up: PowerUpType) {

@@ -44,16 +44,18 @@ impl PowerUp {
     pub fn new() -> PowerUp {
         utils::set_panic_hook();
         let mut rng = thread_rng();
-        let num = rng.gen_range(0, 2);
+        let num = rng.gen_range(0, 3);
         let power_up_type = match num {
             0 => PowerUpType::EnemySlowDown,
             1 => PowerUpType::ExtraFirePower,
+            2 => PowerUpType::Invincible,
             _ => PowerUpType::ExtraFirePower,
         };
+        // let power_up_type = PowerUpType::Invincible;
         let colors = match power_up_type {
             PowerUpType::EnemySlowDown => (JsValue::from("#FF00FF"), JsValue::from("#FF00CC"), JsValue::from("#FF0099")),
             PowerUpType::ExtraFirePower => (JsValue::from("#0062FF"), JsValue::from("#099FFF"), JsValue::from("#00FFFF")),
-            PowerUpType::Invincible => (JsValue::from("#0062FF"), JsValue::from("#099FFF"), JsValue::from("#00FFFF")),
+            PowerUpType::Invincible => (JsValue::from("#FFFF00"), JsValue::from("#FFFF33"), JsValue::from("#FFFF33")),
             PowerUpType::Normal => (JsValue::from("#0062FF"), JsValue::from("#099FFF"), JsValue::from("#00FFFF")),
         };
         PowerUp {
@@ -127,14 +129,16 @@ impl PowerUp {
             self.current_milisecond += 1;
         } else if player_ship.get_power_up() != "normal" {
             player_ship.set_power_up(PowerUpType::Normal);
+            player_ship.set_color(JsValue::from("#33F0FF"));
             self.set_new_timer = true;
             self.current_milisecond = 0;
             self.is_active = true;
             let mut rng = thread_rng();
-            let num = rng.gen_range(0, 2);
+            let num = rng.gen_range(0, 3);
             self.power_up_type = match num {
                 0 => PowerUpType::EnemySlowDown,
                 1 => PowerUpType::ExtraFirePower,
+                3 => PowerUpType::Invincible,
                 _ => PowerUpType::ExtraFirePower,
             };
             self.change_colors()
@@ -160,9 +164,18 @@ impl PowerUp {
             self.set_new_timer = true;
             self.current_milisecond = 0;
             match self.power_up_type {
-                PowerUpType::EnemySlowDown => player_ship.set_power_up(PowerUpType::EnemySlowDown),
-                PowerUpType::ExtraFirePower => player_ship.set_power_up(PowerUpType::ExtraFirePower),
-                PowerUpType::Invincible => player_ship.set_power_up(PowerUpType::Invincible),
+                PowerUpType::EnemySlowDown => {
+                    player_ship.set_power_up(PowerUpType::EnemySlowDown);
+                    player_ship.set_color(JsValue::from("#33F0FF"));
+                } 
+                PowerUpType::ExtraFirePower => {
+                    player_ship.set_power_up(PowerUpType::ExtraFirePower);
+                    player_ship.set_color(JsValue::from("#33F0FF"));
+                } 
+                PowerUpType::Invincible => {
+                    player_ship.set_power_up(PowerUpType::Invincible);
+                    player_ship.set_color(JsValue::from("#FF0000"));
+                } 
                 _ => ()
             }
         }
@@ -181,9 +194,9 @@ impl PowerUp {
                 self.color3 = JsValue::from("#00FFFF");
             },
             PowerUpType::Invincible => {
-                self.color1 = JsValue::from("#0062FF"); 
-                self.color2 = JsValue::from("#099FFF");
-                self.color3 = JsValue::from("#00FFFF");
+                self.color1 = JsValue::from("#FFFF00"); 
+                self.color2 = JsValue::from("#FFFF33");
+                self.color3 = JsValue::from("#FFFF33");
             },
             PowerUpType::Normal => {
                 self.color1 = JsValue::from("#0062FF"); 
