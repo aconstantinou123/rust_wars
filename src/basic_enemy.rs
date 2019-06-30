@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
-use crate::enemy::Enemy;
+use crate::enemy::{Enemy, EnemyType};
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
 use crate::space::Space;
@@ -27,7 +27,7 @@ impl BasicEnemy {
     pub fn new(x: f64, y: f64) -> BasicEnemy {
         utils::set_panic_hook();
         BasicEnemy {
-            base: Enemy::new(25.0, x, y, 1.0, 1.0)
+            base: Enemy::new(25.0, x, y, 1.0, 1.0, EnemyType::Basic)
         }
     }
 

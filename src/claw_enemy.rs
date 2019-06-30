@@ -5,7 +5,7 @@ use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
 use crate::space::Space;
 use crate::shockwave::Shockwave;
-use crate::enemy::Enemy;
+use crate::enemy::{Enemy, EnemyType};
 
 extern crate web_sys;
 
@@ -29,7 +29,7 @@ impl ClawEnemy {
     pub fn new(x: f64, y: f64) -> ClawEnemy {
         utils::set_panic_hook();
         ClawEnemy {
-            base: Enemy::new(25.0, x, y, 3.0, 3.0),
+            base: Enemy::new(25.0, x, y, 3.0, 3.0, EnemyType::Claw),
             radians: 0.0,
             number_of_sides: 4.5,
         }

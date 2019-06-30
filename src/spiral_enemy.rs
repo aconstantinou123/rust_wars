@@ -2,23 +2,12 @@ use wasm_bindgen::prelude::*;
 use std::f64;
 use crate::utils;
 use crate::projectile::Projectile;
-use crate::enemy::Enemy;
+use crate::enemy::{Enemy, EnemyType};
 use crate::space::Space;
 use crate::player_ship::PlayerShip;
 use crate::shockwave::Shockwave;
 
 extern crate web_sys;
-// use wasm_bindgen::convert::RefFromWasmAbi;
-
-
-// impl RefFromWasmAbi for SpiralEnemy {
-//     type Abi = <[u8] as RefFromWasmAbi>::Abi;
-//     type Anchor = &'static str;
-
-//     unsafe fn ref_from_abi(js: Self::Abi, extra: &mut Stack) -> Self::Anchor {
-//         str::from_utf8_unchecked(<[u8]>::ref_from_abi(js, extra))
-//     }
-// }
 
 #[allow(unused_macros)]
 macro_rules! log {
@@ -41,7 +30,7 @@ impl SpiralEnemy {
     pub fn new(x: f64, y: f64) -> SpiralEnemy {
         utils::set_panic_hook();
         SpiralEnemy {
-            base: Enemy::new(25.0, x, y, 1.0, 1.0),
+            base: Enemy::new(25.0, x, y, 1.0, 1.0, EnemyType::Spiral),
             radians: 0.0,
             rotation_radius: 2.0,
             reverse: false,
@@ -56,10 +45,9 @@ impl SpiralEnemy {
        self.base.check_dead(projectile)
     }
 
-    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
-       self.base.blow_up(player_ship, score_to_add)
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, val: i32){
+       self.base.blow_up(player_ship, val)
     }
-
 
     pub fn spiral_movement(&mut self) {
         let rotation_radius_increase = 0.1;

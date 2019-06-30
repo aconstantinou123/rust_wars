@@ -13,6 +13,9 @@ pub mod shockwave;
 pub mod power_up;
 pub mod canvas;
 
+#[macro_use]
+extern crate serde_derive;
+
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
 #[cfg(feature = "wee_alloc")]

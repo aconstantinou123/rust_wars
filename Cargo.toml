@@ -11,10 +11,12 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2"
+wasm-bindgen = { version = "^0.2", features = ["serde-serialize"] }
 rand = { version = "0.6.5", features = ["wasm-bindgen"] }
 console_error_panic_hook = { version = "0.1.1", optional = true }
 wee_alloc = { version = "0.4.2", optional = true }
+serde = "^1.0.59"
+serde_derive = "^1.0.59"
 
 [dev-dependencies]
 js-sys = "0.3.24"

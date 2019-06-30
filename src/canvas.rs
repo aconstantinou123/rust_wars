@@ -1,12 +1,13 @@
 use std::f64;
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
 use crate::player_ship::PlayerShip;
 use crate::power_up::PowerUp;
 use crate::square_enemy::SquareEnemy;
 use crate::basic_enemy::BasicEnemy;
 use crate::follow_enemy::FollowEnemy;
 use crate::claw_enemy::ClawEnemy;
+use crate::projectile::Projectile;
+use crate::spiral_enemy::SpiralEnemy;
 extern crate web_sys;
 
 #[allow(unused_macros)]
@@ -45,10 +46,10 @@ color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
 }
 
 #[wasm_bindgen]
-pub fn draw_projectile(x: f64, y: f64, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
+pub fn draw_projectile(projectile: &Projectile, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
     context.begin_path();
     context.set_fill_style(color);
-    context.arc(x,  y, 5.0, 0.0, f64::consts::PI * 2.0).unwrap();
+    context.arc(projectile.get_x().round(), projectile.get_y().round(), 5.0, 0.0, f64::consts::PI * 2.0).unwrap();
     context.fill();
 }
 
@@ -95,11 +96,12 @@ color2: &JsValue, color3: &JsValue, context: &web_sys::CanvasRenderingContext2d)
 }
 
 #[wasm_bindgen]
-pub fn draw_spiral_enemy(x: f64, y: f64, 
+pub fn draw_spiral_enemy(spiral_enemy: &SpiralEnemy, 
 color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
     context.begin_path();
     context.set_stroke_style(color);
-    context.arc(x,  y, 10.0, 0.0, f64::consts::PI * 2.0).unwrap();
+    context.arc(spiral_enemy.base.get_x().round(),  
+    spiral_enemy.base.get_y().round(), 10.0, 0.0, f64::consts::PI * 2.0).unwrap();
     context.close_path();
     context.stroke();
 }

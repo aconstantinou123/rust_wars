@@ -5,7 +5,7 @@ use crate::projectile::Projectile;
 use crate::space::Space;
 use crate::player_ship::PlayerShip;
 use crate::laser::Laser;
-use crate::enemy::Enemy;
+use crate::enemy::{Enemy, EnemyType};
 use crate::shockwave::Shockwave;
 
 extern crate web_sys;
@@ -31,7 +31,7 @@ impl SquareEnemy {
     pub fn new(x: f64, y: f64) -> SquareEnemy {
         utils::set_panic_hook();
         SquareEnemy {
-            base: Enemy::new(25.0, x, y, 2.0, 2.0),
+            base: Enemy::new(25.0, x, y, 2.0, 2.0, EnemyType::Square),
             in_x_position: false,
             in_y_position: false,
             laser: Laser::new(0.0, x, y),
@@ -105,10 +105,9 @@ impl SquareEnemy {
          self.base.check_dead(projectile)
     }
 
-    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
-         self.base.blow_up(player_ship, score_to_add)
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, val: i32){
+       self.base.blow_up(player_ship, val)
     }
-
 
     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){
          self.base.check_player_ship_collision(player_ship)

@@ -3,7 +3,7 @@ use std::f64;
 use crate::utils;
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
-use crate::enemy::Enemy;
+use crate::enemy::{Enemy, EnemyType};
 use crate::shockwave::Shockwave;
 
 extern crate web_sys;
@@ -28,7 +28,7 @@ impl FollowEnemy {
     pub fn new(x: f64, y: f64) -> FollowEnemy {
         utils::set_panic_hook();
         FollowEnemy {
-            base: Enemy::new(25.0, x, y, 1.5, 1.5),
+            base: Enemy::new(25.0, x, y, 1.5, 1.5, EnemyType::Follow),
             radians: 0.0,
             number_of_sides: 6.0,
         }
@@ -54,8 +54,8 @@ impl FollowEnemy {
        self.base.check_dead(projectile)
     }
 
-    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
-       self.base.blow_up(player_ship, score_to_add)
+    pub fn blow_up(&mut self, player_ship: &mut PlayerShip, val: i32){
+       self.base.blow_up(player_ship, val)
     }
 
     pub fn check_player_ship_collision(&mut self, player_ship: &mut PlayerShip){

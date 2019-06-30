@@ -15,6 +15,16 @@ macro_rules! log {
 }
 
 #[wasm_bindgen]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+pub enum EnemyType {
+    Basic,
+    Claw,
+    Follow,
+    Spiral,
+    Square,
+}
+
+#[wasm_bindgen]
 #[derive(Debug, Copy, Clone)]
 pub struct Enemy {
     size: f64,
@@ -26,11 +36,12 @@ pub struct Enemy {
     original_y_speed: f64,
     active: bool,
     ready_to_remove: bool,
+    enemy_type: EnemyType,
 }
 
 #[wasm_bindgen]
 impl Enemy {
-    pub fn new(size: f64, x: f64, y: f64, x_speed: f64, y_speed: f64) -> Enemy {
+    pub fn new(size: f64, x: f64, y: f64, x_speed: f64, y_speed: f64, enemy_type: EnemyType) -> Enemy {
         utils::set_panic_hook();
         Enemy {
             size,
@@ -42,11 +53,16 @@ impl Enemy {
             original_y_speed: y_speed,
             active: true,
             ready_to_remove: false,
+            enemy_type,
         }
     }
 
      pub fn get_size(&self) -> f64 {
         self.size
+    }
+
+    pub fn get_enemy_type(&self) -> JsValue {
+        JsValue::from_serde(&self.enemy_type).unwrap()
     }
 
      pub fn get_x(&self) -> f64 {

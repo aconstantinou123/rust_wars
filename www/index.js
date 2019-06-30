@@ -93,7 +93,7 @@ const drawShockwave = () => {
 
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
-    draw_projectile(projectile.get_x(), projectile.get_y(), '#FF0000', ctx2)
+    draw_projectile(projectile, '#FF0000', ctx2)
   })
 }
 
@@ -104,8 +104,7 @@ const drawPowerUp = () => {
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     spiralEnemy.spiral_movement()
-    draw_spiral_enemy(Math.floor(spiralEnemy.base.get_x()), 
-    Math.floor(spiralEnemy.base.get_y()), "#0033FF", ctx4)
+    draw_spiral_enemy(spiralEnemy, "#0033FF", ctx4)
   })
 }
 
@@ -241,11 +240,11 @@ const updateFPSDisplay = () => {
 }
 
 const renderGameOverText = () => {
-  ctx.font = "70px Verdana"
-  ctx.fillStyle = "white"
-  ctx.textAlign = "center"
-  ctx.fillText("Game Over", canvas.width/2, canvas.height/2)
-  ctx.fillText(`Final Score: ${playerShip.get_score()}`, canvas.width/2, (canvas.height/2) + 70)
+  ctx5.font = "70px Verdana"
+  ctx5.fillStyle = "white"
+  ctx5.textAlign = "center"
+  ctx5.fillText("Game Over", canvas.width/2, canvas.height/2)
+  ctx5.fillText(`Final Score: ${playerShip.get_score()}`, canvas.width/2, (canvas.height/2) + 70)
 }
 
 const updatePlayerShip = () => {
@@ -296,22 +295,27 @@ const updateEnemies = () => {
 }
 
 const checkProjectileHit = () => {
-  const enemyArray = [
-    ...spiralEnemyArray,
-    ...squareEnemyArray,
-    ...basicEnemyArray,
-    // ...clawEnemyArray,
-    ...followEnemyArray
-  ]
   projectileArray.forEach(projectile => {
-    enemyArray.forEach(enemy => {
+    squareEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 500)
+      enemy.blow_up(playerShip, 300)
+    })
+    followEnemyArray.forEach(enemy => {
+      enemy.check_dead(projectile)
+      enemy.blow_up(playerShip, 200)
     })
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 500)
+    })
+    spiralEnemyArray.forEach(enemy => {
+      enemy.check_dead(projectile)
+      enemy.blow_up(playerShip, 15)
+    })
+    basicEnemyArray.forEach(enemy => {
+      enemy.check_dead(projectile)
+      enemy.blow_up(playerShip, 100)
     })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
@@ -331,7 +335,6 @@ const shootProjectile = (arrayToUpdate, degreesToModify) => {
   return [ ...arrayToUpdate, projectile ]
 }
  
-
 window.addEventListener("keydown", (e) => {
   if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault()
@@ -383,13 +386,7 @@ const controlShip = () => {
 const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
-    // addBasicEnemies(5)
-    //
     addBasicEnemies(5)
-    addFollowEnemies(8)
-    addClawEnemies(2)
-    updateSpiralEnemies()
-    addSquareEnemies(3)
   }
   if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
@@ -408,14 +405,14 @@ const enemyRampUp = () => {
     addBasicEnemies(5)
     addFollowEnemies(5)
     addClawEnemies(2)
-    // updateSpiralEnemies()
+    updateSpiralEnemies()
   }
   if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
     space.increment_intensity_level()
     addBasicEnemies(5)
     addFollowEnemies(8)
     addClawEnemies(2)
-    // updateSpiralEnemies()
+    updateSpiralEnemies()
     addSquareEnemies(2)
   }
   if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
@@ -423,7 +420,7 @@ const enemyRampUp = () => {
     addBasicEnemies(5)
     addFollowEnemies(8)
     addClawEnemies(2)
-    // updateSpiralEnemies()
+    updateSpiralEnemies()
     addSquareEnemies(3)
   }
 }
