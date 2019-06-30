@@ -444,15 +444,11 @@ refreshLoop()
 const step = () => {
   update()
   render()
-  // primaryCtx.save();
-  // primaryCtx.translate(playerShip.get_centre_x() - space.get_width() / 2, 
-  // playerShip.get_centre_y() - space.get_height() / 2)
   primaryCtx.drawImage(offscreen, 0, 0)
   primaryCtx.drawImage(offscreen2, 0, 0)
   primaryCtx.drawImage(offscreen3, 0, 0)
   primaryCtx.drawImage(offscreen4, 0, 0)
   primaryCtx.drawImage(offscreen5, 0, 0)
-  // primaryCtx.restore()
   animate(step)
 }
 
