@@ -4,7 +4,6 @@ use crate::utils;
 use crate::shockwave::Shockwave;
 use crate::power_up::PowerUpType;
 use crate::space::Space;
-use crate::enemy::EnemyType;
 
 extern crate web_sys;
 

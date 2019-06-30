@@ -97,7 +97,7 @@ const drawProjectiles = (array) => {
 }
 
 const drawPowerUp = () => {
-  draw_power_up(powerUp, '#0062FF', '#099FFF', '#00FFFF', ctx3)
+  draw_power_up(powerUp, ctx3)
 }
 
 const drawSpiralEnemy = () => {

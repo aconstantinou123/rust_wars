@@ -33,7 +33,10 @@ pub struct PowerUp {
     timer: i32,
     is_active: bool,
     set_new_timer: bool,
-    power_up_type: PowerUpType
+    power_up_type: PowerUpType,
+    color1: JsValue,
+    color2: JsValue,
+    color3: JsValue,
 }
 
 #[wasm_bindgen]
@@ -47,6 +50,12 @@ impl PowerUp {
             1 => PowerUpType::ExtraFirePower,
             _ => PowerUpType::ExtraFirePower,
         };
+        let colors = match power_up_type {
+            PowerUpType::EnemySlowDown => (JsValue::from("#FF00FF"), JsValue::from("#FF00CC"), JsValue::from("#FF0099")),
+            PowerUpType::ExtraFirePower => (JsValue::from("#0062FF"), JsValue::from("#099FFF"), JsValue::from("#00FFFF")),
+            PowerUpType::Invincible => (JsValue::from("#0062FF"), JsValue::from("#099FFF"), JsValue::from("#00FFFF")),
+            PowerUpType::Normal => (JsValue::from("#0062FF"), JsValue::from("#099FFF"), JsValue::from("#00FFFF")),
+        };
         PowerUp {
             x: -50.0,
             y: -50.0,
@@ -56,7 +65,22 @@ impl PowerUp {
             set_new_timer: true,
             is_active: true,
             power_up_type,
+            color1: colors.0,
+            color2: colors.1,
+            color3: colors.2,
         }
+    }
+
+    pub fn get_color_1(&self) -> JsValue {
+        self.color1.clone()
+    }
+
+    pub fn get_color_2(&self) -> JsValue {
+        self.color2.clone()
+    }
+
+    pub fn get_color_3(&self) -> JsValue {
+        self.color3.clone()
     }
 
     pub fn get_x(&self) -> f64 {
@@ -113,6 +137,7 @@ impl PowerUp {
                 1 => PowerUpType::ExtraFirePower,
                 _ => PowerUpType::ExtraFirePower,
             };
+            self.change_colors()
         }
     }
 
@@ -140,6 +165,31 @@ impl PowerUp {
                 PowerUpType::Invincible => player_ship.set_power_up(PowerUpType::Invincible),
                 _ => ()
             }
+        }
+    }
+
+    pub fn change_colors(&mut self) {
+        match self.power_up_type {
+            PowerUpType::EnemySlowDown => {
+                self.color1 = JsValue::from("#FF00FF");
+                self.color2 = JsValue::from("#FF00CC");
+                self.color3 = JsValue::from("#FF0099")
+            },
+            PowerUpType::ExtraFirePower => {
+                self.color1 = JsValue::from("#0062FF"); 
+                self.color2 = JsValue::from("#099FFF");
+                self.color3 = JsValue::from("#00FFFF");
+            },
+            PowerUpType::Invincible => {
+                self.color1 = JsValue::from("#0062FF"); 
+                self.color2 = JsValue::from("#099FFF");
+                self.color3 = JsValue::from("#00FFFF");
+            },
+            PowerUpType::Normal => {
+                self.color1 = JsValue::from("#0062FF"); 
+                self.color2 = JsValue::from("#099FFF");
+                self.color3 = JsValue::from("#00FFFF");
+            },
         }
     }
 

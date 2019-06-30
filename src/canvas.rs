@@ -79,18 +79,17 @@ pub fn draw_shockwave(player_ship: &PlayerShip, color: &JsValue, context: &web_s
 }
 
 #[wasm_bindgen]
-pub fn draw_power_up(power_up: &PowerUp, color1: &JsValue, 
-color2: &JsValue, color3: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
+pub fn draw_power_up(power_up: &PowerUp, context: &web_sys::CanvasRenderingContext2d) {
     context.begin_path();
-    context.set_stroke_style(color1);
+    context.set_stroke_style(&power_up.get_color_1());
     context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size(), 0.0, f64::consts::PI * 2.0).unwrap();
     context.stroke();
     context.begin_path();
-    context.set_stroke_style(color2);
+    context.set_stroke_style(&power_up.get_color_2());
     context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size() * 0.6, 0.0, f64::consts::PI * 2.0).unwrap();
     context.stroke();
     context.begin_path();
-    context.set_stroke_style(color3);
+    context.set_stroke_style(&power_up.get_color_3());
     context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size() * 0.3, 0.0, f64::consts::PI * 2.0).unwrap();
     context.stroke();
 }
