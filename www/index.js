@@ -80,6 +80,12 @@ let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 let startGame = false
 
+let squareEnemyInterval
+let followEnemyInterval
+let clawEnemyInterval
+let spiralEnemyInterval
+let basicEnemyInterval
+
 const playButton = document.getElementById('play-button')
 const modal = document.getElementById('modal-content')
 
@@ -158,7 +164,7 @@ const addSquareEnemies = (amountToAdd) => {
   const patrolHeight = space.get_height() - 240
   const x = getRandomInt(patrolWidth) + buffer
   const y = getRandomInt(patrolHeight) + buffer
-  setInterval(() => {
+  squareEnemyInterval = setInterval(() => {
     if(squareEnemyArray.length < amountToAdd && startGame){
       const squareEnemy = SquareEnemy.new(x, y)
       squareEnemyArray = [
@@ -170,7 +176,7 @@ const addSquareEnemies = (amountToAdd) => {
 }
 
 const addFollowEnemies = (amountToAdd) => {
-  setInterval(() => {
+  followEnemyInterval = setInterval(() => {
     if(followEnemyArray.length < amountToAdd && startGame){
       const followEnemy = FollowEnemy
       .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
@@ -183,7 +189,7 @@ const addFollowEnemies = (amountToAdd) => {
 }
 
 const addBasicEnemies = (amountToAdd) => {
-  setInterval(() => {
+  basicEnemyInterval = setInterval(() => {
     if(basicEnemyArray.length < amountToAdd && startGame){
       const basicEnemy = BasicEnemy
       .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
@@ -196,7 +202,7 @@ const addBasicEnemies = (amountToAdd) => {
 }
 
 const updateSpiralEnemies = () => {
-  setInterval(() => {
+  spiralEnemyInterval = setInterval(() => {
   if(spiralEnemyArray.length == 30){
     drawSpirals = false
   } else if (spiralEnemyArray.length == 0){
@@ -216,7 +222,7 @@ const updateSpiralEnemies = () => {
 }    
 
 const addClawEnemies = (amountToAdd) => {
-  setInterval(() => {
+  clawEnemyInterval = setInterval(() => {
     if(clawEnemyArray.length < amountToAdd && startGame){
       const clawEnemy = ClawEnemy
         .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
@@ -457,6 +463,17 @@ const restartGame = () => {
   spiralY = getRandomInt(space.get_height() - 30)
   playerShip = PlayerShip.new()
   space.reset_intensity_level()
+  console.log(squareEnemyInterval)
+  clearInterval(squareEnemyInterval)
+  clearInterval(followEnemyInterval)
+  clearInterval(clawEnemyInterval)
+  clearInterval(spiralEnemyInterval)
+  clearInterval(basicEnemyInterval)
+  // squareEnemyInterval = setInterval
+  // followEnemyInterval = setInterval
+  // clawEnemyInterval = setInterval
+  // spiralEnemyInterval = setInterval
+  // basicEnemyInterval = setInterval
 }
 
 
