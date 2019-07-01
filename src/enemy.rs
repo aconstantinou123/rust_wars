@@ -73,7 +73,7 @@ impl Enemy {
         self.y
     }
 
-     pub fn set_x(&mut self, x: f64) {
+    pub fn set_x(&mut self, x: f64) {
         self.x = x
     }
 
@@ -98,14 +98,24 @@ impl Enemy {
     }
 
     pub fn reverse_x_speed(&mut self) {
-        self.x_speed = -self.x_speed
+        self.x_speed = -self.x_speed;
+        self.original_x_speed = self.x_speed;
     }
 
     pub fn reverse_y_speed(&mut self) {
-        self.y_speed = -self.y_speed
+        self.y_speed = -self.y_speed;
+        self.original_y_speed = self.y_speed;
     }
 
-      pub fn is_active(&self) -> bool {
+    pub fn set_x_speed(&mut self, x: f64) {
+        self.x_speed = x
+    }
+
+    pub fn set_y_speed(&mut self, y: f64) {
+        self.y_speed = y
+    }
+
+    pub fn is_active(&self) -> bool {
         self.active
     }
 

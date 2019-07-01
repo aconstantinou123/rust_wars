@@ -44,6 +44,10 @@ impl Space {
         self.intensity_level += 1
     }
 
+     pub fn reset_intensity_level(&mut self) {
+        self.intensity_level = 0
+    }
+
     pub fn get_height(&self) -> f64 {
         self.height
     }
@@ -133,15 +137,15 @@ impl Space {
             basic_enemy.base.set_x(1.0);
             basic_enemy.base.reverse_x_speed();
         } 
-        if basic_enemy.base.get_x() + basic_enemy.base.get_size() >= self.get_width() {
+        if basic_enemy.base.get_x() >= self.get_width() {
             basic_enemy.base.set_x(self.get_width() - basic_enemy.base.get_size());
-            basic_enemy.base.reverse_x_speed()
+            basic_enemy.base.reverse_x_speed();
         }
         if basic_enemy.base.get_y() <= 0.0 {
             basic_enemy.base.set_y(1.0);
             basic_enemy.base.reverse_y_speed();
         }
-        if basic_enemy.base.get_y() + basic_enemy.base.get_size() >= self.get_height() {
+        if basic_enemy.base.get_y() >= self.get_height() {
             basic_enemy.base.set_y(self.get_height() - basic_enemy.base.get_size());
             basic_enemy.base.reverse_y_speed();
         }

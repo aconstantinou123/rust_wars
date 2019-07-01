@@ -60,7 +60,8 @@
       top: 0;
       left: 0;
     }
-    .modal-content {
+    #modal-content {
+      display: block;
       position: absolute;
       top: 15%;
       left: 25%;
@@ -77,7 +78,7 @@
       padding-top: 15px;
       text-align: center;
     }
-    .play-button {
+    #play-button {
       width: 200px;
       font-size: 20px;
       font-family: 'Press Start 2P', cursive;
@@ -90,7 +91,7 @@
   </head>
   <body>
     <div class="modal-wrapper">
-      <div class="modal-content">
+      <div id="modal-content">
           <div class="modal-header">
             <h2>Rust Wars</h2>
           </div>
@@ -107,7 +108,7 @@
             <br/>
             <p>Shoot enemies, pick up power ups, survive</p>
             <div class="play-button-wrapper">
-              <button class="play-button">Play</button>
+              <button id="play-button">Play</button>
             </div>
           </div>
         </div>
