@@ -6,6 +6,7 @@ use crate::square_enemy::SquareEnemy;
 use crate::claw_enemy::ClawEnemy;
 use crate::spiral_enemy::SpiralEnemy;
 use crate::basic_enemy::BasicEnemy;
+use crate::star::Star;
 
 extern crate web_sys;
 
@@ -56,12 +57,23 @@ impl Space {
         self.width
     }
 
+    pub fn check_star_out_of_bounds(&self, star: &mut Star) {
+        if star.get_x() <= 0.0 || star.get_x() >= self.width 
+        || star.get_y() <= 0.0 || star.get_y() >= self.height {
+            star.set_active();
+            // log!("star {}", star.is_active())
+        }
+    }
+
+
     pub fn check_projectile_out_of_bounds(&self, projectile: &mut Projectile) {
         if projectile.get_x() <= 0.0 || projectile.get_x() >= self.width 
         || projectile.get_y() <= 0.0 || projectile.get_y() >= self.height {
             projectile.set_active()
         }
     }
+
+
 
     pub fn check_player_ship_out_of_bounds(&self, player_ship: &mut PlayerShip) {
         if player_ship.get_centre_x() as f64 - player_ship.get_size() <= 0.0 {

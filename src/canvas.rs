@@ -8,6 +8,7 @@ use crate::follow_enemy::FollowEnemy;
 use crate::claw_enemy::ClawEnemy;
 use crate::projectile::Projectile;
 use crate::spiral_enemy::SpiralEnemy;
+use crate::star::Star;
 extern crate web_sys;
 
 #[allow(unused_macros)]
@@ -49,6 +50,14 @@ pub fn draw_projectile(projectile: &Projectile, color: &JsValue, context: &web_s
     context.begin_path();
     context.set_fill_style(color);
     context.arc(projectile.get_x().round(), projectile.get_y().round(), 5.0, 0.0, f64::consts::PI * 2.0).unwrap();
+    context.fill();
+}
+
+#[wasm_bindgen]
+pub fn draw_star(star: &Star, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
+    context.begin_path();
+    context.set_fill_style(color);
+    context.arc(star.get_x().round(), star.get_y().round(), 1.5, 0.0, f64::consts::PI * 2.0).unwrap();
     context.fill();
 }
 

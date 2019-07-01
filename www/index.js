@@ -8,6 +8,7 @@ import  {
   SpiralEnemy,
   BasicEnemy,
   PowerUp,
+  Star,
   draw_projectile,
   draw_spiral_enemy,
   draw_player_ship,
@@ -18,6 +19,7 @@ import  {
   draw_enemy_projectile,
   draw_follow_enemy,
   draw_claw_enemy,
+  draw_star,
 } from "shooter"
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
@@ -70,6 +72,7 @@ let followEnemyArray = []
 let clawEnemyArray = []
 let spiralEnemyArray = []
 let basicEnemyArray = []
+let starArray = []
 let keys = []
 let velX = 0
 let velY = 0
@@ -113,6 +116,12 @@ const drawShockwave = () => {
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
     draw_projectile(projectile, '#FF0000', ctx2)
+  })
+}
+
+const drawStars = () => {
+  starArray.forEach(star => {
+    draw_star(star, 'white', ctx2)
   })
 }
 
@@ -186,6 +195,19 @@ const addFollowEnemies = (amountToAdd) => {
       ]
     }
   }, 2000)
+}
+
+const addStars = () => {
+  setInterval(() => {
+    if(starArray.length < 50){
+      const star = Star
+      .new(space.get_width() / 2, space.get_height() / 2)
+      starArray = [
+        ...starArray,
+        star,
+      ]
+    }
+  }, 75)
 }
 
 const addBasicEnemies = (amountToAdd) => {
@@ -293,6 +315,15 @@ const updateProjectiles = (array) => {
     projectile.calculate_new_y()
   })
   return array.filter(projectile => projectile.is_active())
+}
+
+const updateStarArray = () => {
+  starArray.forEach(star => {
+    space.check_star_out_of_bounds(star)
+    star.calculate_new_x()
+    star.calculate_new_y()
+  })
+  return starArray.filter(star => star.is_active())
 }
 
 const updatePowerUp = () => {
@@ -456,6 +487,7 @@ const restartGame = () => {
   projectileArray = []
   powerUpProjectileArray1 = []
   powerUpProjectileArray2 = []
+  starArray = []
   squareEnemyArray = []
   followEnemyArray = []
   clawEnemyArray = []
@@ -476,7 +508,6 @@ const restartGame = () => {
   clearInterval(clawEnemyInterval)
   clearInterval(spiralEnemyInterval)
   clearInterval(basicEnemyInterval)
-  
 }
 
 
@@ -495,6 +526,7 @@ function refreshLoop() {
 }
 
 refreshLoop()
+addStars()
 
 const step = () => {
   update()
@@ -511,6 +543,7 @@ const update = () => {
   if(startGame){
     enemyRampUp()
     updatePlayerShip()
+    starArray = updateStarArray()
     projectileArray = updateProjectiles(projectileArray)
     if(playerShip.get_power_up() === 'projectile'){
       powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
@@ -532,6 +565,7 @@ const render = () => {
   ctx4.clearRect(0,0,cw,ch)
   ctx5.clearRect(0,0,cw,ch)
   primaryCtx.clearRect(0,0,cw,ch)
+  drawStars()
   if(startGame){
     if(playerShip.get_is_alive()){
       drawPlayerShip()

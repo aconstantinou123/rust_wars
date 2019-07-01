@@ -12,6 +12,7 @@ pub mod basic_enemy;
 pub mod shockwave;
 pub mod power_up;
 pub mod canvas;
+pub mod star;
 
 #[macro_use]
 extern crate serde_derive;
