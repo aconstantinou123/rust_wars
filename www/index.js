@@ -225,7 +225,6 @@ const addBasicEnemies = (amountToAdd) => {
 
 const updateSpiralEnemies = () => {
   spiralEnemyInterval = setInterval(() => {
-  console.log('interval', followEnemyArray.length)
   if(spiralEnemyArray.length == 30){
     drawSpirals = false
   } else if (spiralEnemyArray.length == 0){
@@ -477,7 +476,6 @@ const restartGame = () => {
   projectileArray = []
   powerUpProjectileArray1 = []
   powerUpProjectileArray2 = []
-  starArray = []
   squareEnemyArray = []
   followEnemyArray = []
   clawEnemyArray = []
@@ -530,10 +528,10 @@ const step = () => {
 }
 
 const update = () => {
+  starArray = updateStarArray()
   if(startGame){
     enemyRampUp()
     updatePlayerShip()
-    starArray = updateStarArray()
     projectileArray = updateProjectiles(projectileArray)
     if(playerShip.get_power_up() === 'projectile'){
       powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
