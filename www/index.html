@@ -19,12 +19,12 @@
         color: #5970fe;
       }
       #player-info {
-          border: solid black 3px;
-          background-color: #33F0FF;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        }
+        border: solid black 3px;
+        background-color: #33F0FF;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
       #score {
         display: inline-block;
         padding-right: 20px;
@@ -60,8 +60,14 @@
       z-index: 1;
       height: 100%;
     }
-    .modal-body p {
+    .modal-body .controls {
       text-align: center;
+    }
+    .modal-body .game-over {
+      font-family: 'Vermin Vibes 1989';
+      text-align: center;
+      padding: 40px;
+      font-size: 50px;
     }
     .modal-wrapper {
       position: absolute;
@@ -107,17 +113,19 @@
             <h2>Rust Wars</h2>
           </div>
           <div class="modal-body">
-            <p class="controls">Controls</p>
-            <p>W: up</p>
-            <p>A: left</p>
-            <p>S: down</p>
-            <p>D: right</p>
-            <p>&#8592: spin ship anti-clockwise</p>
-            <p>&#8594: spin ship clockwise</p>
-            <p>Spacebar: press or hold to shoot</p>
-            <p>F: fire shockwave</p>
-            <br/>
-            <p>Shoot enemies, pick up power ups, survive</p>
+            <div id="modal-text">
+              <p class="controls">Controls</p>
+              <p class="controls">W: up</p>
+              <p class="controls">A: left</p>
+              <p class="controls">S: down</p>
+              <p class="controls">D: right</p>
+              <p class="controls">&#8592: spin ship anti-clockwise</p>
+              <p class="controls">&#8594: spin ship clockwise</p>
+              <p class="controls">Spacebar: press or hold to shoot</p>
+              <p class="controls">F: fire shockwave</p>
+              <br/>
+              <p class="controls">Shoot enemies, pick up power ups, survive</p>
+            </div>
             <div class="play-button-wrapper">
               <button id="play-button">Play</button>
             </div>

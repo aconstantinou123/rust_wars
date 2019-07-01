@@ -259,11 +259,16 @@ const updateFPSDisplay = () => {
 }
 
 const renderGameOverText = () => {
-  ctx5.font = "70px Verdana"
-  ctx5.fillStyle = "white"
-  ctx5.textAlign = "center"
-  ctx5.fillText("Game Over", canvas.width/2, canvas.height/2)
-  ctx5.fillText(`Final Score: ${playerShip.get_score()}`, canvas.width/2, (canvas.height/2) + 70)
+  const modalText = document.getElementById("modal-text")
+  modalText.innerHTML = ''
+  const gameOver =  document.createElement("h2")
+  const score = document.createElement("h2")
+  gameOver.innerText = "Game Over"
+  gameOver.setAttribute("class", "game-over")
+  score.innerText = `Final Score: ${playerShip.get_score()}`
+  score.setAttribute("class", "game-over")
+  modalText.appendChild(gameOver)
+  modalText.appendChild(score)
 }
 
 const updatePlayerShip = () => {
@@ -444,7 +449,10 @@ const enemyRampUp = () => {
   }
 }
 
+
+
 const restartGame = () => {
+  renderGameOverText()
   projectileArray = []
   powerUpProjectileArray1 = []
   powerUpProjectileArray2 = []
@@ -463,17 +471,12 @@ const restartGame = () => {
   spiralY = getRandomInt(space.get_height() - 30)
   playerShip = PlayerShip.new()
   space.reset_intensity_level()
-  console.log(squareEnemyInterval)
   clearInterval(squareEnemyInterval)
   clearInterval(followEnemyInterval)
   clearInterval(clawEnemyInterval)
   clearInterval(spiralEnemyInterval)
   clearInterval(basicEnemyInterval)
-  // squareEnemyInterval = setInterval
-  // followEnemyInterval = setInterval
-  // clawEnemyInterval = setInterval
-  // spiralEnemyInterval = setInterval
-  // basicEnemyInterval = setInterval
+  
 }
 
 
@@ -533,7 +536,6 @@ const render = () => {
     if(playerShip.get_is_alive()){
       drawPlayerShip()
     } else {
-      // renderGameOverText()
       restartGame()
       playButton.click()
     }
