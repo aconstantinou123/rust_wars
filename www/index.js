@@ -403,14 +403,9 @@ const enemyRampUp = () => {
   }
   if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
-    // addBasicEnemies(5)
-    // addFollowEnemies(5)
-    // addSquareEnemies(1)
     addBasicEnemies(5)
-    addFollowEnemies(8)
-    addClawEnemies(2)
-    updateSpiralEnemies()
-    addSquareEnemies(3)
+    addFollowEnemies(5)
+    addSquareEnemies(1)
   }
   if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
     space.increment_intensity_level()
