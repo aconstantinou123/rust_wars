@@ -56,11 +56,6 @@ offscreen5.width = space.get_width()
 const cw=canvas.width
 const ch=canvas.height
 ctx.fillRect(0,0,canvas.width,canvas.height)
-ctx.lineWidth = 3
-ctx2.lineWidth = 3
-ctx3.lineWidth = 3
-ctx4.lineWidth = 3
-ctx5.lineWidth = 3
 
 const times = []
 let fps
@@ -103,7 +98,7 @@ playButton.addEventListener('click', () => {
 })
 
 const drawPlayerShip = () => {
-  draw_player_ship(playerShip, ctx3)
+  draw_player_ship(playerShip, ctx2)
   if(playerShip.shockwave.get_is_active()){
     drawShockwave()
   }
@@ -115,7 +110,7 @@ const drawShockwave = () => {
 
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
-    draw_projectile(projectile, '#ea00d9', ctx2)
+    draw_projectile(projectile, '#ff073a', ctx2)
   })
 }
 
