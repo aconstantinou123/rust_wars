@@ -5,8 +5,16 @@
     <title>Rust Wars</title>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+      @font-face {font-family: "Vermin Vibes 1989";
+        src: url("//db.onlinewebfonts.com/t/e9a92ef234e726ff17913d77b956d3e0.eot");
+        src: url("//db.onlinewebfonts.com/t/e9a92ef234e726ff17913d77b956d3e0.eot?#iefix") format("embedded-opentype"),
+        url("//db.onlinewebfonts.com/t/e9a92ef234e726ff17913d77b956d3e0.woff2") format("woff2"),
+        url("//db.onlinewebfonts.com/t/e9a92ef234e726ff17913d77b956d3e0.woff") format("woff"),
+        url("//db.onlinewebfonts.com/t/e9a92ef234e726ff17913d77b956d3e0.ttf") format("truetype"),
+        url("//db.onlinewebfonts.com/t/e9a92ef234e726ff17913d77b956d3e0.svg#Vermin Vibes 1989") format("svg");
+      }
       body {
-        font-family: 'Press Start 2P', cursive;
+        font-family: 'Press Start 2P', cursive;;
         background-color: black;
         color: #5970fe;
       }
@@ -43,6 +51,8 @@
     }
     .modal-header h2 {
       text-align: center;
+      font-family: 'Vermin Vibes 1989';
+      font-size: 40px;
     }
     .modal-body {
       background-color: #00FFFF;
@@ -81,11 +91,12 @@
     #play-button {
       width: 200px;
       font-size: 20px;
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Vermin Vibes 1989';
       color: white;
       border: none;
       background-color: #6E0DD0;
       height: 50px;
+      font-size: 30px;
     }
     </style>
   </head>
@@ -116,9 +127,9 @@
     <canvas id="space"></canvas>
     <div id="player-info">
       <h4 id="player-health"></h4>
-      <h4 id="shockwaves">Shockwaves Remaining: </h4>
-      <h4 id="fps">FPS</h4>
-      <h4 id="score">Score</h4>
+      <h4 id="shockwaves">Shockwaves Remaining: 3</h4>
+      <h4 id="fps">FPS: 0</h4>
+      <h4 id="score">Score: 0</h4>
     </div>
     <script src="./bootstrap.js"></script>
   </body>
