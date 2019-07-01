@@ -225,6 +225,7 @@ const addBasicEnemies = (amountToAdd) => {
 
 const updateSpiralEnemies = () => {
   spiralEnemyInterval = setInterval(() => {
+  console.log('interval', followEnemyArray.length)
   if(spiralEnemyArray.length == 30){
     drawSpirals = false
   } else if (spiralEnemyArray.length == 0){
@@ -442,40 +443,29 @@ const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
     addBasicEnemies(5)
-  }
-  if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
+  } else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
-    addBasicEnemies(5)
     addFollowEnemies(5)
     addSquareEnemies(1)
-  }
-  if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
+  } else if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
     space.increment_intensity_level()
+    clearInterval(basicEnemyInterval)
     addBasicEnemies(8)
-    addFollowEnemies(5)
     addClawEnemies(1)
-  }
-  if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
+  } else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
     space.increment_intensity_level()
-    addBasicEnemies(5)
-    addFollowEnemies(5)
+    clearInterval(clawEnemyInterval)
     addClawEnemies(2)
     updateSpiralEnemies()
-  }
-  if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
+  } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
     space.increment_intensity_level()
-    addBasicEnemies(5)
+    clearInterval(followEnemyInterval)
     addFollowEnemies(8)
-    addClawEnemies(2)
-    updateSpiralEnemies()
+    clearInterval(squareEnemyInterval)
     addSquareEnemies(2)
-  }
-  if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
+  } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
     space.increment_intensity_level()
-    addBasicEnemies(5)
-    addFollowEnemies(8)
-    addClawEnemies(2)
-    updateSpiralEnemies()
+    clearInterval(squareEnemyInterval)
     addSquareEnemies(3)
   }
 }
@@ -487,7 +477,6 @@ const restartGame = () => {
   projectileArray = []
   powerUpProjectileArray1 = []
   powerUpProjectileArray2 = []
-  starArray = []
   squareEnemyArray = []
   followEnemyArray = []
   clawEnemyArray = []
@@ -540,10 +529,10 @@ const step = () => {
 }
 
 const update = () => {
+  starArray = updateStarArray()
   if(startGame){
     enemyRampUp()
     updatePlayerShip()
-    starArray = updateStarArray()
     projectileArray = updateProjectiles(projectileArray)
     if(playerShip.get_power_up() === 'projectile'){
       powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
