@@ -115,7 +115,7 @@ const drawShockwave = () => {
 
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
-    draw_projectile(projectile, '#FF0000', ctx2)
+    draw_projectile(projectile, '#ea00d9', ctx2)
   })
 }
 
@@ -477,6 +477,7 @@ const restartGame = () => {
   projectileArray = []
   powerUpProjectileArray1 = []
   powerUpProjectileArray2 = []
+  starArray = []
   squareEnemyArray = []
   followEnemyArray = []
   clawEnemyArray = []
@@ -529,10 +530,10 @@ const step = () => {
 }
 
 const update = () => {
-  starArray = updateStarArray()
   if(startGame){
     enemyRampUp()
     updatePlayerShip()
+    starArray = updateStarArray()
     projectileArray = updateProjectiles(projectileArray)
     if(playerShip.get_power_up() === 'projectile'){
       powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
