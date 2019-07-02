@@ -8,6 +8,7 @@ use crate::follow_enemy::FollowEnemy;
 use crate::claw_enemy::ClawEnemy;
 use crate::projectile::Projectile;
 use crate::spiral_enemy::SpiralEnemy;
+use crate::space::Space;
 use crate::star::Star;
 extern crate web_sys;
 
@@ -53,19 +54,13 @@ pub fn draw_projectile(projectile: &Projectile, color: &JsValue, context: &web_s
     context.begin_path();
     context.set_fill_style(color);
     context.arc(projectile.get_x().round(), projectile.get_y().round(), 5.0, 0.0, f64::consts::PI * 2.0).unwrap();
-    // context.set_stroke_style(color);
-    // context.set_line_width(10.0);
-    // context.move_to(projectile.get_x().round(), projectile.get_y().round());
-    // context.line_to(projectile.get_x().round() + 10.0, projectile.get_y().round() + 10.0);
     context.fill();
-    // context.stroke();
 }
 
 #[wasm_bindgen]
 pub fn draw_star(star: &Star, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
     context.begin_path();
     context.set_stroke_style(color);
-    // context.arc(star.get_x().round(), star.get_y().round(), 1.5, 0.0, f64::consts::PI * 2.0).unwrap();
     context.move_to(star.get_x().round(), star.get_y().round());
     context.line_to(star.get_x().round() + 1.0, star.get_y().round() + 1.0);
     context.stroke();
@@ -203,4 +198,25 @@ pub fn draw_claw_enemy(claw_enemy: &mut ClawEnemy, color: &JsValue, context: &we
     context.stroke();
     context.rotate(-claw_enemy.get_radians()).unwrap();
     context.translate(-center_x, -center_y).unwrap();
+}
+
+#[wasm_bindgen]
+pub fn draw_outline(space: &Space, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
+    context.set_line_width(10.0);
+    context.set_stroke_style(color);
+    context.stroke_rect(0.0, 0.0, space.get_width(), space.get_height());
+}
+
+#[wasm_bindgen]
+pub fn draw_offscreen_canvas(space: &Space, player_ship: &PlayerShip, 
+canvas: &web_sys::HtmlCanvasElement, 
+offscreen_canvas: &web_sys::HtmlCanvasElement, 
+primary_context: &web_sys::CanvasRenderingContext2d,
+offscreen_context: &web_sys::CanvasRenderingContext2d){
+    primary_context.set_transform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0).unwrap();
+    primary_context.clear_rect(0.0, 0.0, space.get_width(), space.get_height());
+    primary_context.translate(-player_ship.get_centre_x() + canvas.width() as f64 / 2.0, 
+    -player_ship.get_centre_y() + canvas.height() as f64 / 2.0).unwrap();
+    primary_context.draw_image_with_html_canvas_element(offscreen_canvas, 0.0, 0.0).unwrap();
+    offscreen_context.clear_rect(0.0, 0.0, space.get_width(), space.get_height());
 }
