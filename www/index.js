@@ -25,36 +25,37 @@ import  {
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
 let playerShip = PlayerShip.new()
-const space = Space.new(window.innerWidth - 20, 860)
+const space = Space.new(1800, 1200)
 const powerUp = PowerUp.new()
 
 
-const offscreen=document.createElement('canvas')
-const offscreen2=document.createElement('canvas')
-const offscreen3=document.createElement('canvas')
-const offscreen4=document.createElement('canvas')
-const offscreen5=document.createElement('canvas')
+// const offscreen=document.createElement('canvas')
+// const offscreen2=document.createElement('canvas')
+// const offscreen3=document.createElement('canvas')
+// const offscreen4=document.createElement('canvas')
+// const offscreen5=document.createElement('canvas')
 const canvas=document.getElementById("space")
-const ctx=offscreen.getContext("2d")
-const ctx2=offscreen2.getContext("2d")
-const ctx3=offscreen3.getContext("2d")
-const ctx4=offscreen4.getContext("2d")
-const ctx5=offscreen5.getContext("2d")
-const primaryCtx = canvas.getContext("2d", { alpha: false })
-canvas.height = space.get_height()
-canvas.width = space.get_width()
-offscreen.height = space.get_height()
-offscreen.width = space.get_width()
-offscreen2.height = space.get_height()
-offscreen2.width = space.get_width()
-offscreen3.height = space.get_height()
-offscreen3.width = space.get_width()
-offscreen4.height = space.get_height()
-offscreen4.width = space.get_width()
-offscreen5.height = space.get_height()
-offscreen5.width = space.get_width()
-const cw=canvas.width
-const ch=canvas.height
+// const ctx=offscreen.getContext("2d")
+// const ctx=offscreen.getContext("2d")
+// const ctx2=offscreen2.getContext("2d")
+// const ctx3=offscreen3.getContext("2d")
+// const ctx4=offscreen4.getContext("2d")
+// const ctx5=offscreen5.getContext("2d")
+const ctx = canvas.getContext("2d", { alpha: false })
+canvas.width = window.innerWidth - 20
+canvas.height = 860
+// offscreen.height = space.get_height()
+// offscreen.width = space.get_width()
+// offscreen2.height = space.get_height()
+// offscreen2.width = space.get_width()
+// offscreen3.height = space.get_height()
+// offscreen3.width = space.get_width()
+// offscreen4.height = space.get_height()
+// offscreen4.width = space.get_width()
+// offscreen5.height = space.get_height()
+// offscreen5.width = space.get_width()
+const cw=window.innerWidth - 20
+const ch=860
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
 const times = []
@@ -98,67 +99,67 @@ playButton.addEventListener('click', () => {
 })
 
 const drawPlayerShip = () => {
-  draw_player_ship(playerShip, ctx2)
+  draw_player_ship(playerShip, ctx)
   if(playerShip.shockwave.get_is_active()){
     drawShockwave()
   }
 }
 
 const drawShockwave = () => {
-  draw_shockwave(playerShip, "#FFFF00", ctx3)
+  draw_shockwave(playerShip, "#FFFF00", ctx)
 }
 
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
-    draw_projectile(projectile, '#ff073a', ctx2)
+    draw_projectile(projectile, '#ff073a', ctx)
   })
 }
 
 const drawStars = () => {
   starArray.forEach(star => {
-    draw_star(star, 'white', ctx2)
+    draw_star(star, 'white', ctx)
   })
 }
 
 const drawPowerUp = () => {
-  draw_power_up(powerUp, ctx3)
+  draw_power_up(powerUp, ctx)
 }
 
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     spiralEnemy.spiral_movement()
-    draw_spiral_enemy(spiralEnemy, "#0033FF", ctx4)
+    draw_spiral_enemy(spiralEnemy, "#0033FF", ctx)
   })
 }
 
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
-    draw_square_enemy(squareEnemy, "#FFFF00", ctx4)
+    draw_square_enemy(squareEnemy, "#FFFF00", ctx)
     drawEnemyProjectile(squareEnemy)
   })
 }
 
 const drawBasicEnemy = () => {
   basicEnemyArray.forEach(basicEnemy => {
-    draw_basic_enemy(basicEnemy,  "#00FF00", ctx5)
+    draw_basic_enemy(basicEnemy,  "#00FF00", ctx)
   })
 }
 
 const drawEnemyProjectile = (squareEnemy) => {
   if(squareEnemy.get_can_shoot()){
-    draw_enemy_projectile(squareEnemy, "#FF00FF", ctx5)
+    draw_enemy_projectile(squareEnemy, "#FF00FF", ctx)
   }
 }
 
 const drawFollowEnemy = () => {
   followEnemyArray.forEach(followEnemy => {
-    draw_follow_enemy(followEnemy, "#9D00FF", ctx5)
+    draw_follow_enemy(followEnemy, "#9D00FF", ctx)
   })
 }
 
 const drawClawEnemy = () => {
   clawEnemyArray.forEach(clawEnemy => {
-    draw_claw_enemy(clawEnemy, "#FF0000", ctx5)
+    draw_claw_enemy(clawEnemy, "#FF0000", ctx)
   })
 }
 
@@ -436,31 +437,29 @@ const controlShip = () => {
 const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
-    addBasicEnemies(5)
+    addBasicEnemies(20)
   } else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
-    addFollowEnemies(5)
-    addSquareEnemies(1)
+    addFollowEnemies(20)
+    addSquareEnemies(4)
   } else if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
     space.increment_intensity_level()
     clearInterval(basicEnemyInterval)
-    addBasicEnemies(8)
-    addClawEnemies(1)
+    addBasicEnemies(16)
+    addClawEnemies(4)
   } else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
     space.increment_intensity_level()
-    clearInterval(clawEnemyInterval)
-    addClawEnemies(2)
     updateSpiralEnemies()
   } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
     space.increment_intensity_level()
     clearInterval(followEnemyInterval)
-    addFollowEnemies(8)
+    addFollowEnemies(30)
     clearInterval(squareEnemyInterval)
-    addSquareEnemies(2)
+    addSquareEnemies(4)
   } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
     space.increment_intensity_level()
     clearInterval(squareEnemyInterval)
-    addSquareEnemies(3)
+    addSquareEnemies(10)
   }
 }
 
@@ -511,15 +510,35 @@ function refreshLoop() {
 refreshLoop()
 addStars()
 
+const drawOutline = () => {
+  ctx.beginPath()
+  ctx.lineWidth = 10
+  ctx.moveTo(0, 0)
+  ctx.lineTo(space.get_width(), 0)
+  ctx.moveTo(space.get_width(), 0)
+  ctx.lineTo(space.get_width(), space.get_height())
+  ctx.moveTo(space.get_width(), space.get_height())
+  ctx.lineTo(0, space.get_height())
+  ctx.moveTo(0, space.get_height())
+  ctx.lineTo(0, 0)
+  ctx.closePath()
+  ctx.strokeStyle = '#ea00d9'
+  ctx.stroke()
+}
+
 const step = () => {
+  animate(step)
+  ctx.setTransform(1,0,0,1,0,0)
+  ctx.clearRect(0, 0, space.get_width(), space.get_width())
+  ctx.translate(-playerShip.get_centre_x() + (canvas.width/2), -playerShip.get_centre_y() + (canvas.height/2))
   update()
   render()
-  primaryCtx.drawImage(offscreen, 0, 0)
-  primaryCtx.drawImage(offscreen2, 0, 0)
-  primaryCtx.drawImage(offscreen3, 0, 0)
-  primaryCtx.drawImage(offscreen4, 0, 0)
-  primaryCtx.drawImage(offscreen5, 0, 0)
-  animate(step)
+  // primaryCtx.drawImage(offscreen, 0, 0)
+  // primaryCtx.drawImage(offscreen2, 0, 0)
+  // primaryCtx.drawImage(offscreen3, 0, 0)
+  // primaryCtx.drawImage(offscreen4, 0, 0)
+  // primaryCtx.drawImage(offscreen5, 0, 0)
+  // ctx.translate(-camX, -camY)
 }
 
 const update = () => {
@@ -543,11 +562,12 @@ const update = () => {
 }
 
 const render = () => {
-  ctx2.clearRect(0,0,cw,ch)
-  ctx3.clearRect(0,0,cw,ch)
-  ctx4.clearRect(0,0,cw,ch)
-  ctx5.clearRect(0,0,cw,ch)
-  primaryCtx.clearRect(0,0,cw,ch)
+  ctx.clearRect(0,0,cw,ch)
+  // ctx3.clearRect(0,0,cw,ch)
+  // ctx4.clearRect(0,0,cw,ch)
+  // ctx5.clearRect(0,0,cw,ch)
+  // primaryCtx.clearRect(0,0,cw,ch)
+  drawOutline()
   drawStars()
   if(startGame){
     if(playerShip.get_is_alive()){
