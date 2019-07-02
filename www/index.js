@@ -29,34 +29,21 @@ const space = Space.new(1800, 1200)
 const powerUp = PowerUp.new()
 
 
-// const offscreen=document.createElement('canvas')
-// const offscreen2=document.createElement('canvas')
-// const offscreen3=document.createElement('canvas')
-// const offscreen4=document.createElement('canvas')
-// const offscreen5=document.createElement('canvas')
 const canvas=document.getElementById("space")
-// const ctx=offscreen.getContext("2d")
-// const ctx=offscreen.getContext("2d")
-// const ctx2=offscreen2.getContext("2d")
-// const ctx3=offscreen3.getContext("2d")
-// const ctx4=offscreen4.getContext("2d")
-// const ctx5=offscreen5.getContext("2d")
-const ctx = canvas.getContext("2d", { alpha: false })
+const offscreen=document.createElement('canvas')
+
+const ctx2=canvas.getContext("2d",  { alpha: false })
+const ctx = offscreen.getContext("2d", { alpha: false })
+
 canvas.width = window.innerWidth - 20
 canvas.height = 860
-// offscreen.height = space.get_height()
-// offscreen.width = space.get_width()
-// offscreen2.height = space.get_height()
-// offscreen2.width = space.get_width()
-// offscreen3.height = space.get_height()
-// offscreen3.width = space.get_width()
-// offscreen4.height = space.get_height()
-// offscreen4.width = space.get_width()
-// offscreen5.height = space.get_height()
-// offscreen5.width = space.get_width()
+offscreen.width = space.get_width()
+offscreen.height = space.get_height()
+// ctx.fillRect(0, 0, space.get_width(), space.get_height())
+// ctx.fillRect(0, 0, space.get_width(), space.get_height())
+
 const cw=window.innerWidth - 20
 const ch=860
-ctx.fillRect(0,0,canvas.width,canvas.height)
 
 const times = []
 let fps
@@ -438,6 +425,10 @@ const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
     addBasicEnemies(20)
+    addClawEnemies(4)
+    addSquareEnemies(4)
+    addFollowEnemies(30)
+    updateSpiralEnemies()
   } else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
     addFollowEnemies(20)
@@ -528,17 +519,17 @@ const drawOutline = () => {
 
 const step = () => {
   animate(step)
-  ctx.setTransform(1,0,0,1,0,0)
-  ctx.clearRect(0, 0, space.get_width(), space.get_width())
-  ctx.translate(-playerShip.get_centre_x() + (canvas.width/2), -playerShip.get_centre_y() + (canvas.height/2))
+  // ctx.setTransform(1,0,0,1,0,0)
+  ctx2.setTransform(1,0,0,1,0,0)
+  // ctx.clearRect(0, 0, space.get_width() * 2, space.get_width() * 2)
+  ctx2.clearRect(0, 0, space.get_width() * 2, space.get_height() * 2)
+  // ctx.translate(-playerShip.get_centre_x() + (canvas.width/2), -playerShip.get_centre_y() + (canvas.height/2))
+  ctx2.translate(-playerShip.get_centre_x() + (canvas.width/2), -playerShip.get_centre_y() + (canvas.height/2))
+  
+  ctx2.drawImage(offscreen, 0, 0)
+  ctx.clearRect(0,0, space.get_width(),space.get_height())
   update()
   render()
-  // primaryCtx.drawImage(offscreen, 0, 0)
-  // primaryCtx.drawImage(offscreen2, 0, 0)
-  // primaryCtx.drawImage(offscreen3, 0, 0)
-  // primaryCtx.drawImage(offscreen4, 0, 0)
-  // primaryCtx.drawImage(offscreen5, 0, 0)
-  // ctx.translate(-camX, -camY)
 }
 
 const update = () => {
@@ -562,14 +553,14 @@ const update = () => {
 }
 
 const render = () => {
-  ctx.clearRect(0,0,cw,ch)
+  // ctx.drawImage(offscreen, 0, 0)
   // ctx3.clearRect(0,0,cw,ch)
   // ctx4.clearRect(0,0,cw,ch)
   // ctx5.clearRect(0,0,cw,ch)
   // primaryCtx.clearRect(0,0,cw,ch)
-  drawOutline()
   drawStars()
   if(startGame){
+    drawOutline()
     if(playerShip.get_is_alive()){
       drawPlayerShip()
     } else {

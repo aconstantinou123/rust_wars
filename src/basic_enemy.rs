@@ -27,7 +27,7 @@ impl BasicEnemy {
     pub fn new(x: f64, y: f64) -> BasicEnemy {
         utils::set_panic_hook();
         BasicEnemy {
-            base: Enemy::new(25.0, x, y, 1.0, 1.0, EnemyType::Basic)
+            base: Enemy::new(35.0, x, y, 2.0, 2.0, EnemyType::Basic)
         }
     }
 
@@ -61,7 +61,7 @@ impl BasicEnemy {
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
         self.check_player_ship_collision(player_ship);
-        self.change_speed(player_ship, 0.2);
+    self.change_speed(player_ship, 0.2);
         space.check_basic_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);
         self.move_enemy();

@@ -53,15 +53,22 @@ pub fn draw_projectile(projectile: &Projectile, color: &JsValue, context: &web_s
     context.begin_path();
     context.set_fill_style(color);
     context.arc(projectile.get_x().round(), projectile.get_y().round(), 5.0, 0.0, f64::consts::PI * 2.0).unwrap();
+    // context.set_stroke_style(color);
+    // context.set_line_width(10.0);
+    // context.move_to(projectile.get_x().round(), projectile.get_y().round());
+    // context.line_to(projectile.get_x().round() + 10.0, projectile.get_y().round() + 10.0);
     context.fill();
+    // context.stroke();
 }
 
 #[wasm_bindgen]
 pub fn draw_star(star: &Star, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
     context.begin_path();
-    context.set_fill_style(color);
-    context.arc(star.get_x().round(), star.get_y().round(), 1.5, 0.0, f64::consts::PI * 2.0).unwrap();
-    context.fill();
+    context.set_stroke_style(color);
+    // context.arc(star.get_x().round(), star.get_y().round(), 1.5, 0.0, f64::consts::PI * 2.0).unwrap();
+    context.move_to(star.get_x().round(), star.get_y().round());
+    context.line_to(star.get_x().round() + 1.0, star.get_y().round() + 1.0);
+    context.stroke();
 }
 
 #[wasm_bindgen]

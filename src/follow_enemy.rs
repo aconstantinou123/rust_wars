@@ -28,7 +28,7 @@ impl FollowEnemy {
     pub fn new(x: f64, y: f64) -> FollowEnemy {
         utils::set_panic_hook();
         FollowEnemy {
-            base: Enemy::new(25.0, x, y, 1.5, 1.5, EnemyType::Follow),
+            base: Enemy::new(35.0, x, y, 2.5, 2.5, EnemyType::Follow),
             radians: 0.0,
             number_of_sides: 6.0,
         }
