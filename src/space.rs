@@ -65,15 +65,12 @@ impl Space {
         }
     }
 
-
     pub fn check_projectile_out_of_bounds(&self, projectile: &mut Projectile) {
         if projectile.get_x() <= 0.0 || projectile.get_x() >= self.width 
         || projectile.get_y() <= 0.0 || projectile.get_y() >= self.height {
             projectile.set_active()
         }
     }
-
-
 
     pub fn check_player_ship_out_of_bounds(&self, player_ship: &mut PlayerShip) {
         if player_ship.get_centre_x() as f64 - player_ship.get_size() <= 0.0 {
@@ -145,8 +142,8 @@ impl Space {
     }
 
      pub fn check_basic_enemy_at_edge(&self, basic_enemy: &mut BasicEnemy) {
-        if basic_enemy.base.get_x() <= 0.0 {
-            basic_enemy.base.set_x(1.0);
+        if basic_enemy.base.get_x() <= basic_enemy.base.get_size() {
+            basic_enemy.base.set_x(basic_enemy.base.get_size());
             basic_enemy.base.reverse_x_speed();
         } 
         if basic_enemy.base.get_x() >= self.get_width() {
