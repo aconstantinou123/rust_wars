@@ -1,11 +1,17 @@
 const express = require('express')
 const path = require('path')
+const cors = require('cors')
 
 const app = express()
 
 const port = process.env.PORT || 5000
 
+app.use(cors())
 app.use(express.static(path.join(__dirname, './dist')))
+
+app.get('/media/technical-debt.mp3', (req, res) => {
+  res.sendFile(path.join(__dirname, './media/technical-debt.mp3'))
+})
 
 app.listen(port, () => {
   console.log(`Shooter is ready to go on port ${port}`)

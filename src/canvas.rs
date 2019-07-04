@@ -214,7 +214,7 @@ offscreen_canvas: &web_sys::HtmlCanvasElement,
 primary_context: &web_sys::CanvasRenderingContext2d,
 offscreen_context: &web_sys::CanvasRenderingContext2d){
     primary_context.set_transform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0).unwrap();
-    primary_context.clear_rect(0.0, 0.0, space.get_width(), space.get_height());
+    primary_context.clear_rect(0.0, 0.0, space.get_width() * 2.0, space.get_height() * 2.0);
     primary_context.translate(-player_ship.get_centre_x() + canvas.width() as f64 / 2.0, 
     -player_ship.get_centre_y() + canvas.height() as f64 / 2.0).unwrap();
     primary_context.draw_image_with_html_canvas_element(offscreen_canvas, 0.0, 0.0).unwrap();

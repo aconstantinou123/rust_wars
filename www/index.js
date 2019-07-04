@@ -24,6 +24,8 @@ import  {
   draw_offscreen_canvas,
 } from "shooter"
 
+import BufferLoader from './bufferLoader'
+
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
 let playerShip = PlayerShip.new()
@@ -62,6 +64,7 @@ let drawSpirals = true
 let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 let startGame = false
+let startBackgroundMusic = false
 
 let squareEnemyInterval
 let followEnemyInterval
@@ -69,10 +72,17 @@ let clawEnemyInterval
 let spiralEnemyInterval
 let basicEnemyInterval
 
+const file = require('./media/technical-debt.mp3')
+let context
+let bufferLoader
+let source1
+
+
+
 const playButton = document.getElementById('play-button')
 const modal = document.getElementById('modal-content')
 
-playButton.addEventListener('click', () => {
+playButton.addEventListener('click', function() {
   const computedDisplay = window.getComputedStyle(modal, null).getPropertyValue('display');
   if (computedDisplay === "block") {
     modal.style.display = "none"
@@ -80,7 +90,35 @@ playButton.addEventListener('click', () => {
     modal.style.display = "block"
   }
   startGame = !startGame
+  if(!startBackgroundMusic){
+    context.resume().then(() => {
+      source1.loop = true
+      startBackgroundMusic = true
+      source1.start(0)
+    })
+  }
 })
+
+const finishedLoading = (bufferList) => {
+  source1 = context.createBufferSource()
+  source1.buffer = bufferList[0]
+  source1.connect(context.destination)
+}
+
+const init = () => {
+  // Fix up prefixing
+  window.AudioContext = window.AudioContext || window.webkitAudioContext
+  context = new AudioContext()
+
+  bufferLoader = new BufferLoader(
+    context,
+    [
+      'http://localhost:5000/media/technical-debt.mp3',
+    ],
+    finishedLoading
+    )
+  bufferLoader.load()
+}
 
 const drawPlayerShip = () => {
   draw_player_ship(playerShip, offscreenCtx)
@@ -551,6 +589,7 @@ const render = () => {
                 
 
 window.onload = () => {
+  init()
   animate(step)
 } 
 

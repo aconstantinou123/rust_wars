@@ -7,10 +7,18 @@ module.exports = {
   entry: {
      app: "./bootstrap.js",
     },
+    module: {
+      rules: [
+        {
+            test: /\.(ogg|mp3|wav|mpe?g)$/i,
+            use: 'file-loader'
+        }
+      ]
+    },
   plugins: [
      // new CleanWebpackPlugin(['dist/*']) for < v2 versions of CleanWebpackPlugin
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin(['index.html']),
+    new CopyWebpackPlugin(['index.html'], { from: 'media' }),
     ],
     output: {
     path: path.resolve(__dirname, "dist"),
