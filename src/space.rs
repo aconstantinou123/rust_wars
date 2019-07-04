@@ -61,7 +61,6 @@ impl Space {
         if star.get_x() <= 0.0 || star.get_x() >= self.width 
         || star.get_y() <= 0.0 || star.get_y() >= self.height {
             star.set_active();
-            // log!("star {}", star.is_active())
         }
     }
 

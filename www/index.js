@@ -65,6 +65,7 @@ let spiralX = getRandomInt(space.get_width() - 30)
 let spiralY = getRandomInt(space.get_height() - 30)
 let startGame = false
 let startBackgroundMusic = false
+let playerShotStarted = false
 
 let squareEnemyInterval
 let followEnemyInterval
@@ -73,8 +74,13 @@ let spiralEnemyInterval
 let basicEnemyInterval
 
 let context
+let playerShotContext
 let bufferLoader
-let source1
+let backgroundMusic
+let playerShotSound
+
+let gainNode
+
 
 
 
@@ -91,17 +97,26 @@ playButton.addEventListener('click', function() {
   startGame = !startGame
   if(!startBackgroundMusic){
     context.resume().then(() => {
-      source1.loop = true
+      backgroundMusic.loop = true
       startBackgroundMusic = true
-      source1.start(0)
+      backgroundMusic.start(0)
     })
   }
 })
 
 const finishedLoading = (bufferList) => {
-  source1 = context.createBufferSource()
-  source1.buffer = bufferList[0]
-  source1.connect(context.destination)
+  gainNode = playerShotContext.createGain()
+  gainNode.gain.value = 0.5 
+  gainNode.connect(playerShotContext.destination)
+
+  backgroundMusic = context.createBufferSource()
+  backgroundMusic.buffer = bufferList[0]
+  backgroundMusic.connect(context.destination)
+
+  playerShotSound = playerShotContext.createBufferSource()
+  playerShotSound.buffer = bufferList[1]
+  playerShotSound.connect(gainNode)
+
   const loading = document.querySelector('.loading')
   const playerInfo = document.querySelector('#player-info')
   const modalWrapper = document.querySelector('.modal-wrapper')
@@ -113,11 +128,13 @@ const finishedLoading = (bufferList) => {
 const init = () => {
   window.AudioContext = window.AudioContext || window.webkitAudioContext
   context = new AudioContext()
+  playerShotContext = new AudioContext()
 
   bufferLoader = new BufferLoader(
     context,
     [
       'http://localhost:5000/media/technical-debt.mp3',
+      'http://localhost:5000/media/player-shot-2.wav',
     ],
     finishedLoading
     )
@@ -424,6 +441,14 @@ document.body.addEventListener("keydown", (e) => {
 
 document.body.addEventListener("keyup", (e) => {
   keys[e.keyCode] = false
+  if(e.keyCode === 32){
+    if(context.state === 'running') {
+      playerShotSound.loopEnd = 1;
+      setTimeout(() => {
+        playerShotContext.suspend()
+      }, 500)
+    }
+  }
 })
 
 const controlShip = () => {
@@ -448,6 +473,16 @@ const controlShip = () => {
       const amountToDelay =  playerShip.get_power_up() === 'projectile' ? 0 : 5
       if(delay > amountToDelay ){
           projectileArray = shootProjectile(projectileArray, 0)
+          playerShotContext.resume().then(() => {
+          playerShotSound.loopEnd = 0.1;
+          gainNode.gain.value = 0.5
+            if(!playerShotStarted){
+              playerShotSound.loopEnd = 0.1;
+              playerShotSound.loop = true;
+              playerShotSound.start(0)
+              playerShotStarted = true
+            }
+          })
           if(playerShip.get_power_up() === 'projectile'){
             powerUpProjectileArray1 = shootProjectile(powerUpProjectileArray1, -10)
             powerUpProjectileArray2 = shootProjectile(powerUpProjectileArray2,10)
