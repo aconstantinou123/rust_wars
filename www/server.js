@@ -17,6 +17,10 @@ app.get('/media/player-shot-2.wav', (req, res) => {
   res.sendFile(path.join(__dirname, './media/player-shot-2.wav'))
 })
 
+app.get('/media/enemy-explosion.wav', (req, res) => {
+  res.sendFile(path.join(__dirname, './media/enemy-explosion.wav'))
+})
+
 app.listen(port, () => {
   console.log(`Shooter is ready to go on port ${port}`)
 })

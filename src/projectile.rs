@@ -31,7 +31,7 @@ impl Projectile {
             y,
             speed: 10.0,
             initial_angle,
-            active: true,
+            active: false,
         }
     }
 
@@ -65,5 +65,21 @@ impl Projectile {
 
     pub fn set_active(&mut self) {
         self.active = false
+    }
+
+    pub fn set_x(&mut self, x: f64) {
+        self.x = x
+    }
+
+    pub fn set_y(&mut self, y: f64) {
+        self.x = y
+    }
+
+    pub fn reset_state(&mut self, x: f64, y: f64, initial_angle: f64) {
+        self.x = x;
+        self.y = y;
+        self.initial_angle = initial_angle;
+        self.speed = 10.0;
+        self.active = true;
     }
 }

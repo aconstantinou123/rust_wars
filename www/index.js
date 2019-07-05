@@ -24,7 +24,14 @@ import  {
   draw_offscreen_canvas,
 } from "shooter"
 
+import { Howl, Howler } from 'howler';
 import BufferLoader from './bufferLoader'
+
+const enemyExplosion = new Howl({
+  src: ['http://localhost:5000/media/enemy-explosion.wav'],
+  volume: 0.2,
+})
+
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 
@@ -44,11 +51,18 @@ canvas.height = 860
 offscreen.width = space.get_width()
 offscreen.height = space.get_height()
 
+
+let initProjectileArray = []
+let initPowerUpProjectileArray1 = []
+let initPowerUpProjectileArray2 = []
+let initSquareEnemyArray = []
+let initFollowEnemyArray = []
+let initClawEnemyArray = []
+let initSpiralEnemyArray = []
+let initStarArray = []
+
 const times = []
 let fps
-let projectileArray = []
-let powerUpProjectileArray1 = []
-let powerUpProjectileArray2 = []
 let squareEnemyArray = []
 let followEnemyArray = []
 let clawEnemyArray = []
@@ -73,13 +87,14 @@ let clawEnemyInterval
 let spiralEnemyInterval
 let basicEnemyInterval
 
+let bufferLoader
 let context
 let playerShotContext
-let bufferLoader
+
 let backgroundMusic
 let playerShotSound
 
-let gainNode
+let playerShotGainNode
 
 
 
@@ -99,24 +114,24 @@ playButton.addEventListener('click', function() {
     context.resume().then(() => {
       backgroundMusic.loop = true
       startBackgroundMusic = true
-      backgroundMusic.start(0)
+      // backgroundMusic.start(0)
     })
   }
 })
 
 const finishedLoading = (bufferList) => {
-  gainNode = playerShotContext.createGain()
-  gainNode.gain.value = 0.5 
-  gainNode.connect(playerShotContext.destination)
-
   backgroundMusic = context.createBufferSource()
   backgroundMusic.buffer = bufferList[0]
   backgroundMusic.connect(context.destination)
 
+  playerShotGainNode = playerShotContext.createGain()
+  playerShotGainNode.gain.value = 0.5 
+  playerShotGainNode.connect(playerShotContext.destination)
+
   playerShotSound = playerShotContext.createBufferSource()
   playerShotSound.buffer = bufferList[1]
-  playerShotSound.connect(gainNode)
-
+  playerShotSound.connect(playerShotGainNode)
+  
   const loading = document.querySelector('.loading')
   const playerInfo = document.querySelector('#player-info')
   const modalWrapper = document.querySelector('.modal-wrapper')
@@ -135,11 +150,14 @@ const init = () => {
     [
       'http://localhost:5000/media/technical-debt.mp3',
       'http://localhost:5000/media/player-shot-2.wav',
+      'http://localhost:5000/media/enemy-explosion.wav',
     ],
     finishedLoading
     )
   bufferLoader.load()
 }
+
+
 
 const drawPlayerShip = () => {
   draw_player_ship(playerShip, offscreenCtx)
@@ -154,7 +172,9 @@ const drawShockwave = () => {
 
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
-    draw_projectile(projectile, '#ff073a', offscreenCtx)
+    if(projectile.is_active()){
+      draw_projectile(projectile, '#ff073a', offscreenCtx)
+    }
   })
 }
 
@@ -184,7 +204,9 @@ const drawSquareEnemy = () => {
 
 const drawBasicEnemy = () => {
   basicEnemyArray.forEach(basicEnemy => {
-    draw_basic_enemy(basicEnemy,  "#00FF00", offscreenCtx)
+    if(basicEnemy.get_added_to_array()){
+      draw_basic_enemy(basicEnemy,  "#00FF00", offscreenCtx)
+    }
   })
 }
 
@@ -206,6 +228,70 @@ const drawClawEnemy = () => {
   })
 }
 
+const initProjectileArrays = (arrayToUpdate) => {
+  for(let i = 0; i < 100; i++){
+    const projectile = Projectile.new(0,0,0)
+    arrayToUpdate = [ ...arrayToUpdate, projectile ]
+  }
+  return arrayToUpdate
+}
+
+const initSquareEnemies = () => {
+  for(let i = 0; i < 5; i++){
+    const buffer = 120
+    const patrolWidth = space.get_width() - 240
+    const patrolHeight = space.get_height() - 240
+    const x = getRandomInt(patrolWidth) + buffer
+    const y = getRandomInt(patrolHeight) + buffer
+    const squareEnemy = SquareEnemy.new(x, y)
+    initSquareEnemyArray = [
+      ...initSquareEnemyArray,
+      squareEnemy,
+    ]
+  }
+}
+
+const initFollowEnemies = () => {
+  for(let i = 0; i < 20; i++){
+    const followEnemy = FollowEnemy
+    .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+    initFollowEnemyArray = [
+      ...initFollowEnemyArray,
+      followEnemy,
+    ]
+  }
+}
+
+const initStars = () => {
+  for(let i = 0; i < 10; i++){
+    const star = Star
+      .new(space.get_width() / 2, space.get_height() / 2)
+      initStarArray = [
+        ...initStarArray,
+        star,
+      ]
+    }
+  }
+  
+const initBasicEnemies = () => {
+  for(let i = 0; i < 20; i++){
+    const basicEnemy = BasicEnemy 
+      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+    basicEnemyArray = [
+      ...basicEnemyArray,
+      basicEnemy,
+    ]
+  }
+}
+
+initProjectileArray = initProjectileArrays(initProjectileArray, 0)
+initPowerUpProjectileArray1 = initProjectileArrays(initPowerUpProjectileArray1, -10)
+initPowerUpProjectileArray2 = initProjectileArrays(initPowerUpProjectileArray2, 10)
+initBasicEnemies()
+// initSquareEnemies()
+// initFollowEnemies()
+initStars()
+
 const addSquareEnemies = (amountToAdd) => {
   const buffer = 120
   const patrolWidth = space.get_width() - 240
@@ -214,7 +300,7 @@ const addSquareEnemies = (amountToAdd) => {
   const y = getRandomInt(patrolHeight) + buffer
   squareEnemyInterval = setInterval(() => {
     if(squareEnemyArray.length < amountToAdd && startGame){
-      const squareEnemy = SquareEnemy.new(x, y)
+      const squareEnemy = initSpiralEnemyArray.pop()
       squareEnemyArray = [
         ...squareEnemyArray,
         squareEnemy,
@@ -226,8 +312,7 @@ const addSquareEnemies = (amountToAdd) => {
 const addFollowEnemies = (amountToAdd) => {
   followEnemyInterval = setInterval(() => {
     if(followEnemyArray.length < amountToAdd && startGame){
-      const followEnemy = FollowEnemy
-      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+      const followEnemy = initFollowEnemyArray.pop()
       followEnemyArray = [
         ...followEnemyArray,
         followEnemy,
@@ -238,9 +323,8 @@ const addFollowEnemies = (amountToAdd) => {
 
 const addStars = () => {
   setInterval(() => {
-    if(starArray.length < 50){
-      const star = Star
-      .new(space.get_width() / 2, space.get_height() / 2)
+    if(starArray.length < 10){
+      const star = initStarArray.pop()
       starArray = [
         ...starArray,
         star,
@@ -249,18 +333,24 @@ const addStars = () => {
   }, 75)
 }
 
+
 const addBasicEnemies = (amountToAdd) => {
   basicEnemyInterval = setInterval(() => {
-    if(basicEnemyArray.length < amountToAdd && startGame){
-      const basicEnemy = BasicEnemy
-      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
-      basicEnemyArray = [
-        ...basicEnemyArray,
-        basicEnemy,
-      ]
+    const activeArrayLength = basicEnemyArray
+      .filter(enemy => enemy.get_added_to_array()).length
+      if(activeArrayLength < amountToAdd && startGame){
+      let idx
+      const basicEnemyToSet = basicEnemyArray
+      .find((enemy, index)  => {
+        idx = index
+        return !enemy.get_added_to_array()
+      })
+      basicEnemyToSet.set_add_to_array()
+      basicEnemyArray[idx] = basicEnemyToSet
     }
   }, 2000)
 }
+
 
 const updateSpiralEnemies = () => {
   spiralEnemyInterval = setInterval(() => {
@@ -353,7 +443,6 @@ const updateProjectiles = (array) => {
     projectile.calculate_new_x()
     projectile.calculate_new_y()
   })
-  return array.filter(projectile => projectile.is_active())
 }
 
 const updateStarArray = () => {
@@ -362,7 +451,7 @@ const updateStarArray = () => {
     star.calculate_new_x()
     star.calculate_new_y()
   })
-  return starArray.filter(star => star.is_active())
+  return starArray
 }
 
 const updatePowerUp = () => {
@@ -370,63 +459,84 @@ const updatePowerUp = () => {
     powerUp.power_up_countdown(playerShip)
   } else if(startGame) {
     powerUp.generate_random_position(space)
-    powerUpProjectileArray1 = []
-    powerUpProjectileArray2 = []
   }
   powerUp.check_collision_with_player_ship(playerShip)
 }
 
 const updateEnemies = () => {
   [
-    ...spiralEnemyArray,
-    ...squareEnemyArray,
+    // ...spiralEnemyArray,
+    // ...squareEnemyArray,
     ...basicEnemyArray,
-    ...clawEnemyArray,
-    ...followEnemyArray
+    // ...clawEnemyArray,
+    // ...followEnemyArray
   ].forEach(enemy => {
-    enemy.update(playerShip, space)
+    if(enemy.get_added_to_array()){
+      enemy.update(playerShip, space)
+    }
   })
 }
 
 const checkProjectileHit = () => {
-  projectileArray.forEach(projectile => {
+  initProjectileArray.forEach(projectile => {
     squareEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 300)
+      // if(!enemy.base.is_active()){
+      //   enemyExplosion.play()
+      // }
     })
     followEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 200)
+      // if(!enemy.base.is_active()){
+      //   enemyExplosion.play()
+      // }
     })
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 500)
+      // if(!enemy.base.is_active()){
+      //   enemyExplosion.play()
+      // }
     })
     spiralEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 15)
+      // if(!enemy.base.is_active()){
+      //   enemyExplosion.play()
+      // }
     })
     basicEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 100)
+      // if(!enemy.base.is_active()){
+      //   enemyExplosion.play()
+      // }
     })
   })
   squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
   followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.base.is_active())
   clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.base.is_active())
   spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.base.is_active())
-  basicEnemyArray = basicEnemyArray.filter(basicEnemy => basicEnemy.base.is_active())
   
 }
 
-const shootProjectile = (arrayToUpdate, degreesToModify) => {
-  const projectile = Projectile.new(
-    playerShip.get_centre_x(), 
-    playerShip.get_centre_y(),
-    playerShip.get_rotation_degrees() + degreesToModify,
-    )
-  return [ ...arrayToUpdate, projectile ]
+const shootProjectile = (projectileArray, degreesToModify) => {
+    let idx
+    const projectileToSet = projectileArray
+      .find((projectile, index)  => {
+        idx = index
+        return !projectile.is_active()
+      })
+    projectileToSet.reset_state(
+      playerShip.get_centre_x(), 
+      playerShip.get_centre_y(),
+      playerShip.get_rotation_degrees() + degreesToModify,
+      )
+      projectileArray[idx] = projectileToSet
+  return projectileArray
 }
  
 window.addEventListener("keydown", (e) => {
@@ -472,20 +582,19 @@ const controlShip = () => {
     if (keys[32]){
       const amountToDelay =  playerShip.get_power_up() === 'projectile' ? 0 : 5
       if(delay > amountToDelay ){
-          projectileArray = shootProjectile(projectileArray, 0)
+          initProjectileArray = shootProjectile(initProjectileArray, 0)
           playerShotContext.resume().then(() => {
-          playerShotSound.loopEnd = 0.1;
-          gainNode.gain.value = 0.5
+          playerShotSound.loopEnd = 0.1
+          playerShotGainNode.gain.value = 0.5
             if(!playerShotStarted){
-              playerShotSound.loopEnd = 0.1;
-              playerShotSound.loop = true;
+              playerShotSound.loop = true
               playerShotSound.start(0)
               playerShotStarted = true
             }
           })
           if(playerShip.get_power_up() === 'projectile'){
-            powerUpProjectileArray1 = shootProjectile(powerUpProjectileArray1, -10)
-            powerUpProjectileArray2 = shootProjectile(powerUpProjectileArray2,10)
+            initPowerUpProjectileArray1 = shootProjectile(initPowerUpProjectileArray1, -10)
+            initPowerUpProjectileArray2 = shootProjectile(initPowerUpProjectileArray2,10)
           }
           delay = 0
       } else {
@@ -501,40 +610,41 @@ const enemyRampUp = () => {
     addBasicEnemies(20)
     // addClawEnemies(4)
     // addSquareEnemies(4)
-    // addFollowEnemies(30)
+    // addFollowEnemies(20)
     // updateSpiralEnemies()
-  } else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
-    space.increment_intensity_level()
-    addFollowEnemies(20)
-    addSquareEnemies(4)
-  } else if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
-    space.increment_intensity_level()
-    clearInterval(basicEnemyInterval)
-    addBasicEnemies(16)
-    addClawEnemies(4)
-  } else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
-    space.increment_intensity_level()
-    updateSpiralEnemies()
-  } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
-    space.increment_intensity_level()
-    clearInterval(followEnemyInterval)
-    addFollowEnemies(30)
-    clearInterval(squareEnemyInterval)
-    addSquareEnemies(4)
-  } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
-    space.increment_intensity_level()
-    clearInterval(squareEnemyInterval)
-    addSquareEnemies(10)
-  }
+  } 
+  // else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
+  //   space.increment_intensity_level()
+    // addFollowEnemies(20)
+  //   addSquareEnemies(4)
+  // } else if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
+  //   space.increment_intensity_level()
+  //   clearInterval(basicEnemyInterval)
+  //   addBasicEnemies(16)
+  //   addClawEnemies(4)
+  // } else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
+  //   space.increment_intensity_level()
+  //   updateSpiralEnemies() 
+  // } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
+  //   space.increment_intensity_level()
+  //   clearInterval(followEnemyInterval)
+  //   addFollowEnemies(30)
+  //   clearInterval(squareEnemyInterval)
+  //   addSquareEnemies(4)
+  // } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
+  //   space.increment_intensity_level()
+  //   clearInterval(squareEnemyInterval)
+  //   addSquareEnemies(10)
+  // }
 }
 
 
 
 const restartGame = () => {
   renderGameOverText()
-  projectileArray = []
-  powerUpProjectileArray1 = []
-  powerUpProjectileArray2 = []
+  initProjectileArray = []
+  initPowerUpProjectileArray1 = []
+  initPowerUpProjectileArray2 = []
   squareEnemyArray = []
   followEnemyArray = []
   clawEnemyArray = []
@@ -586,10 +696,10 @@ const update = () => {
   if(startGame){
     enemyRampUp()
     updatePlayerShip()
-    projectileArray = updateProjectiles(projectileArray)
+    updateProjectiles(initProjectileArray)
     if(playerShip.get_power_up() === 'projectile'){
-      powerUpProjectileArray1 = updateProjectiles(powerUpProjectileArray1)
-      powerUpProjectileArray2 = updateProjectiles(powerUpProjectileArray2)
+      updateProjectiles(initPowerUpProjectileArray1)
+      updateProjectiles(initPowerUpProjectileArray2)
     }
     updateEnemies()
     checkProjectileHit()
@@ -613,10 +723,10 @@ const render = () => {
       playButton.click()
     }
     drawSquareEnemy()
-    drawProjectiles(projectileArray)
+    drawProjectiles(initProjectileArray)
     if(playerShip.get_power_up() === 'projectile'){
-      drawProjectiles(powerUpProjectileArray1)
-      drawProjectiles(powerUpProjectileArray2)
+      drawProjectiles(initPowerUpProjectileArray1)
+      drawProjectiles(initPowerUpProjectileArray2)
     }
     drawFollowEnemy()
     drawClawEnemy()

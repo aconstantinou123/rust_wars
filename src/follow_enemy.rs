@@ -5,6 +5,7 @@ use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
 use crate::enemy::{Enemy, EnemyType};
 use crate::shockwave::Shockwave;
+use crate::space::Space;
 
 extern crate web_sys;
 
@@ -90,11 +91,12 @@ impl FollowEnemy {
         self.base.change_speed(player_ship, speed)
     }
 
-    pub fn update(&mut self, player_ship: &mut PlayerShip) {
+    pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
         self.check_player_ship_collision(player_ship);
         self.check_shockwave_collision(&player_ship.shockwave);
         self.change_speed(player_ship, 0.2);
         self.move_enemy(player_ship);
+        self.base.move_and_reactivate(space, 2.5, 35.0);
     }
 
 }

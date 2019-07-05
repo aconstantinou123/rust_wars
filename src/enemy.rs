@@ -3,7 +3,9 @@ use crate::utils;
 use crate::projectile::Projectile;
 use crate::player_ship::PlayerShip;
 use crate::shockwave::Shockwave;
+use crate::space::Space;
 use std::f64;
+use rand::prelude::*;
 
 extern crate web_sys;
 
@@ -36,6 +38,8 @@ pub struct Enemy {
     original_y_speed: f64,
     active: bool,
     ready_to_remove: bool,
+    removal_time: i32,
+    added_to_array: bool,
     enemy_type: EnemyType,
 }
 
@@ -51,10 +55,20 @@ impl Enemy {
             y_speed,
             original_x_speed: x_speed,
             original_y_speed: y_speed,
-            active: true,
+            active: false,
+            removal_time: 0,
+            added_to_array: false,
             ready_to_remove: false,
             enemy_type,
         }
+    }
+
+    pub fn get_added_to_array(&self) -> bool {
+        self.added_to_array
+    }
+
+    pub fn set_add_to_array(&mut self) {
+        self.added_to_array = true
     }
 
      pub fn get_size(&self) -> f64 {
@@ -137,14 +151,16 @@ impl Enemy {
     }
 
     pub fn check_dead(&mut self, projectile: &Projectile) {
-        let right_x = self.get_x() as f64 + self.get_size();
-        let bottom_y = self.get_y() as f64 + self.get_size();
-        if projectile.get_x() <= right_x  
-        && projectile.get_x() >= self.get_x()
-        && projectile.get_y() <= bottom_y 
-        && projectile.get_y() >= self.get_y()
-        {
-            self.ready_to_remove = true;
+        if projectile.is_active() == true {
+            let right_x = self.get_x() as f64 + self.get_size();
+            let bottom_y = self.get_y() as f64 + self.get_size();
+            if projectile.get_x() <= right_x  
+            && projectile.get_x() >= self.get_x()
+            && projectile.get_y() <= bottom_y 
+            && projectile.get_y() >= self.get_y()
+            {
+                self.ready_to_remove = true;
+            }
         }
     }
 
@@ -248,7 +264,27 @@ impl Enemy {
         }
     }
 
-     pub fn change_speed(&mut self, player_ship: &PlayerShip, speed: f64) {
+    pub fn move_and_reactivate(&mut self, space: &Space, original_speed: f64, original_size: f64) {
+        if self.active == false && self.removal_time < 120 {
+            self.x = space.get_width() * 2.0;
+            self.y = space.get_height() * 2.0;
+            self.removal_time += 1;
+        } else if self.active == false{
+            self.active = true;
+            self.ready_to_remove = false;
+            self.removal_time = 0;
+            let mut rng = thread_rng();
+            let rand_x = rng.gen_range(0, space.get_width() as i32 - 30);
+            let rand_y = rng.gen_range(0, space.get_height() as i32 - 30);
+            self.x = rand_x as f64;
+            self.y = rand_y as f64;
+            self.x_speed = original_speed;
+            self.y_speed = original_speed;
+            self.size = original_size;
+        }
+    }
+
+    pub fn change_speed(&mut self, player_ship: &PlayerShip, speed: f64) {
          if player_ship.get_power_up() == "slowdown" {
              self.x_speed = speed;
              self.y_speed = speed;

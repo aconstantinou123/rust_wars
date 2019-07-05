@@ -18,7 +18,7 @@ module.exports = {
   plugins: [
      // new CleanWebpackPlugin(['dist/*']) for < v2 versions of CleanWebpackPlugin
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin(['index.html'], { from: 'media' }),
+    new CopyWebpackPlugin(['index.html']),
     ],
     output: {
     path: path.resolve(__dirname, "dist"),

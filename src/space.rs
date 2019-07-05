@@ -60,7 +60,9 @@ impl Space {
     pub fn check_star_out_of_bounds(&self, star: &mut Star) {
         if star.get_x() <= 0.0 || star.get_x() >= self.width 
         || star.get_y() <= 0.0 || star.get_y() >= self.height {
-            star.set_active();
+            star.set_x(self.width / 2.0);
+            star.set_y(self.height / 2.0);
+            star.set_radians();
         }
     }
 

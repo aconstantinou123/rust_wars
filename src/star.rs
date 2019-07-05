@@ -48,6 +48,21 @@ impl Star {
         self.y
     }
 
+     pub fn set_x(&mut self, x: f64) {
+        self.x = x
+    }
+
+     pub fn set_radians(&mut self) {
+        let mut rng = thread_rng();
+        let rand_angle = rng.gen_range(0, 360);
+        let radians = rand_angle as f64 * f64::consts::PI/180.0;
+        self.radians = radians;
+    }
+
+    pub fn set_y(&mut self, y: f64) {
+        self.y = y
+    }
+
     pub fn calculate_new_x(&mut self) {
        self.x += self.radians.cos() * self.speed
     }

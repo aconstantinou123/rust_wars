@@ -59,12 +59,28 @@ impl BasicEnemy {
         self.base
     }
 
+    pub fn set_active(&mut self) {
+        self.base.set_active();
+    }
+
+    pub fn is_active(&self) -> bool {
+        self.base.is_active()
+    }
+     pub fn get_added_to_array(&self) -> bool {
+        self.base.get_added_to_array()
+    }
+
+    pub fn set_add_to_array(&mut self) {
+        self.base.set_add_to_array()
+    }
+
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
         self.check_player_ship_collision(player_ship);
-    self.change_speed(player_ship, 0.2);
+        self.change_speed(player_ship, 0.2);
         space.check_basic_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);
         self.move_enemy();
+        self.base.move_and_reactivate(space, 2.0, 35.0);
     }
 
 }
