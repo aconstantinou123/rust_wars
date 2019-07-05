@@ -66,7 +66,8 @@ impl BasicEnemy {
     pub fn is_active(&self) -> bool {
         self.base.is_active()
     }
-     pub fn get_added_to_array(&self) -> bool {
+    
+    pub fn get_added_to_array(&self) -> bool {
         self.base.get_added_to_array()
     }
 

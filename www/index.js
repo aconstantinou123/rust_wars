@@ -55,8 +55,6 @@ offscreen.height = space.get_height()
 let initProjectileArray = []
 let initPowerUpProjectileArray1 = []
 let initPowerUpProjectileArray2 = []
-let initSquareEnemyArray = []
-let initFollowEnemyArray = []
 let initClawEnemyArray = []
 let initSpiralEnemyArray = []
 let initStarArray = []
@@ -197,8 +195,10 @@ const drawSpiralEnemy = () => {
 
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
-    draw_square_enemy(squareEnemy, "#FFFF00", offscreenCtx)
-    drawEnemyProjectile(squareEnemy)
+    if(squareEnemy.get_added_to_array()){
+      draw_square_enemy(squareEnemy, "#FFFF00", offscreenCtx)
+      drawEnemyProjectile(squareEnemy)
+    }
   })
 }
 
@@ -218,13 +218,17 @@ const drawEnemyProjectile = (squareEnemy) => {
 
 const drawFollowEnemy = () => {
   followEnemyArray.forEach(followEnemy => {
-    draw_follow_enemy(followEnemy, "#9D00FF", offscreenCtx)
+    if(followEnemy.get_added_to_array()){
+      draw_follow_enemy(followEnemy, "#9D00FF", offscreenCtx)
+    }
   })
 }
 
 const drawClawEnemy = () => {
   clawEnemyArray.forEach(clawEnemy => {
-    draw_claw_enemy(clawEnemy, "#FF0000", offscreenCtx)
+    if(clawEnemy.get_added_to_array()){
+      draw_claw_enemy(clawEnemy, "#FF0000", offscreenCtx)
+    }
   })
 }
 
@@ -239,31 +243,31 @@ const initProjectileArrays = (arrayToUpdate) => {
 const initSquareEnemies = () => {
   for(let i = 0; i < 5; i++){
     const buffer = 120
-    const patrolWidth = space.get_width() - 240
-    const patrolHeight = space.get_height() - 240
+    const patrolWidth = 1560
+    const patrolHeight = 960
     const x = getRandomInt(patrolWidth) + buffer
     const y = getRandomInt(patrolHeight) + buffer
     const squareEnemy = SquareEnemy.new(x, y)
-    initSquareEnemyArray = [
-      ...initSquareEnemyArray,
+    squareEnemyArray = [
+      ...squareEnemyArray,
       squareEnemy,
     ]
   }
 }
 
-const initFollowEnemies = () => {
-  for(let i = 0; i < 20; i++){
+const initFollowEnemies = (amountToAdd) => {
+  for(let i = 0; i < amountToAdd; i++){
     const followEnemy = FollowEnemy
     .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
-    initFollowEnemyArray = [
-      ...initFollowEnemyArray,
+    followEnemyArray = [
+      ...followEnemyArray,
       followEnemy,
     ]
   }
 }
 
-const initStars = () => {
-  for(let i = 0; i < 10; i++){
+const initStars = (amountToAdd) => {
+  for(let i = 0; i < amountToAdd; i++){
     const star = Star
       .new(space.get_width() / 2, space.get_height() / 2)
       initStarArray = [
@@ -273,8 +277,8 @@ const initStars = () => {
     }
   }
   
-const initBasicEnemies = () => {
-  for(let i = 0; i < 20; i++){
+const initBasicEnemies = (amountToAdd) => {
+  for(let i = 0; i < amountToAdd; i++){
     const basicEnemy = BasicEnemy 
       .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
     basicEnemyArray = [
@@ -284,42 +288,25 @@ const initBasicEnemies = () => {
   }
 }
 
+const initClawEnemies = (amountToAdd) => {
+  for(let i = 0; i < amountToAdd; i++){
+    const clawEnemy = ClawEnemy
+      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
+    clawEnemyArray = [
+      ...clawEnemyArray,
+      clawEnemy,
+    ]
+  }
+}
+
 initProjectileArray = initProjectileArrays(initProjectileArray, 0)
 initPowerUpProjectileArray1 = initProjectileArrays(initPowerUpProjectileArray1, -10)
 initPowerUpProjectileArray2 = initProjectileArrays(initPowerUpProjectileArray2, 10)
-initBasicEnemies()
-// initSquareEnemies()
-// initFollowEnemies()
-initStars()
-
-const addSquareEnemies = (amountToAdd) => {
-  const buffer = 120
-  const patrolWidth = space.get_width() - 240
-  const patrolHeight = space.get_height() - 240
-  const x = getRandomInt(patrolWidth) + buffer
-  const y = getRandomInt(patrolHeight) + buffer
-  squareEnemyInterval = setInterval(() => {
-    if(squareEnemyArray.length < amountToAdd && startGame){
-      const squareEnemy = initSpiralEnemyArray.pop()
-      squareEnemyArray = [
-        ...squareEnemyArray,
-        squareEnemy,
-      ]
-    }
-  }, 5000)
-}
-
-const addFollowEnemies = (amountToAdd) => {
-  followEnemyInterval = setInterval(() => {
-    if(followEnemyArray.length < amountToAdd && startGame){
-      const followEnemy = initFollowEnemyArray.pop()
-      followEnemyArray = [
-        ...followEnemyArray,
-        followEnemy,
-      ]
-    }
-  }, 2000)
-}
+initBasicEnemies(20)
+initSquareEnemies(5)
+initFollowEnemies(20)
+initClawEnemies(10)
+initStars(10)
 
 const addStars = () => {
   setInterval(() => {
@@ -333,20 +320,20 @@ const addStars = () => {
   }, 75)
 }
 
-
-const addBasicEnemies = (amountToAdd) => {
-  basicEnemyInterval = setInterval(() => {
-    const activeArrayLength = basicEnemyArray
+const addEnemies = (enemyArray, amountToAdd, interval) => {
+  console.log(enemyArray)
+  interval = setInterval(() => {
+    const activeArrayLength = enemyArray
       .filter(enemy => enemy.get_added_to_array()).length
       if(activeArrayLength < amountToAdd && startGame){
       let idx
-      const basicEnemyToSet = basicEnemyArray
+      const enemyToSet = enemyArray
       .find((enemy, index)  => {
         idx = index
         return !enemy.get_added_to_array()
       })
-      basicEnemyToSet.set_add_to_array()
-      basicEnemyArray[idx] = basicEnemyToSet
+      enemyToSet.set_add_to_array()
+      enemyArray[idx] = enemyToSet
     }
   }, 2000)
 }
@@ -371,19 +358,6 @@ const updateSpiralEnemies = () => {
     }
   }, 10)
 }    
-
-const addClawEnemies = (amountToAdd) => {
-  clawEnemyInterval = setInterval(() => {
-    if(clawEnemyArray.length < amountToAdd && startGame){
-      const clawEnemy = ClawEnemy
-        .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
-      clawEnemyArray = [
-        ...clawEnemyArray,
-        clawEnemy,
-      ]
-    }
-  }, 1000)
-}
 
 const updatePlayerHealthDisplay = () => {
   const playerHealthElement = document.getElementById("player-health")
@@ -466,10 +440,10 @@ const updatePowerUp = () => {
 const updateEnemies = () => {
   [
     // ...spiralEnemyArray,
-    // ...squareEnemyArray,
+    ...squareEnemyArray,
     ...basicEnemyArray,
-    // ...clawEnemyArray,
-    // ...followEnemyArray
+    ...clawEnemyArray,
+    ...followEnemyArray
   ].forEach(enemy => {
     if(enemy.get_added_to_array()){
       enemy.update(playerShip, space)
@@ -516,9 +490,6 @@ const checkProjectileHit = () => {
       // }
     })
   })
-  squareEnemyArray = squareEnemyArray.filter(squareEnemy => squareEnemy.base.is_active())
-  followEnemyArray = followEnemyArray.filter(followEnemy => followEnemy.base.is_active())
-  clawEnemyArray = clawEnemyArray.filter(clawEnemy => clawEnemy.base.is_active())
   spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.base.is_active())
   
 }
@@ -607,9 +578,10 @@ const controlShip = () => {
 const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
-    addBasicEnemies(20)
-    // addClawEnemies(4)
-    // addSquareEnemies(4)
+    addEnemies(basicEnemyArray, 20, basicEnemyInterval)
+    addEnemies(followEnemyArray, 10, followEnemyInterval)
+    addEnemies(squareEnemyArray, 3, squareEnemyInterval)
+    addEnemies(clawEnemyArray, 5, clawEnemyInterval)
     // addFollowEnemies(20)
     // updateSpiralEnemies()
   } 
