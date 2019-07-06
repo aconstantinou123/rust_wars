@@ -75,6 +75,10 @@ impl BasicEnemy {
         self.base.set_add_to_array()
     }
 
+    pub fn remove_enemy_from_array(&mut self) {
+        self.base.remove_enemy_from_array()
+    }
+
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
         self.blow_up(player_ship, 100);
         self.check_player_ship_collision(player_ship);

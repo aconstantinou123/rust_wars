@@ -75,6 +75,10 @@ impl Enemy {
         self.added_to_array = true
     }
 
+    pub fn remove_enemy_from_array(&mut self) {
+        self.added_to_array = false
+    }
+
      pub fn get_size(&self) -> f64 {
         self.size
     }
@@ -260,19 +264,21 @@ impl Enemy {
     }
 
     pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
-        if self.ready_to_remove == true && self.size < 50.0 {
-            self.size += 1.0
-        }  else if self.ready_to_remove && self.active == true {
-            self.set_active();
+        if self.ready_to_remove == true && self.size < 50.0 && self.active == true {
+            self.size += 1.0;
+        }  else if self.ready_to_remove == true {
+            self.active = false;
+            self.ready_to_remove = false;
             player_ship.set_score(score_to_add)
         }
     }
 
     pub fn move_and_reactivate(&mut self, space: &Space, 
     original_speed: f64, original_size: f64, max_x: f64, max_y: f64, buffer: f64) {
-        if self.active == false && self.removal_time < 120 {
-            self.x = space.get_width() * 2.0;
-            self.y = space.get_height() * 2.0;
+        if self.active == false && self.removal_time < 300 {
+            self.x = -space.get_width() * 10.0;
+            self.y = -space.get_height() * 10.0;
+            self.size = 0.0;
             self.removal_time += 1;
         } else if self.active == false{
             self.active = true;
