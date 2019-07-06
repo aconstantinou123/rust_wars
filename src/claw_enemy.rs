@@ -119,6 +119,7 @@ impl ClawEnemy {
     }
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
+        self.blow_up(player_ship, 500);
         self.check_player_ship_collision(player_ship);
         space.check_claw_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);

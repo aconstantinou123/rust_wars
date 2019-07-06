@@ -76,6 +76,7 @@ impl BasicEnemy {
     }
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
+        self.blow_up(player_ship, 100);
         self.check_player_ship_collision(player_ship);
         self.change_speed(player_ship, 0.2);
         space.check_basic_enemy_at_edge(self);

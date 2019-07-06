@@ -261,7 +261,7 @@ impl Enemy {
 
     pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
         if self.ready_to_remove == true && self.size < 50.0 {
-            self.size += 0.03
+            self.size += 1.0
         }  else if self.ready_to_remove && self.active == true {
             self.set_active();
             player_ship.set_score(score_to_add)
@@ -285,6 +285,8 @@ impl Enemy {
             self.y = rand_y;
             self.x_speed = original_speed;
             self.y_speed = original_speed;
+            self.original_x_speed = original_speed;
+            self.original_y_speed = original_speed;
             self.size = original_size;
         }
     }

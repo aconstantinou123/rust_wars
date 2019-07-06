@@ -401,14 +401,12 @@ const checkProjectileHit = (projectileArray) => {
   projectileArray.forEach(projectile => {
     squareEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 300)
       // if(!enemy.base.is_active()){
       //   enemyExplosion.play()
       // }
     })
     followEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 200)
       // if(!enemy.base.is_active()){
       //   enemyExplosion.play()
       // }
@@ -416,21 +414,18 @@ const checkProjectileHit = (projectileArray) => {
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 500)
       // if(!enemy.base.is_active()){
       //   enemyExplosion.play()
       // }
     })
     spiralEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 15)
       // if(!enemy.base.is_active()){
       //   enemyExplosion.play()
       // }
     })
     basicEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
-      enemy.blow_up(playerShip, 100)
       // if(!enemy.base.is_active()){
       //   enemyExplosion.play()
       // }
@@ -523,34 +518,34 @@ const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
     addEnemies(basicEnemyArray, 10, basicEnemyInterval)
-    addEnemies(followEnemyArray, 10, followEnemyInterval)
-    addEnemies(squareEnemyArray, 1, squareEnemyInterval)
-    addEnemies(clawEnemyArray, 5, clawEnemyInterval)
-    updateSpiralEnemies()
+    // addEnemies(followEnemyArray, 10, followEnemyInterval)
+    // addEnemies(squareEnemyArray, 1, squareEnemyInterval)
+    // addEnemies(clawEnemyArray, 5, clawEnemyInterval)
+    // updateSpiralEnemies()
   } 
-  // else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
-  //   space.increment_intensity_level()
-  //   addEnemies(followEnemyArray, 10, followEnemyInterval)
-  //   addEnemies(squareEnemyArray, 2, squareEnemyInterval)
-  // } else if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
-  //   space.increment_intensity_level()
-  //   clearInterval(basicEnemyInterval)
-  //   addEnemies(basicEnemyArray, 15, basicEnemyInterval)
-  //   addEnemies(clawEnemyArray, 4, clawEnemyInterval)
-  // } else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
-  //   space.increment_intensity_level()
-  //   updateSpiralEnemies() 
-  // } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
-  //   space.increment_intensity_level()
-  //   clearInterval(followEnemyInterval)
-  //   addEnemies(followEnemyArray, 20, followEnemyInterval)
-  //   clearInterval(squareEnemyInterval)
-  //   addEnemies(squareEnemyArray, 2, squareEnemyInterval)
-  // } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
-  //   space.increment_intensity_level()
-  //   clearInterval(squareEnemyInterval)
-  //   addEnemies(squareEnemyArray, 10, squareEnemyInterval)
-  // }
+   else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
+    space.increment_intensity_level()
+    addEnemies(followEnemyArray, 10, followEnemyInterval)
+    addEnemies(squareEnemyArray, 2, squareEnemyInterval)
+  } else if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
+    space.increment_intensity_level()
+    clearInterval(basicEnemyInterval)
+    addEnemies(basicEnemyArray, 15, basicEnemyInterval)
+    addEnemies(clawEnemyArray, 4, clawEnemyInterval)
+  } else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
+    space.increment_intensity_level()
+    updateSpiralEnemies() 
+  } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
+    space.increment_intensity_level()
+    clearInterval(followEnemyInterval)
+    addEnemies(followEnemyArray, 20, followEnemyInterval)
+    clearInterval(squareEnemyInterval)
+    addEnemies(squareEnemyArray, 2, squareEnemyInterval)
+  } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
+    space.increment_intensity_level()
+    clearInterval(squareEnemyInterval)
+    addEnemies(squareEnemyArray, 10, squareEnemyInterval)
+  }
 }
 
 
