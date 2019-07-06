@@ -29,6 +29,7 @@
   "homepage": "https://github.com/rustwasm/create-wasm-app#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "howler": "^2.1.2",
     "nodemon": "^1.19.1",
     "shooter": "file:../pkg",
     "webpack-merge": "^4.2.1"

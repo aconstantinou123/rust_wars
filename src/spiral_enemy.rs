@@ -79,11 +79,49 @@ impl SpiralEnemy {
         self.base.change_speed(player_ship, speed)
     }
 
+    pub fn get_added_to_array(&self) -> bool {
+        self.base.get_added_to_array()
+    }
+
+    pub fn set_add_to_array(&mut self) {
+        self.base.set_add_to_array()
+    }
+
+    pub fn set_x(&mut self, x: f64) {
+        self.base.set_x(x)
+    }
+
+    pub fn set_y(&mut self, y: f64) {
+        self.base.set_y(y)
+    }
+
+    pub fn set_active(&mut self) {
+        self.base.set_active()
+    }
+
+    pub fn set_speed(&mut self, speed: f64) {
+        self.base.set_x_speed(speed);
+        self.base.set_y_speed(speed);
+    }
+
+    pub fn move_and_reactivate(&mut self, space: &Space, original_speed: f64, original_size: f64) {
+        if self.base.is_active() == false {
+            self.base.set_x(space.get_width() * -10.0);
+            self.base.set_y(space.get_height() * -10.0);
+            // self.base.set_active();
+            self.base.set_ready_to_remove();
+            self.base.set_x_speed(original_speed);
+            self.base.set_y_speed(original_speed);
+            self.base.set_size(original_size);
+        }
+    }
+
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
         self.check_player_ship_collision(player_ship);
         space.check_spiral_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);
         self.change_speed(player_ship, 0.5);
+        self.move_and_reactivate(space, 0.0, 25.0);
     }
 
 }

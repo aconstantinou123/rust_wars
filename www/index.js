@@ -55,8 +55,6 @@ offscreen.height = space.get_height()
 let initProjectileArray = []
 let initPowerUpProjectileArray1 = []
 let initPowerUpProjectileArray2 = []
-let initClawEnemyArray = []
-let initSpiralEnemyArray = []
 let initStarArray = []
 
 const times = []
@@ -112,7 +110,7 @@ playButton.addEventListener('click', function() {
     context.resume().then(() => {
       backgroundMusic.loop = true
       startBackgroundMusic = true
-      // backgroundMusic.start(0)
+      backgroundMusic.start(0)
     })
   }
 })
@@ -188,8 +186,10 @@ const drawPowerUp = () => {
 
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
-    spiralEnemy.spiral_movement()
-    draw_spiral_enemy(spiralEnemy, "#0033FF", offscreenCtx)
+    if(spiralEnemy.get_added_to_array()){
+      spiralEnemy.spiral_movement()
+      draw_spiral_enemy(spiralEnemy, "#0033FF", offscreenCtx)
+    }
   })
 }
 
@@ -299,6 +299,17 @@ const initClawEnemies = (amountToAdd) => {
   }
 }
 
+const initSpiralEnemies = (amountToAdd) => {
+  for(let i = 0; i < amountToAdd; i++){
+    const spiralEnemy = SpiralEnemy
+      .new(0, 0)
+    spiralEnemyArray = [
+      ...spiralEnemyArray,
+      spiralEnemy
+    ]
+  }
+}
+
 initProjectileArray = initProjectileArrays(initProjectileArray, 0)
 initPowerUpProjectileArray1 = initProjectileArrays(initPowerUpProjectileArray1, -10)
 initPowerUpProjectileArray2 = initProjectileArrays(initPowerUpProjectileArray2, 10)
@@ -306,6 +317,7 @@ initBasicEnemies(20)
 initSquareEnemies(5)
 initFollowEnemies(20)
 initClawEnemies(10)
+initSpiralEnemies(30)
 initStars(10)
 
 const addStars = () => {
@@ -321,7 +333,6 @@ const addStars = () => {
 }
 
 const addEnemies = (enemyArray, amountToAdd, interval) => {
-  console.log(enemyArray)
   interval = setInterval(() => {
     const activeArrayLength = enemyArray
       .filter(enemy => enemy.get_added_to_array()).length
@@ -341,21 +352,30 @@ const addEnemies = (enemyArray, amountToAdd, interval) => {
 
 const updateSpiralEnemies = () => {
   spiralEnemyInterval = setInterval(() => {
-  if(spiralEnemyArray.length == 30){
+    const addedArrayLength = spiralEnemyArray
+    .filter(enemy => enemy.get_added_to_array()).length
+    const activeArrayLength = spiralEnemyArray
+    .filter(enemy => enemy.base.is_active()).length
+  if(addedArrayLength == 30 && activeArrayLength == 30){
     drawSpirals = false
-  } else if (spiralEnemyArray.length == 0){
+  } else if(activeArrayLength <= 30 && drawSpirals && startGame){
+      let idx
+      const spiralEnemyToSet = spiralEnemyArray
+        .find((enemy, index)  => {
+          idx = index
+          return !enemy.base.is_active()
+        })
+      spiralEnemyToSet.set_active()
+      spiralEnemyToSet.set_add_to_array()
+      spiralEnemyToSet.set_x(spiralX)
+      spiralEnemyToSet.set_x(spiralY)
+      spiralEnemyToSet.set_speed(1)
+      spiralEnemyArray[idx] = spiralEnemyToSet
+  } else if (addedArrayLength == 30 && activeArrayLength == 0){
     drawSpirals = true
     spiralX = getRandomInt(space.get_width() - 30)
     spiralY = getRandomInt(space.get_height() - 30)
   }
-    if(spiralEnemyArray.length <= 30 && drawSpirals && startGame){
-      const spiralEnemy = SpiralEnemy
-        .new(spiralX, spiralY)
-      spiralEnemyArray = [
-        ...spiralEnemyArray,
-        spiralEnemy
-      ]
-    }
   }, 10)
 }    
 
@@ -439,7 +459,7 @@ const updatePowerUp = () => {
 
 const updateEnemies = () => {
   [
-    // ...spiralEnemyArray,
+    ...spiralEnemyArray,
     ...squareEnemyArray,
     ...basicEnemyArray,
     ...clawEnemyArray,
@@ -489,9 +509,7 @@ const checkProjectileHit = () => {
       //   enemyExplosion.play()
       // }
     })
-  })
-  spiralEnemyArray = spiralEnemyArray.filter(spiralEnemy => spiralEnemy.base.is_active())
-  
+  }) 
 }
 
 const shootProjectile = (projectileArray, degreesToModify) => {
@@ -582,8 +600,7 @@ const enemyRampUp = () => {
     addEnemies(followEnemyArray, 10, followEnemyInterval)
     addEnemies(squareEnemyArray, 3, squareEnemyInterval)
     addEnemies(clawEnemyArray, 5, clawEnemyInterval)
-    // addFollowEnemies(20)
-    // updateSpiralEnemies()
+    updateSpiralEnemies()
   } 
   // else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
   //   space.increment_intensity_level()

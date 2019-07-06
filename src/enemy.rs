@@ -63,6 +63,10 @@ impl Enemy {
         }
     }
 
+    pub fn set_size(&mut self, size: f64) {
+        self.size = size
+    }
+
     pub fn get_added_to_array(&self) -> bool {
         self.added_to_array
     }
