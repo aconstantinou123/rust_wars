@@ -55,7 +55,7 @@ impl Enemy {
             y_speed,
             original_x_speed: x_speed,
             original_y_speed: y_speed,
-            active: false,
+            active: true,
             removal_time: 0,
             added_to_array: false,
             ready_to_remove: false,
@@ -268,7 +268,8 @@ impl Enemy {
         }
     }
 
-    pub fn move_and_reactivate(&mut self, space: &Space, original_speed: f64, original_size: f64) {
+    pub fn move_and_reactivate(&mut self, space: &Space, 
+    original_speed: f64, original_size: f64, max_x: f64, max_y: f64, buffer: f64) {
         if self.active == false && self.removal_time < 120 {
             self.x = space.get_width() * 2.0;
             self.y = space.get_height() * 2.0;
@@ -278,10 +279,10 @@ impl Enemy {
             self.ready_to_remove = false;
             self.removal_time = 0;
             let mut rng = thread_rng();
-            let rand_x = rng.gen_range(0, space.get_width() as i32 - 30);
-            let rand_y = rng.gen_range(0, space.get_height() as i32 - 30);
-            self.x = rand_x as f64;
-            self.y = rand_y as f64;
+            let rand_x = rng.gen_range(0.0, max_x - 30.0) + buffer;
+            let rand_y = rng.gen_range(0.0, max_y - 30.0) + buffer;
+            self.x = rand_x;
+            self.y = rand_y;
             self.x_speed = original_speed;
             self.y_speed = original_speed;
             self.size = original_size;

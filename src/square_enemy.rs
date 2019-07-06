@@ -50,54 +50,56 @@ impl SquareEnemy {
         self.laser.get_y()
     }
 
-    pub fn move_enemy(&mut self, space: &Space, player_ship: &mut PlayerShip) {
+    pub fn move_enemy(&mut self, max_x: f64, max_y: f64, player_ship: &mut PlayerShip) {
         let laser_x = self.base.get_x() + (self.base.get_size() / 2.0);
         let laser_y = self.base.get_y() + (self.base.get_size() / 2.0);
         if self.in_x_position == false || self.in_y_position == false {
             self.laser.align_with_enemy_position(laser_x, laser_y);
-            self.move_to_position(space)
+            self.move_to_position(max_x, max_y);
         } else if self.laser.get_shoot_timer() <= 500 && self.laser.get_can_shoot() == false {
             if self.laser.get_radians() != 0.0 {
                 self.laser.reset_radians();
             }
             self.laser.align_with_enemy_position(laser_x, laser_y);
             self.laser.delay_shot(player_ship);
-            self.patrol_edges(space)
+            self.patrol_edges(max_x, max_y)
         } else {
             self.laser.delay_shot(player_ship);
         }
     }
 
-    pub fn patrol_edges(&mut self, space: &Space) {
-        if self.base.get_x() < (space.get_width() - self.base.get_size() - 105.0) 
+    pub fn patrol_edges(&mut self, max_x: f64, max_y: f64) {
+        if self.base.get_x() < (max_x - self.base.get_size() - 105.0) 
             && self.base.get_y() <= 105.0 {
-            self.base.increment_x(self.base.get_x_speed())
-        } else if self.base.get_y() < (space.get_height() - self.base.get_size() - 105.0) 
-            && self.base.get_x() >= (space.get_width() - self.base.get_size() - 105.0) {
-            self.base.increment_y(self.base.get_x_speed())
+            self.base.increment_x(self.base.get_x_speed());
+        } else if self.base.get_y() < (max_y - self.base.get_size() - 105.0) 
+            && self.base.get_x() >= (max_x - self.base.get_size() - 105.0) {
+            self.base.increment_y(self.base.get_x_speed());
         } else if self.base.get_x() > 105.0 
-            && self.base.get_y() >= (space.get_height() - self.base.get_size() - 105.0) {
-            self.base.increment_x(-self.base.get_x_speed())
+            && self.base.get_y() >= (max_y - self.base.get_size() - 105.0) {
+            self.base.increment_x(-self.base.get_x_speed());
         } else if self.base.get_y() > 105.0 
             && self.base.get_x() <= 105.0 {
-            self.base.increment_y(-self.base.get_x_speed())
+            self.base.increment_y(-self.base.get_x_speed());
         }
     }
 
-    pub fn move_to_position(&mut self, space: &Space) {
-        if self.base.get_x() < space.get_width() *  0.5 && self.base.get_x() > 100.0 {
+    pub fn move_to_position(&mut self, max_x: f64, max_y: f64) {
+        if self.base.get_x() < max_x *  0.5 && self.base.get_x() > 100.0 {
             self.base.increment_x(-self.base.get_x_speed())
-        } else if self.base.get_x() > space.get_width() *  0.5 && self.base.get_x() < space.get_width() - 100.0 {
+        } else if self.base.get_x() > max_x *  0.5 && self.base.get_x() < max_x - 100.0 {
              self.base.increment_x(self.base.get_x_speed())
-        } else {
-            self.in_x_position = true;
+        } 
+        else {
+            self.in_x_position = true
         }
-        if self.base.get_y() < space.get_height() * 0.5 && self.base.get_y() > 100.0 {
-            self.base.increment_y(-self.base.get_x_speed())
-        } else if self.base.get_y() > space.get_height() *  0.5 && self.base.get_y() < space.get_height() - 100.0 {
+        if self.base.get_y() < max_y * 0.5 && self.base.get_y() > 100.0 {
+            self.base.increment_y(-self.base.get_x_speed());
+        } else if self.base.get_y() > max_y *  0.5 && self.base.get_y() < max_y - 100.0 {
             self.base.increment_y(self.base.get_x_speed())
-        } else {
-            self.in_y_position = true;
+        } 
+        else {
+            self.in_y_position = true
         }
      }
 
@@ -130,13 +132,18 @@ impl SquareEnemy {
     }
 
 
-    pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
+    pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
         self.check_player_ship_collision(player_ship);
         space.check_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);
         self.change_speed(player_ship, 0.2);
-        self.move_enemy(space, player_ship);
-        self.base.move_and_reactivate(space, 2.0, 35.0);
+        self.move_enemy(max_x, max_y, player_ship);
+        if self.base.is_active() == false {
+            self.in_x_position = false;
+            self.in_y_position = false;
+            self.laser = Laser::new(0.0, self.base.get_x(), self.base.get_y());
+        }
+        self.base.move_and_reactivate(space, 2.0, 35.0, max_x, max_y, 120.0);
     }
 
 }
