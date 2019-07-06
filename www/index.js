@@ -52,13 +52,13 @@ offscreen.width = space.get_width()
 offscreen.height = space.get_height()
 
 
-let initProjectileArray = []
-let initPowerUpProjectileArray1 = []
-let initPowerUpProjectileArray2 = []
 let initStarArray = []
 
 const times = []
 let fps
+let projectileArray = []
+let powerUpProjectileArray1 = []
+let powerUpProjectileArray2 = []
 let squareEnemyArray = []
 let followEnemyArray = []
 let clawEnemyArray = []
@@ -91,8 +91,6 @@ let backgroundMusic
 let playerShotSound
 
 let playerShotGainNode
-
-
 
 
 const playButton = document.getElementById('play-button')
@@ -232,97 +230,42 @@ const drawClawEnemy = () => {
   })
 }
 
-const initProjectileArrays = (arrayToUpdate) => {
-  for(let i = 0; i < 100; i++){
-    const projectile = Projectile.new(0,0,0)
-    arrayToUpdate = [ ...arrayToUpdate, projectile ]
-  }
-  return arrayToUpdate
-}
-
-const initSquareEnemies = () => {
-  for(let i = 0; i < 5; i++){
-    const buffer = 120
-    const patrolWidth = 1560
-    const patrolHeight = 960
-    const x = getRandomInt(patrolWidth) + buffer
-    const y = getRandomInt(patrolHeight) + buffer
-    const squareEnemy = SquareEnemy.new(x, y)
-    squareEnemyArray = [
-      ...squareEnemyArray,
-      squareEnemy,
+const initObjectArrays = (array, amountToAdd, Type, optionalX, optionalY, optionalRadians) => {
+  const x = optionalX ? optionalX : getRandomInt(space.get_width() - 30)
+  const y = optionalY ? optionalY : getRandomInt(space.get_height() - 30)
+  const radians = optionalRadians ? optionalRadians : null
+  for(let i = 0; i < amountToAdd; i++){
+    const object = Type.new(x, y, radians)
+    array = [
+      ...array,
+      object,
     ]
   }
+  return array
 }
 
-const initFollowEnemies = (amountToAdd) => {
-  for(let i = 0; i < amountToAdd; i++){
-    const followEnemy = FollowEnemy
-    .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
-    followEnemyArray = [
-      ...followEnemyArray,
-      followEnemy,
-    ]
-  }
-}
 
-const initStars = (amountToAdd) => {
-  for(let i = 0; i < amountToAdd; i++){
-    const star = Star
-      .new(space.get_width() / 2, space.get_height() / 2)
-      initStarArray = [
-        ...initStarArray,
-        star,
-      ]
-    }
-  }
-  
-const initBasicEnemies = (amountToAdd) => {
-  for(let i = 0; i < amountToAdd; i++){
-    const basicEnemy = BasicEnemy 
-      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
-    basicEnemyArray = [
-      ...basicEnemyArray,
-      basicEnemy,
-    ]
-  }
-}
 
-const initClawEnemies = (amountToAdd) => {
-  for(let i = 0; i < amountToAdd; i++){
-    const clawEnemy = ClawEnemy
-      .new(getRandomInt(space.get_width() - 30), getRandomInt(space.get_height() - 30))
-    clawEnemyArray = [
-      ...clawEnemyArray,
-      clawEnemy,
-    ]
-  }
-}
-
-const initSpiralEnemies = (amountToAdd) => {
-  for(let i = 0; i < amountToAdd; i++){
-    const spiralEnemy = SpiralEnemy
-      .new(0, 0)
-    spiralEnemyArray = [
-      ...spiralEnemyArray,
-      spiralEnemy
-    ]
-  }
-}
-
-initProjectileArray = initProjectileArrays(initProjectileArray, 0)
-initPowerUpProjectileArray1 = initProjectileArrays(initPowerUpProjectileArray1, -10)
-initPowerUpProjectileArray2 = initProjectileArrays(initPowerUpProjectileArray2, 10)
-initBasicEnemies(20)
-initSquareEnemies(5)
-initFollowEnemies(20)
-initClawEnemies(10)
-initSpiralEnemies(30)
-initStars(10)
+projectileArray = initObjectArrays(projectileArray, 100, Projectile, 0, 0, 0)
+powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 100, Projectile, 0, 0, 0)
+powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 100, Projectile, 0, 0, 0)
+basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
+const buffer = 120
+const patrolWidth = 1560
+const patrolHeight = 960
+const squareEnemyX = getRandomInt(patrolWidth) + buffer
+const squareEnemyY = getRandomInt(patrolHeight) + buffer
+squareEnemyArray = initObjectArrays(squareEnemyArray, 5, SquareEnemy, squareEnemyX, squareEnemyY)
+followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
+clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
+spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
+const starX = space.get_width() / 2
+const starY = space.get_height() / 2
+initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
 
 const addStars = () => {
   setInterval(() => {
-    if(starArray.length < 10){
+    if(starArray.length < 20){
       const star = initStarArray.pop()
       starArray = [
         ...starArray,
@@ -472,7 +415,7 @@ const updateEnemies = () => {
 }
 
 const checkProjectileHit = () => {
-  initProjectileArray.forEach(projectile => {
+  projectileArray.forEach(projectile => {
     squareEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
       enemy.blow_up(playerShip, 300)
@@ -571,7 +514,7 @@ const controlShip = () => {
     if (keys[32]){
       const amountToDelay =  playerShip.get_power_up() === 'projectile' ? 0 : 5
       if(delay > amountToDelay ){
-          initProjectileArray = shootProjectile(initProjectileArray, 0)
+          projectileArray = shootProjectile(projectileArray, 0)
           playerShotContext.resume().then(() => {
           playerShotSound.loopEnd = 0.1
           playerShotGainNode.gain.value = 0.5
@@ -582,8 +525,8 @@ const controlShip = () => {
             }
           })
           if(playerShip.get_power_up() === 'projectile'){
-            initPowerUpProjectileArray1 = shootProjectile(initPowerUpProjectileArray1, -10)
-            initPowerUpProjectileArray2 = shootProjectile(initPowerUpProjectileArray2,10)
+            powerUpProjectileArray1 = shootProjectile(powerUpProjectileArray1, -10)
+            powerUpProjectileArray2 = shootProjectile(powerUpProjectileArray2,10)
           }
           delay = 0
       } else {
@@ -631,14 +574,30 @@ const enemyRampUp = () => {
 
 const restartGame = () => {
   renderGameOverText()
-  initProjectileArray = []
-  initPowerUpProjectileArray1 = []
-  initPowerUpProjectileArray2 = []
+  projectileArray = []
+  powerUpProjectileArray1 = []
+  powerUpProjectileArray2 = []
   squareEnemyArray = []
   followEnemyArray = []
   clawEnemyArray = []
   spiralEnemyArray = []
   basicEnemyArray = []
+  projectileArray = initObjectArrays(projectileArray, 100, Projectile, 0, 0, 0)
+  powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 100, Projectile, 0, 0, 0)
+  powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 100, Projectile, 0, 0, 0)
+  basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
+  const buffer = 120
+  const patrolWidth = 1560
+  const patrolHeight = 960
+  const squareEnemyX = getRandomInt(patrolWidth) + buffer
+  const squareEnemyY = getRandomInt(patrolHeight) + buffer
+  squareEnemyArray = initObjectArrays(squareEnemyArray, 5, SquareEnemy, squareEnemyX, squareEnemyY)
+  followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
+  clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
+  spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
+  const starX = space.get_width() / 2
+  const starY = space.get_height() / 2
+  initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
   keys = []
   velX = 0
   velY = 0
@@ -685,10 +644,10 @@ const update = () => {
   if(startGame){
     enemyRampUp()
     updatePlayerShip()
-    updateProjectiles(initProjectileArray)
+    updateProjectiles(projectileArray)
     if(playerShip.get_power_up() === 'projectile'){
-      updateProjectiles(initPowerUpProjectileArray1)
-      updateProjectiles(initPowerUpProjectileArray2)
+      updateProjectiles(powerUpProjectileArray1)
+      updateProjectiles(powerUpProjectileArray2)
     }
     updateEnemies()
     checkProjectileHit()
@@ -712,10 +671,10 @@ const render = () => {
       playButton.click()
     }
     drawSquareEnemy()
-    drawProjectiles(initProjectileArray)
+    drawProjectiles(projectileArray)
     if(playerShip.get_power_up() === 'projectile'){
-      drawProjectiles(initPowerUpProjectileArray1)
-      drawProjectiles(initPowerUpProjectileArray2)
+      drawProjectiles(powerUpProjectileArray1)
+      drawProjectiles(powerUpProjectileArray2)
     }
     drawFollowEnemy()
     drawClawEnemy()
