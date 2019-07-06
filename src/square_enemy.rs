@@ -136,7 +136,7 @@ impl SquareEnemy {
     }
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
-        self.blow_up(player_ship, 300);
+        self.base.move_and_reactivate(space, 2.0, 35.0, max_x, max_y, 120.0);
         self.check_player_ship_collision(player_ship);
         space.check_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);
@@ -147,7 +147,7 @@ impl SquareEnemy {
             self.in_y_position = false;
             self.laser = Laser::new(0.0, self.base.get_x(), self.base.get_y());
         }
-        self.base.move_and_reactivate(space, 2.0, 35.0, max_x, max_y, 120.0);
+        self.blow_up(player_ship, 300);
     }
 
 }

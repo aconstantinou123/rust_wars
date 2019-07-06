@@ -41,12 +41,15 @@ pub struct Enemy {
     removal_time: i32,
     added_to_array: bool,
     enemy_type: EnemyType,
+    id: i32,
 }
 
 #[wasm_bindgen]
 impl Enemy {
     pub fn new(size: f64, x: f64, y: f64, x_speed: f64, y_speed: f64, enemy_type: EnemyType) -> Enemy {
         utils::set_panic_hook();
+        let mut rng = thread_rng();
+        let id = rng.gen_range(0, 5000);
         Enemy {
             size,
             x,
@@ -60,6 +63,7 @@ impl Enemy {
             added_to_array: false,
             ready_to_remove: false,
             enemy_type,
+            id,
         }
     }
 
@@ -196,11 +200,11 @@ impl Enemy {
                 self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
                 player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
                 player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-                if player_ship.get_power_up() != "invincible" {
-                    player_ship.set_health(-5);
-                } else {
+                if player_ship.get_power_up() == "invincible" {
                     self.active = false;
                     player_ship.set_score(500);
+                } else {
+                    player_ship.set_health(-5);
                 }
             } 
             if right_side_of_ship >= left_x
@@ -211,11 +215,11 @@ impl Enemy {
                 self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
                 player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
                 player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-                if player_ship.get_power_up() != "invincible" {
-                    player_ship.set_health(-5);
-                } else {
+                if player_ship.get_power_up() == "invincible" {
                     self.active = false;
                     player_ship.set_score(500);
+                } else {
+                    player_ship.set_health(-5);
                 }
             }
             if bottom_of_ship >= top_y
@@ -226,11 +230,11 @@ impl Enemy {
                 self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
                 player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
                 player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-                if player_ship.get_power_up() != "invincible" {
-                    player_ship.set_health(-5);
-                } else {
+                if player_ship.get_power_up() == "invincible" {
                     self.active = false;
                     player_ship.set_score(500);
+                } else {
+                    player_ship.set_health(-5);
                 }
             }
             if top_of_ship <= bottom_y
@@ -241,11 +245,11 @@ impl Enemy {
                 self.increment_y(-(radians.sin() * (self.y_speed * 10.0)));
                 player_ship.increment_centre_x(radians.cos() * (player_ship.get_speed() as f64 * 5.0));
                 player_ship.increment_centre_y(radians.sin() * (player_ship.get_speed() as f64 * 5.0));
-                if player_ship.get_power_up() != "invincible" {
-                    player_ship.set_health(-5);
-                } else {
+                if player_ship.get_power_up() == "invincible" {
                     self.active = false;
                     player_ship.set_score(500);
+                } else {
+                    player_ship.set_health(-5);
                 }
             }
         }
@@ -255,18 +259,19 @@ impl Enemy {
         let right_x = self.get_x() + (self.get_size() / 2.0);
         let left_x = self.get_x() - (self.get_size() / 2.0);
         if shockwave.get_x() <= right_x && shockwave.get_x() >= left_x {
-            self.active = false;
+            self.ready_to_remove = true;
         }
         if shockwave.get_x() + (shockwave.get_x() * 2.0) >= left_x 
         && shockwave.get_x() + (shockwave.get_x() * 2.0) <= right_x {
-            self.active = false;
+            self.ready_to_remove = true;
         }
     }
 
     pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
         if self.ready_to_remove == true && self.size < 50.0 && self.active == true {
             self.size += 1.0;
-        }  else if self.ready_to_remove == true {
+        }  else if self.active == true && self.ready_to_remove == true {
+            log!("id {}, x {}, y {}", self.id, self.x, self.y);
             self.active = false;
             self.ready_to_remove = false;
             player_ship.set_score(score_to_add)
@@ -276,9 +281,9 @@ impl Enemy {
     pub fn move_and_reactivate(&mut self, space: &Space, 
     original_speed: f64, original_size: f64, max_x: f64, max_y: f64, buffer: f64) {
         if self.active == false && self.removal_time < 300 {
-            self.x = -space.get_width() * 10.0;
-            self.y = -space.get_height() * 10.0;
-            self.size = 0.0;
+            self.x = -space.get_width();
+            self.y = -space.get_height();
+            self.size = 60.0;
             self.removal_time += 1;
         } else if self.active == false{
             self.active = true;
