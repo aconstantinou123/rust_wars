@@ -200,32 +200,16 @@ const drawSquareEnemy = () => {
   })
 }
 
-const drawBasicEnemy = () => {
-  basicEnemyArray.forEach(basicEnemy => {
-    if(basicEnemy.get_added_to_array()){
-      draw_basic_enemy(basicEnemy,  "#00FF00", offscreenCtx)
-    }
-  })
-}
-
 const drawEnemyProjectile = (squareEnemy) => {
   if(squareEnemy.get_can_shoot()){
     draw_enemy_projectile(squareEnemy, "#FF00FF", offscreenCtx)
   }
 }
 
-const drawFollowEnemy = () => {
-  followEnemyArray.forEach(followEnemy => {
-    if(followEnemy.get_added_to_array()){
-      draw_follow_enemy(followEnemy, "#9D00FF", offscreenCtx)
-    }
-  })
-}
-
-const drawClawEnemy = () => {
-  clawEnemyArray.forEach(clawEnemy => {
-    if(clawEnemy.get_added_to_array()){
-      draw_claw_enemy(clawEnemy, "#FF0000", offscreenCtx)
+const drawEnemy = (enemyArray, color, drawFunction) => {
+  enemyArray.forEach(enemy => {
+    if(enemy.get_added_to_array()){
+      drawFunction(enemy, color, offscreenCtx)
     }
   })
 }
@@ -243,25 +227,6 @@ const initObjectArrays = (array, amountToAdd, Type, optionalX, optionalY, option
   }
   return array
 }
-
-
-
-projectileArray = initObjectArrays(projectileArray, 100, Projectile, 0, 0, 0)
-powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 100, Projectile, 0, 0, 0)
-powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 100, Projectile, 0, 0, 0)
-basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
-const buffer = 120
-const patrolWidth = 1560
-const patrolHeight = 960
-const squareEnemyX = getRandomInt(patrolWidth) + buffer
-const squareEnemyY = getRandomInt(patrolHeight) + buffer
-squareEnemyArray = initObjectArrays(squareEnemyArray, 5, SquareEnemy, squareEnemyX, squareEnemyY)
-followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
-clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
-spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
-const starX = space.get_width() / 2
-const starY = space.get_height() / 2
-initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
 
 const addStars = () => {
   setInterval(() => {
@@ -414,7 +379,7 @@ const updateEnemies = () => {
   })
 }
 
-const checkProjectileHit = () => {
+const checkProjectileHit = (projectileArray) => {
   projectileArray.forEach(projectile => {
     squareEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
@@ -630,6 +595,23 @@ function refreshLoop() {
   });
 }
 
+projectileArray = initObjectArrays(projectileArray, 100, Projectile, 0, 0, 0)
+powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 100, Projectile, 0, 0, 0)
+powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 100, Projectile, 0, 0, 0)
+basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
+const buffer = 120
+const patrolWidth = 1560
+const patrolHeight = 960
+const squareEnemyX = getRandomInt(patrolWidth) + buffer
+const squareEnemyY = getRandomInt(patrolHeight) + buffer
+squareEnemyArray = initObjectArrays(squareEnemyArray, 5, SquareEnemy, squareEnemyX, squareEnemyY)
+followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
+clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
+spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
+const starX = space.get_width() / 2
+const starY = space.get_height() / 2
+initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
+
 refreshLoop()
 addStars()
 
@@ -648,9 +630,11 @@ const update = () => {
     if(playerShip.get_power_up() === 'projectile'){
       updateProjectiles(powerUpProjectileArray1)
       updateProjectiles(powerUpProjectileArray2)
+      checkProjectileHit(powerUpProjectileArray1)
+      checkProjectileHit(powerUpProjectileArray2)
     }
     updateEnemies()
-    checkProjectileHit()
+    checkProjectileHit(projectileArray)
     updatePlayerHealthDisplay()
     updateScoreDisplay()
     updateShockwavesDisplay()
@@ -670,16 +654,16 @@ const render = () => {
       restartGame()
       playButton.click()
     }
-    drawSquareEnemy()
-    drawProjectiles(projectileArray)
     if(playerShip.get_power_up() === 'projectile'){
       drawProjectiles(powerUpProjectileArray1)
       drawProjectiles(powerUpProjectileArray2)
     }
-    drawFollowEnemy()
-    drawClawEnemy()
+    drawSquareEnemy()
+    drawProjectiles(projectileArray)
+    drawEnemy(followEnemyArray, "#9D00FF", draw_follow_enemy)
+    drawEnemy(clawEnemyArray, "#FF0000", draw_claw_enemy)
     drawSpiralEnemy()
-    drawBasicEnemy()
+    drawEnemy(basicEnemyArray,  "#00FF00", draw_basic_enemy)
     drawPowerUp()
   }
 }
