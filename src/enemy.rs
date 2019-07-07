@@ -41,15 +41,12 @@ pub struct Enemy {
     removal_time: i32,
     added_to_array: bool,
     enemy_type: EnemyType,
-    id: i32,
 }
 
 #[wasm_bindgen]
 impl Enemy {
     pub fn new(size: f64, x: f64, y: f64, x_speed: f64, y_speed: f64, enemy_type: EnemyType) -> Enemy {
         utils::set_panic_hook();
-        let mut rng = thread_rng();
-        let id = rng.gen_range(0, 5000);
         Enemy {
             size,
             x,
@@ -63,7 +60,6 @@ impl Enemy {
             added_to_array: false,
             ready_to_remove: false,
             enemy_type,
-            id,
         }
     }
 
@@ -275,7 +271,6 @@ impl Enemy {
         if self.ready_to_remove == true && self.size < 50.0 && self.active == true {
             self.size += 1.0;
         }  else if self.active == true && self.ready_to_remove == true {
-            log!("id {}, x {}, y {}", self.id, self.x, self.y);
             self.active = false;
             self.ready_to_remove = false;
             player_ship.set_score(score_to_add)
@@ -314,6 +309,18 @@ impl Enemy {
             self.x_speed = self.original_x_speed;
             self.y_speed = self.original_y_speed;
         }
-     }
+    }
 
+    pub fn can_draw(&self, player_ship: &PlayerShip, window_width: f64, window_height: f64) -> bool {
+        let min_x = player_ship.get_centre_x() - (window_width / 2.0);
+        let max_x = player_ship.get_centre_x() + (window_width / 2.0);
+        let min_y = player_ship.get_centre_y() - (window_height / 2.0);
+        let max_y = player_ship.get_centre_y() + (window_height / 2.0);
+        if(self.x >= min_x && self.x <= max_x)
+        && (self.y >= min_y && self.y <= max_y){
+            true
+        } else {
+            false
+        }
+    }
 }

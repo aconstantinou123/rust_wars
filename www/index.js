@@ -168,7 +168,8 @@ const drawShockwave = () => {
 
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
-    if(projectile.is_active()){
+    if(projectile.is_active()
+    && projectile.can_draw(playerShip, window.innerWidth, window.innerHeight)){
       draw_projectile(projectile, '#ff073a', offscreenCtx)
     }
   })
@@ -176,7 +177,9 @@ const drawProjectiles = (array) => {
 
 const drawStars = () => {
   starArray.forEach(star => {
-    draw_star(star, 'white', offscreenCtx)
+    if(star.can_draw(playerShip, window.innerWidth, window.innerHeight)){
+      draw_star(star, 'white', offscreenCtx)
+    }
   })
 }
 
@@ -186,7 +189,8 @@ const drawPowerUp = () => {
 
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
-    if(spiralEnemy.get_added_to_array()){
+    if(spiralEnemy.get_added_to_array() && spiralEnemy.base.is_active()
+    && spiralEnemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
       spiralEnemy.spiral_movement()
       draw_spiral_enemy(spiralEnemy, "#0033FF", offscreenCtx)
     }
@@ -195,7 +199,8 @@ const drawSpiralEnemy = () => {
 
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
-    if(squareEnemy.get_added_to_array()){
+    if(squareEnemy.get_added_to_array() && squareEnemy.base.is_active()
+    && squareEnemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
       draw_square_enemy(squareEnemy, "#FFFF00", offscreenCtx)
       drawEnemyProjectile(squareEnemy)
     }
@@ -203,14 +208,16 @@ const drawSquareEnemy = () => {
 }
 
 const drawEnemyProjectile = (squareEnemy) => {
-  if(squareEnemy.get_can_shoot()){
+  if(squareEnemy.get_can_shoot()
+  && squareEnemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
     draw_enemy_projectile(squareEnemy, "#FF00FF", offscreenCtx)
   }
 }
 
 const drawEnemy = (enemyArray, color, drawFunction) => {
   enemyArray.forEach(enemy => {
-    if(enemy.get_added_to_array()){
+    if(enemy.get_added_to_array() && enemy.base.is_active()
+    && enemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
       drawFunction(enemy, color, offscreenCtx)
     }
   })
@@ -248,7 +255,7 @@ const initSquareArray = (squareEnemyArray, amountToAdd) => {
 
 const addStars = () => {
   setInterval(() => {
-    if(starArray.length < 20){
+    if(starArray.length < 10){
       const star = initStarArray.pop()
       starArray = [
         ...starArray,
@@ -269,7 +276,6 @@ const addEnemies = (enemyArray, amountToAdd, interval) => {
         idx = index
         return !enemy.get_added_to_array()
       })
-      console.log('interval')
       enemyToSet.set_add_to_array()
       enemyToSet.set_ready_to_remove_false()
       enemyArray[idx] = enemyToSet
@@ -537,27 +543,53 @@ const enemyRampUp = () => {
    else if (playerShip.get_score() >= 1000 && space.get_intensity_level() === 1) {
     space.increment_intensity_level()
     basicEnemyArray = resetEnemyArray(basicEnemyArray)
-    addEnemies(followEnemyArray, 10, followEnemyInterval)
+    addEnemies(followEnemyArray, 5, followEnemyInterval)
     addEnemies(squareEnemyArray, 2, squareEnemyInterval)
   } 
-  else if (playerShip.get_score() >= 10000 && space.get_intensity_level() === 2) {
+  else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 2) {
     space.increment_intensity_level()
     basicEnemyArray = resetEnemyArray(basicEnemyArray)
-    addEnemies(basicEnemyArray, 15, basicEnemyInterval)
-    addEnemies(clawEnemyArray, 4, clawEnemyInterval)
-  } else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 3) {
-    space.increment_intensity_level()
-    updateSpiralEnemies() 
-  } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 4) {
-    space.increment_intensity_level()
     followEnemyArray = resetEnemyArray(followEnemyArray)
-    addEnemies(followEnemyArray, 20, followEnemyInterval)
     squareEnemyArray = resetEnemyArray(squareEnemyArray)
+    addEnemies(followEnemyArray, 5, followEnemyInterval)
     addEnemies(squareEnemyArray, 2, squareEnemyInterval)
-  } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 5) {
+    addEnemies(basicEnemyArray, 10, basicEnemyInterval)
+    addEnemies(clawEnemyArray, 2, clawEnemyInterval)
+  } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 3) {
     space.increment_intensity_level()
+    basicEnemyArray = resetEnemyArray(basicEnemyArray)
+    followEnemyArray = resetEnemyArray(followEnemyArray)
     squareEnemyArray = resetEnemyArray(squareEnemyArray)
-    addEnemies(squareEnemyArray, 5, squareEnemyInterval)
+    clawEnemyArray = resetEnemyArray(clawEnemyArray)
+    addEnemies(followEnemyArray, 5, followEnemyInterval)
+    addEnemies(squareEnemyArray, 2, squareEnemyInterval)
+    addEnemies(basicEnemyArray, 10, basicEnemyInterval)
+    addEnemies(clawEnemyArray, 2, clawEnemyInterval)
+    // updateSpiralEnemies() 
+  } else if (playerShip.get_score() >= 60000 && space.get_intensity_level() === 4) {
+    space.increment_intensity_level()
+    basicEnemyArray = resetEnemyArray(basicEnemyArray)
+    followEnemyArray = resetEnemyArray(followEnemyArray)
+    squareEnemyArray = resetEnemyArray(squareEnemyArray)
+    clawEnemyArray = resetEnemyArray(clawEnemyArray)
+    // spiralEnemyArray = resetEnemyArray(spiralEnemyArray)
+    addEnemies(basicEnemyArray, 10, basicEnemyInterval)
+    addEnemies(clawEnemyArray, 2, clawEnemyInterval)
+    addEnemies(followEnemyArray, 10, followEnemyInterval)
+    addEnemies(squareEnemyArray, 2, squareEnemyInterval)
+    // updateSpiralEnemies()
+  } else if (playerShip.get_score() >= 80000 && space.get_intensity_level() === 5) {
+    space.increment_intensity_level()
+    basicEnemyArray = resetEnemyArray(basicEnemyArray)
+    followEnemyArray = resetEnemyArray(followEnemyArray)
+    squareEnemyArray = resetEnemyArray(squareEnemyArray)
+    clawEnemyArray = resetEnemyArray(clawEnemyArray)
+    // spiralEnemyArray = resetEnemyArray(spiralEnemyArray)
+    addEnemies(squareEnemyArray, 4, squareEnemyInterval)
+    addEnemies(basicEnemyArray, 10, basicEnemyInterval)
+    addEnemies(clawEnemyArray, 2, clawEnemyInterval)
+    addEnemies(followEnemyArray, 10, followEnemyInterval)
+    // updateSpiralEnemies()
   }
 }
 
@@ -580,13 +612,13 @@ const restartGame = () => {
   squareEnemyArray = initSquareArray(squareEnemyArray, 5)
   followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
   clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
-  spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
-  spiralEnemyArray.forEach(enemy => {
-    enemy.set_active()
-  })
+  // spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
+  // spiralEnemyArray.forEach(enemy => {
+  //   enemy.set_active()
+  // })
   const starX = space.get_width() / 2
   const starY = space.get_height() / 2
-  initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
+  initStarArray = initObjectArrays(initStarArray, 10, Star, starX, starY)
   keys = []
   velX = 0
   velY = 0
@@ -626,13 +658,13 @@ basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
 squareEnemyArray = initSquareArray(squareEnemyArray, 5)
 followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
 clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
-spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
-spiralEnemyArray.forEach(enemy => {
-  enemy.set_active()
-})
+// spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy, 0, 0)
+// spiralEnemyArray.forEach(enemy => {
+//   enemy.set_active()
+// })
 const starX = space.get_width() / 2
 const starY = space.get_height() / 2
-initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
+initStarArray = initObjectArrays(initStarArray, 10, Star, starX, starY)
 
 refreshLoop()
 addStars()

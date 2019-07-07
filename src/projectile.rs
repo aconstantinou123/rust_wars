@@ -1,4 +1,5 @@
 use wasm_bindgen::prelude::*;
+use crate::player_ship::PlayerShip;
 use crate::utils;
 use std::f64;
 
@@ -81,5 +82,18 @@ impl Projectile {
         self.initial_angle = initial_angle;
         self.speed = 10.0;
         self.active = true;
+    }
+
+    pub fn can_draw(&self, player_ship: &PlayerShip, window_width: f64, window_height: f64) -> bool {
+        let min_x = player_ship.get_centre_x() - (window_width / 2.0);
+        let max_x = player_ship.get_centre_x() + (window_width / 2.0);
+        let min_y = player_ship.get_centre_y() - (window_height / 2.0);
+        let max_y = player_ship.get_centre_y() + (window_height / 2.0);
+        if(self.x >= min_x && self.x <= max_x)
+        && (self.y >= min_y && self.y <= max_y){
+            true
+        } else {
+            false
+        }
     }
 }

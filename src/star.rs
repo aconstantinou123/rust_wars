@@ -1,5 +1,6 @@
 use wasm_bindgen::prelude::*;
 use crate::utils;
+use crate::player_ship::PlayerShip;
 use std::f64;
 use rand::prelude::*;
 
@@ -77,5 +78,18 @@ impl Star {
 
     pub fn set_active(&mut self) {
         self.active = false
+    }
+
+    pub fn can_draw(&self, player_ship: &PlayerShip, window_width: f64, window_height: f64) -> bool {
+        let min_x = player_ship.get_centre_x() - (window_width / 2.0);
+        let max_x = player_ship.get_centre_x() + (window_width / 2.0);
+        let min_y = player_ship.get_centre_y() - (window_height / 2.0);
+        let max_y = player_ship.get_centre_y() + (window_height / 2.0);
+        if(self.x >= min_x && self.x <= max_x)
+        && (self.y >= min_y && self.y <= max_y){
+            true
+        } else {
+            false
+        }
     }
 }
