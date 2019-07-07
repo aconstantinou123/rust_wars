@@ -122,6 +122,10 @@ impl ClawEnemy {
         self.base.remove_enemy_from_array()
     }
 
+    pub fn set_ready_to_remove_false(&mut self){
+        self.base.set_ready_to_remove_false()
+    }
+
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
         self.base.move_and_reactivate(space, 3.0, 25.0, max_x, max_y, 0.0);
         self.check_player_ship_collision(player_ship);

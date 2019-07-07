@@ -150,4 +150,8 @@ impl SquareEnemy {
         self.blow_up(player_ship, 300);
     }
 
+    pub fn set_ready_to_remove_false(&mut self){
+        self.base.set_ready_to_remove_false()
+    }
+
 }

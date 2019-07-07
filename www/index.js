@@ -271,6 +271,7 @@ const addEnemies = (enemyArray, amountToAdd, interval) => {
       })
       console.log('interval')
       enemyToSet.set_add_to_array()
+      enemyToSet.set_ready_to_remove_false()
       enemyArray[idx] = enemyToSet
     } else {
       clearInterval(interval)

@@ -120,6 +120,10 @@ impl SpiralEnemy {
         self.base.remove_enemy_from_array()
     }
 
+    pub fn set_ready_to_remove_false(&mut self){
+        self.base.set_ready_to_remove_false()
+    }
+
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
         self.move_and_reactivate(space, 0.0, 25.0);
         self.check_player_ship_collision(player_ship);

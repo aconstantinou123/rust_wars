@@ -153,6 +153,10 @@ impl Enemy {
         self.ready_to_remove = !self.ready_to_remove
     }
 
+    pub fn set_ready_to_remove_false(&mut self){
+        self.ready_to_remove = false
+    }
+
     pub fn get_is_ready_to_remove(&self) -> bool {
         self.ready_to_remove
     }
