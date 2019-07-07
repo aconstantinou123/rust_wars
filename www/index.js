@@ -34,8 +34,8 @@ const enemyExplosion = new Howl({
 
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
-const spaceX = 1800
-const spaceY = 1200
+const spaceX = 2000
+const spaceY = 1500
 
 let playerShip = PlayerShip.new()
 const space = Space.new(spaceX, spaceY)
@@ -48,8 +48,8 @@ const offscreen=document.createElement('canvas')
 const primaryCtx=canvas.getContext("2d",  { alpha: false })
 const offscreenCtx = offscreen.getContext("2d", { alpha: false })
 
-canvas.width = window.innerWidth - 20
-canvas.height = 860
+canvas.width = (window.innerWidth - 20) / 0.75
+canvas.height = 860 / 0.75
 offscreen.width = space.get_width()
 offscreen.height = space.get_height()
 
@@ -169,7 +169,7 @@ const drawShockwave = () => {
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
     if(projectile.is_active()
-    && projectile.can_draw(playerShip, window.innerWidth, window.innerHeight)){
+    && projectile.can_draw(playerShip, window.innerWidth / 0.75, window.innerHeight / 0.75)){
       draw_projectile(projectile, '#ff073a', offscreenCtx)
     }
   })
@@ -177,7 +177,7 @@ const drawProjectiles = (array) => {
 
 const drawStars = () => {
   starArray.forEach(star => {
-    if(star.can_draw(playerShip, window.innerWidth, window.innerHeight)){
+    if(star.can_draw(playerShip, window.innerWidth / 0.75, window.innerHeight / 0.75)){
       draw_star(star, 'white', offscreenCtx)
     }
   })
@@ -190,7 +190,7 @@ const drawPowerUp = () => {
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     if(spiralEnemy.get_added_to_array() && spiralEnemy.base.is_active()
-    && spiralEnemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
+    && spiralEnemy.base.can_draw(playerShip, window.innerWidth / 0.75, window.innerHeight / 0.75)){
       spiralEnemy.spiral_movement()
       draw_spiral_enemy(spiralEnemy, "#0033FF", offscreenCtx)
     }
@@ -200,7 +200,7 @@ const drawSpiralEnemy = () => {
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
     if(squareEnemy.get_added_to_array() && squareEnemy.base.is_active()
-    && squareEnemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
+    && squareEnemy.base.can_draw(playerShip, window.innerWidth / 0.75, window.innerHeight / 0.75)){
       draw_square_enemy(squareEnemy, "#FFFF00", offscreenCtx)
       drawEnemyProjectile(squareEnemy)
     }
@@ -209,7 +209,7 @@ const drawSquareEnemy = () => {
 
 const drawEnemyProjectile = (squareEnemy) => {
   if(squareEnemy.get_can_shoot()
-  && squareEnemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
+  && squareEnemy.base.can_draw(playerShip, window.innerWidth / 0.75, window.innerHeight / 0.75)){
     draw_enemy_projectile(squareEnemy, "#FF00FF", offscreenCtx)
   }
 }
@@ -217,7 +217,7 @@ const drawEnemyProjectile = (squareEnemy) => {
 const drawEnemy = (enemyArray, color, drawFunction) => {
   enemyArray.forEach(enemy => {
     if(enemy.get_added_to_array() && enemy.base.is_active()
-    && enemy.base.can_draw(playerShip, window.innerWidth, window.innerHeight)){
+    && enemy.base.can_draw(playerShip, window.innerWidth / 0.75, window.innerHeight / 0.75)){
       drawFunction(enemy, color, offscreenCtx)
     }
   })
@@ -255,7 +255,7 @@ const initSquareArray = (squareEnemyArray, amountToAdd) => {
 
 const addStars = () => {
   setInterval(() => {
-    if(starArray.length < 10){
+    if(starArray.length < 20){
       const star = initStarArray.pop()
       starArray = [
         ...starArray,
@@ -618,7 +618,7 @@ const restartGame = () => {
   // })
   const starX = space.get_width() / 2
   const starY = space.get_height() / 2
-  initStarArray = initObjectArrays(initStarArray, 10, Star, starX, starY)
+  initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
   keys = []
   velX = 0
   velY = 0
@@ -664,7 +664,7 @@ clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
 // })
 const starX = space.get_width() / 2
 const starY = space.get_height() / 2
-initStarArray = initObjectArrays(initStarArray, 10, Star, starX, starY)
+initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
 
 refreshLoop()
 addStars()
