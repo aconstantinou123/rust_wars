@@ -48,8 +48,8 @@ const offscreen=document.createElement('canvas')
 const primaryCtx=canvas.getContext("2d",  { alpha: false })
 const offscreenCtx = offscreen.getContext("2d", { alpha: false })
 
-canvas.width = (window.innerWidth - 20) / 0.60
-canvas.height = 860 / 0.60
+canvas.width = (window.innerWidth - 20) / 0.7
+canvas.height = 860 / 0.7
 offscreen.width = space.get_width()
 offscreen.height = space.get_height()
 
@@ -169,7 +169,7 @@ const drawShockwave = () => {
 const drawProjectiles = (array) => {
   array.forEach(projectile => {
     if(projectile.is_active()
-    && projectile.can_draw(playerShip, window.innerWidth / 0.60, window.innerHeight / 0.60)){
+    && projectile.can_draw(playerShip, window.innerWidth / 0.7, window.innerHeight / 0.7)){
       draw_projectile(projectile, '#ff073a', offscreenCtx)
     }
   })
@@ -177,7 +177,7 @@ const drawProjectiles = (array) => {
 
 const drawStars = () => {
   starArray.forEach(star => {
-    if(star.can_draw(playerShip, window.innerWidth / 0.60, window.innerHeight / 0.60)){
+    if(star.can_draw(playerShip, window.innerWidth / 0.7, window.innerHeight / 0.7)){
       draw_star(star, 'white', offscreenCtx)
     }
   })
@@ -190,7 +190,7 @@ const drawPowerUp = () => {
 const drawSpiralEnemy = () => {
   spiralEnemyArray.forEach(spiralEnemy => {
     if(spiralEnemy.get_added_to_array() && spiralEnemy.base.is_active()
-    && spiralEnemy.base.can_draw(playerShip, window.innerWidth / 0.60, window.innerHeight / 0.60)){
+    && spiralEnemy.base.can_draw(playerShip, window.innerWidth / 0.7, window.innerHeight / 0.7)){
       spiralEnemy.spiral_movement()
       draw_spiral_enemy(spiralEnemy, "#0033FF", offscreenCtx)
     }
@@ -200,7 +200,7 @@ const drawSpiralEnemy = () => {
 const drawSquareEnemy = () => {
   squareEnemyArray.forEach(squareEnemy => {
     if(squareEnemy.get_added_to_array() && squareEnemy.base.is_active()
-    && squareEnemy.base.can_draw(playerShip, window.innerWidth / 0.60, window.innerHeight / 0.60)){
+    && squareEnemy.base.can_draw(playerShip, window.innerWidth / 0.7, window.innerHeight / 0.7)){
       draw_square_enemy(squareEnemy, "#FFFF00", offscreenCtx)
       drawEnemyProjectile(squareEnemy)
     }
@@ -209,7 +209,7 @@ const drawSquareEnemy = () => {
 
 const drawEnemyProjectile = (squareEnemy) => {
   if(squareEnemy.get_can_shoot()
-  && squareEnemy.base.can_draw(playerShip, window.innerWidth / 0.60, window.innerHeight / 0.60)){
+  && squareEnemy.base.can_draw(playerShip, window.innerWidth / 0.7, window.innerHeight / 0.7)){
     draw_enemy_projectile(squareEnemy, "#FF00FF", offscreenCtx)
   }
 }
@@ -217,7 +217,7 @@ const drawEnemyProjectile = (squareEnemy) => {
 const drawEnemy = (enemyArray, color, drawFunction) => {
   enemyArray.forEach(enemy => {
     if(enemy.get_added_to_array() && enemy.base.is_active()
-    && enemy.base.can_draw(playerShip, window.innerWidth / 0.60, window.innerHeight / 0.60)){
+    && enemy.base.can_draw(playerShip, window.innerWidth / 0.7, window.innerHeight / 0.7)){
       drawFunction(enemy, color, offscreenCtx)
     }
   })
@@ -409,32 +409,19 @@ const updateEnemies = () => {
 
 const checkProjectileHit = (projectileArray) => {
   projectileArray.forEach(projectile => {
-    squareEnemyArray.forEach(enemy => {
-      enemy.check_dead(projectile)
-      // if(!enemy.base.is_active()){
-      //   enemyExplosion.play()
-      // }
-    })
-    followEnemyArray.forEach(enemy => {
-      enemy.check_dead(projectile)
-      // if(!enemy.base.is_active()){
-      //   enemyExplosion.play()
-      // }
+    [
+      ...spiralEnemyArray,
+      ...squareEnemyArray,
+      ...basicEnemyArray,
+      ...followEnemyArray
+    ].forEach(enemy => {
+        enemy.check_dead(projectile)
+        // if(!enemy.base.is_active()){
+        //   enemyExplosion.play()
+        // }
     })
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
-      enemy.check_dead(projectile)
-      // if(!enemy.base.is_active()){
-      //   enemyExplosion.play()
-      // }
-    })
-    spiralEnemyArray.forEach(enemy => {
-      enemy.check_dead(projectile)
-      // if(!enemy.base.is_active()){
-      //   enemyExplosion.play()
-      // }
-    })
-    basicEnemyArray.forEach(enemy => {
       enemy.check_dead(projectile)
       // if(!enemy.base.is_active()){
       //   enemyExplosion.play()
