@@ -268,8 +268,8 @@ impl Enemy {
     }
 
     pub fn blow_up(&mut self, player_ship: &mut PlayerShip, score_to_add: i32){
-        if self.ready_to_remove == true && self.size < 50.0 && self.active == true {
-            self.size += 1.0;
+        if self.ready_to_remove == true && self.size < 100.0 && self.active == true {
+            self.size += 2.5;
         }  else if self.active == true && self.ready_to_remove == true {
             self.active = false;
             self.ready_to_remove = false;

@@ -120,7 +120,7 @@ color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
     context.set_line_width(5.0);
     context.set_stroke_style(color);
     context.arc(spiral_enemy.base.get_x().round(),  
-    spiral_enemy.base.get_y().round(), 10.0, 0.0, f64::consts::PI * 2.0).unwrap();
+    spiral_enemy.base.get_y().round(), spiral_enemy.base.get_size(), 0.0, f64::consts::PI * 2.0).unwrap();
     context.close_path();
     context.stroke();
 }
