@@ -43,15 +43,15 @@ const powerUp = PowerUp.new()
 
 
 const canvas=document.getElementById("space")
-const offscreen=document.createElement('canvas')
+const offscreen = new OffscreenCanvas(space.get_width(), space.get_height())
 
-const primaryCtx=canvas.getContext("2d",  { alpha: false })
+const primaryCtx = canvas.getContext("2d",  { alpha: false })
 const offscreenCtx = offscreen.getContext("2d", { alpha: false })
 
 canvas.width = (window.innerWidth - 20) / 0.7
 canvas.height = 860 / 0.7
-offscreen.width = space.get_width()
-offscreen.height = space.get_height()
+// offscreen.width = space.get_width()
+// offscreen.height = space.get_height()
 
 
 let initStarArray = []
@@ -88,9 +88,11 @@ let basicEnemyInterval
 let bufferLoader
 let context
 let playerShotContext
+let explosionContext = new AudioContext()
 
 let backgroundMusic
 let playerShotSound
+let explosionSound
 
 let playerShotGainNode
 
@@ -109,16 +111,21 @@ playButton.addEventListener('click', function() {
   if(!startBackgroundMusic){
     context.resume().then(() => {
       backgroundMusic.loop = true
+      backgroundMusic.loopStart = 60
       startBackgroundMusic = true
-      backgroundMusic.start(0)
+      backgroundMusic.start(0, 60)
     })
   }
 })
 
 const finishedLoading = (bufferList) => {
+  const backgroundMusicGainNode = context.createGain()
+  backgroundMusicGainNode.gain.value = 0.4 
+  backgroundMusicGainNode.connect(context.destination)
+
   backgroundMusic = context.createBufferSource()
   backgroundMusic.buffer = bufferList[0]
-  backgroundMusic.connect(context.destination)
+  backgroundMusic.connect(backgroundMusicGainNode)
 
   playerShotGainNode = playerShotContext.createGain()
   playerShotGainNode.gain.value = 0.5 
@@ -127,6 +134,8 @@ const finishedLoading = (bufferList) => {
   playerShotSound = playerShotContext.createBufferSource()
   playerShotSound.buffer = bufferList[1]
   playerShotSound.connect(playerShotGainNode)
+
+  explosionSound = bufferList[2]
   
   const loading = document.querySelector('.loading')
   const playerInfo = document.querySelector('#player-info')
@@ -134,6 +143,14 @@ const finishedLoading = (bufferList) => {
   modalWrapper.style.display = "block"
   playerInfo.style.display = "flex"
   loading.style.display = "none"
+}
+
+const playExplosion = () => {
+  const explosion = explosionContext.createBufferSource()
+  explosion.buffer = explosionSound
+  explosion.connect(explosionContext.destination)
+  explosion.start(0)
+  explosion.stop(explosionContext.currentTime + 1)
 }
 
 const init = () => {
@@ -403,7 +420,12 @@ const updateEnemies = () => {
   ].forEach(enemy => {
     if(enemy.get_added_to_array()){
       enemy.update(playerShip, space, spaceX, spaceY)
-    }
+      if (enemy.base.get_is_ready_to_remove() && enemy.base.is_active() && enemy.base.get_size() === 100.0){
+        // console.log(enemy.base.get_is_ready_to_remove())
+        playExplosion()
+        console.log('boom')
+      }
+    } 
   })
 }
 
@@ -423,9 +445,6 @@ const checkProjectileHit = (projectileArray) => {
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
       enemy.check_dead(projectile)
-      // if(!enemy.base.is_active()){
-      //   enemyExplosion.play()
-      // }
     })
   }) 
 }

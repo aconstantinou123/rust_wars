@@ -10,7 +10,7 @@ app.use(cors())
 app.use(express.static(path.join(__dirname, './dist')))
 
 app.get('/media/technical-debt.mp3', (req, res) => {
-  res.sendFile(path.join(__dirname, './media/technical-debt.mp3'))
+  res.sendFile(path.join(__dirname, './media/timecrawler.mp3'))
 })
 
 app.get('/media/player-shot-2.wav', (req, res) => {
@@ -18,7 +18,7 @@ app.get('/media/player-shot-2.wav', (req, res) => {
 })
 
 app.get('/media/enemy-explosion.wav', (req, res) => {
-  res.sendFile(path.join(__dirname, './media/enemy-explosion.wav'))
+  res.sendFile(path.join(__dirname, './media/enemy-explosion.flac'))
 })
 
 app.listen(port, () => {

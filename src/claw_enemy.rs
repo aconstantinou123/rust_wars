@@ -29,7 +29,7 @@ impl ClawEnemy {
     pub fn new(x: f64, y: f64) -> ClawEnemy {
         utils::set_panic_hook();
         ClawEnemy {
-            base: Enemy::new(25.0, x, y, 3.0, 3.0, EnemyType::Claw),
+            base: Enemy::new(25.0, x, y, 7.0, 7.0, EnemyType::Claw),
             radians: 0.0,
             number_of_sides: 4.5,
         }
@@ -58,14 +58,14 @@ impl ClawEnemy {
     pub fn avoid_projectile(&mut self, projectile: &Projectile) {
         let delta_x = projectile.get_x() - self.base.get_x();
         let delta_y = projectile.get_y() - self.base.get_x();
-        if delta_x < 50.0 && delta_x > -50.0 {
+        if delta_x < 20.0 && delta_x > -20.0 {
             if projectile.get_x() < self.base.get_x() {
                 self.base.increment_x(5.0)
             } else {
                 self.base.increment_y(-5.0)
             }
         }
-        if delta_y < 50.0 && delta_y > -50.0 {
+        if delta_y < 20.0 && delta_y > -20.0 {
             if projectile.get_y() < self.base.get_y() {
                 self.base.increment_x(5.0)
             } else {
