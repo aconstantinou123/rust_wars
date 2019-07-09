@@ -39,7 +39,7 @@ impl PlayerShip {
         let rotation_degress = 270.0;
         PlayerShip {
             side_count: 3,
-            size: 30.0,
+            size: 35.0,
             rotation_degress,
             centre_x: 900.0,
             centre_y: 600.0,

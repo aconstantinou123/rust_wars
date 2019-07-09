@@ -151,6 +151,9 @@ const playExplosion = () => {
   explosion.connect(explosionContext.destination)
   explosion.start(0)
   explosion.stop(explosionContext.currentTime + 1)
+  explosion.onended(() => {
+    explosion.disconnect()
+  })
 }
 
 const init = () => {
