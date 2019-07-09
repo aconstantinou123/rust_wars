@@ -18,7 +18,7 @@ app.get('/media/player-shot-2.wav', (req, res) => {
 })
 
 app.get('/media/enemy-explosion.wav', (req, res) => {
-  res.sendFile(path.join(__dirname, './media/enemy-explosion.flac'))
+  res.sendFile(path.join(__dirname, './media/enemy-explosion.wav'))
 })
 
 app.listen(port, () => {

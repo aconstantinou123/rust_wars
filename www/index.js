@@ -24,18 +24,11 @@ import  {
   draw_offscreen_canvas,
 } from "shooter"
 
-import { Howl, Howler } from 'howler';
 import BufferLoader from './bufferLoader'
 
-const enemyExplosion = new Howl({
-  src: ['http://localhost:5000/media/enemy-explosion.wav'],
-  volume: 0.2,
-})
-
-
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
-const spaceX = 2000
-const spaceY = 2000
+const spaceX = 1100
+const spaceY =  1100
 
 let playerShip = PlayerShip.new()
 const space = Space.new(spaceX, spaceY)
@@ -48,8 +41,8 @@ const offscreen = new OffscreenCanvas(space.get_width(), space.get_height())
 const primaryCtx = canvas.getContext("2d",  { alpha: false })
 const offscreenCtx = offscreen.getContext("2d", { alpha: false })
 
-canvas.width = (window.innerWidth - 20) / 0.7
-canvas.height = 860 / 0.7
+canvas.width = (window.innerWidth - 20) * 0.75
+canvas.height = 860 * 0.75
 // offscreen.width = space.get_width()
 // offscreen.height = space.get_height()
 
@@ -86,9 +79,9 @@ let spiralEnemyInterval
 let basicEnemyInterval
 
 let bufferLoader
-let context
-let playerShotContext
-let explosionContext = new AudioContext()
+const explosionContext = new AudioContext()
+const context = new AudioContext()
+const playerShotContext = new AudioContext()
 
 let backgroundMusic
 let playerShotSound
@@ -151,13 +144,13 @@ const playExplosion = () => {
   explosion.connect(explosionContext.destination)
   explosion.start(0)
   explosion.stop(explosionContext.currentTime + 1)
+  explosion.onended(() => {
+    explosion.disconnect()
+  })
 }
 
 const init = () => {
   window.AudioContext = window.AudioContext || window.webkitAudioContext
-  context = new AudioContext()
-  playerShotContext = new AudioContext()
-
   bufferLoader = new BufferLoader(
     context,
     [
@@ -231,7 +224,7 @@ const drawEnemyProjectile = (squareEnemy) => {
   }
 }
 
-const drawEnemy = (enemyArray, color, drawFunction) => {
+const drawEnemy = (enemyArray, color, drawFunction, playerShip) => {
   enemyArray.forEach(enemy => {
     if(enemy.get_added_to_array() && enemy.base.is_active()
     && enemy.base.can_draw(playerShip, window.innerWidth / 0.7, window.innerHeight / 0.7)){
@@ -421,9 +414,7 @@ const updateEnemies = () => {
     if(enemy.get_added_to_array()){
       enemy.update(playerShip, space, spaceX, spaceY)
       if (enemy.base.get_is_ready_to_remove() && enemy.base.is_active() && enemy.base.get_size() === 100.0){
-        // console.log(enemy.base.get_is_ready_to_remove())
         playExplosion()
-        console.log('boom')
       }
     } 
   })
@@ -710,6 +701,7 @@ const update = () => {
     updatePowerUp()
     updateFPSDisplay()
     draw_offscreen_canvas(space, playerShip, canvas, offscreen, primaryCtx, offscreenCtx)
+    // draw_offscreen_canvas(space, playerShip, canvas, offscreen2, primaryCtx, offscreenCtx2)
   }
 }
 
@@ -729,10 +721,10 @@ const render = () => {
     }
     drawSquareEnemy()
     drawProjectiles(projectileArray)
-    drawEnemy(followEnemyArray, "#9D00FF", draw_follow_enemy)
-    drawEnemy(clawEnemyArray, "#FF0000", draw_claw_enemy)
+    drawEnemy(followEnemyArray, "#9D00FF", draw_follow_enemy, playerShip)
+    drawEnemy(clawEnemyArray, "#FF0000", draw_claw_enemy, playerShip)
     drawSpiralEnemy()
-    drawEnemy(basicEnemyArray,  "#00FF00", draw_basic_enemy)
+    drawEnemy(basicEnemyArray,  "#00FF00", draw_basic_enemy, playerShip)
     drawPowerUp()
   }
 }

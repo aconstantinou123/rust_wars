@@ -29,7 +29,7 @@ impl ClawEnemy {
     pub fn new(x: f64, y: f64) -> ClawEnemy {
         utils::set_panic_hook();
         ClawEnemy {
-            base: Enemy::new(25.0, x, y, 7.0, 7.0, EnemyType::Claw),
+            base: Enemy::new(7.5, x, y, 7.0, 7.0, EnemyType::Claw),
             radians: 0.0,
             number_of_sides: 4.5,
         }

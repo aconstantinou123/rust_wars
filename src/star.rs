@@ -28,7 +28,7 @@ impl Star {
     
     pub fn new(x: f64, y: f64) -> Star {
         utils::set_panic_hook();
-        let speed = 7.0;
+        let speed = 4.0;
         let mut rng = thread_rng();
         let rand_angle = rng.gen_range(0, 360);
         let radians = rand_angle as f64 * f64::consts::PI/180.0;
