@@ -30,7 +30,7 @@ impl SpiralEnemy {
     pub fn new(x: f64, y: f64) -> SpiralEnemy {
         utils::set_panic_hook();
         SpiralEnemy {
-            base: Enemy::new(7.5, x, y, 3.0, 3.0, EnemyType::Spiral),
+            base: Enemy::new(15.0, x, y, 3.0, 3.0, EnemyType::Spiral),
             radians: 0.0,
             rotation_radius: 2.0,
             reverse: false,

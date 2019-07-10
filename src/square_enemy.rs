@@ -31,7 +31,7 @@ impl SquareEnemy {
     pub fn new(x: f64, y: f64) -> SquareEnemy {
         utils::set_panic_hook();
         SquareEnemy {
-            base: Enemy::new(10.0, x, y, 2.0, 2.0, EnemyType::Square),
+            base: Enemy::new(15.0, x, y, 2.0, 2.0, EnemyType::Square),
             in_x_position: false,
             in_y_position: false,
             laser: Laser::new(0.0, x, y),

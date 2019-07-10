@@ -30,7 +30,7 @@ impl Projectile {
         Projectile {
             x,
             y,
-            speed: 10.0,
+            speed: 25.0,
             initial_angle,
             active: false,
         }

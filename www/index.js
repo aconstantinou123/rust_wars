@@ -144,9 +144,6 @@ const playExplosion = () => {
   explosion.connect(explosionContext.destination)
   explosion.start(0)
   explosion.stop(explosionContext.currentTime + 1)
-  explosion.onended(() => {
-    explosion.disconnect()
-  })
 }
 
 const init = () => {
@@ -429,9 +426,6 @@ const checkProjectileHit = (projectileArray) => {
       ...followEnemyArray
     ].forEach(enemy => {
         enemy.check_dead(projectile)
-        // if(!enemy.base.is_active()){
-        //   enemyExplosion.play()
-        // }
     })
     clawEnemyArray.forEach(enemy => {
       enemy.avoid_projectile(projectile)
@@ -480,10 +474,10 @@ document.body.addEventListener("keyup", (e) => {
 
 const controlShip = () => {
   if(playerShip.get_is_alive()) {
-    if(keys[37] && rotationSpeed > -2){
-      rotationSpeed -= 1
-    } if (keys[39] && rotationSpeed < 2){
-      rotationSpeed += 1
+    if(keys[37] && rotationSpeed > -4){
+      rotationSpeed -= 2
+    } if (keys[39] && rotationSpeed < 4){
+      rotationSpeed += 2
     } if(keys[65] && velX > -playerShip.get_speed()){
       velX -= 1
     } if (keys[68] && velX < playerShip.get_speed()){
@@ -497,7 +491,7 @@ const controlShip = () => {
       playerShip.activate_shockwave()
     } 
     if (keys[32]){
-      const amountToDelay =  playerShip.get_power_up() === 'projectile' ? 0 : 5
+      const amountToDelay =  playerShip.get_power_up() === 'projectile' ? 0 : 2
       if(delay > amountToDelay ){
           projectileArray = shootProjectile(projectileArray, 0)
           playerShotContext.resume().then(() => {
@@ -675,10 +669,29 @@ initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
 refreshLoop()
 addStars()
 
+// const step = () => {
+//   animate(step)
+//   update()
+//   render()
+// }
+
+
+const framerate = 1000 / 60
 const step = () => {
-  animate(step)
-  update()
-  render()
+    const delta = Date.now()
+    const deltaTime = Date.now() - delta
+    if (deltaTime >= framerate) {
+        animate(step)
+        update()
+        render()
+    }
+    else {
+        setTimeout(() => { 
+          animate(step)
+          update()
+          render()
+      }, framerate - deltaTime)
+    }
 }
 
 const update = () => {
