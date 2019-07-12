@@ -22,17 +22,24 @@ macro_rules! log {
 #[wasm_bindgen]
 pub fn draw_player_ship(player_ship: &PlayerShip, context: &web_sys::CanvasRenderingContext2d){
     let radians = player_ship.get_rotation_degrees() * f64::consts::PI / 180.0;
+    let new_x = player_ship.generate_new_x().round();
+    let new_y = player_ship.generate_new_y().round();
+    let coordinates: Vec<_> = (0 ..player_ship.get_side_count() + 1)
+        .map(f64::from)
+        .map(|i| (player_ship.draw_line_x(i).round(), 
+        player_ship.draw_line_y(i).round()))
+        .collect();
     context.translate(player_ship.get_centre_x(), player_ship.get_centre_y())
         .unwrap();
     context.rotate(radians)
         .unwrap();
-    context.begin_path();
     context.set_line_width(2.0);
     context.set_stroke_style(&player_ship.get_color());
-    context.move_to(player_ship.generate_new_x().round(), player_ship.generate_new_y().round());
+    context.begin_path();
+    context.move_to(new_x, new_y);
     for i in 0..player_ship.get_side_count() + 1 {
-        context.line_to(player_ship.draw_line_x(i as f64).round(), player_ship.draw_line_y(i as f64).round());
-        context.stroke()
+        context.line_to(coordinates[i as usize].0, coordinates[i as usize].1);
+        context.stroke();
     } 
     context.begin_path();
     context.set_line_width(2.0);
@@ -51,129 +58,140 @@ pub fn draw_player_ship(player_ship: &PlayerShip, context: &web_sys::CanvasRende
 
 #[wasm_bindgen]
 pub fn draw_projectile(projectile: &Projectile, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
-    context.begin_path();
+    let x = projectile.get_x().round();
+    let y = projectile.get_y().round();
+    let two_pi = f64::consts::PI * 2.0;
     context.set_fill_style(color);
-    context.arc(projectile.get_x().round(), projectile.get_y().round(), 3.0, 0.0, f64::consts::PI * 2.0).unwrap();
+    context.begin_path();
+    context.arc(x, y, 3.0, 0.0, two_pi).unwrap();
     context.fill();
 }
 
 #[wasm_bindgen]
 pub fn draw_star(star: &Star, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
+    let x = star.get_x().round();
+    let y = star.get_y().round();
     context.begin_path();
     context.set_stroke_style(color);
-    context.move_to(star.get_x().round(), star.get_y().round());
-    context.line_to(star.get_x().round() + 1.0, star.get_y().round() + 1.0);
+    context.move_to(x, y);
+    context.line_to(x + 1.0, y + 1.0);
     context.stroke();
 }
 
 #[wasm_bindgen]
 pub fn draw_shockwave(player_ship: &PlayerShip, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
+    let x = player_ship.shockwave.get_x().round();
+    let y = player_ship.shockwave.get_y().round();
+    let width = player_ship.shockwave.get_width();
+    let height = player_ship.shockwave.get_height();
     context.set_stroke_style(color);
     context.set_line_width(2.0);
     context.begin_path();
-    context.stroke_rect(
-        player_ship.shockwave.get_x().round(),
-        player_ship.shockwave.get_y().round(),
-        player_ship.shockwave.get_width(),
-        player_ship.shockwave.get_height(),
-    );
+    context.stroke_rect(x, y, width, height);
     if player_ship.shockwave.get_x() != 0.0 {
-            context.set_line_width(2.0);
-             context.begin_path();
+            context.begin_path();
             context.stroke_rect(
-            player_ship.shockwave.get_x().round() + 25.0,
-            player_ship.shockwave.get_y().round() + 25.0,
-            player_ship.shockwave.get_width() - 50.0,
-            player_ship.shockwave.get_height() - 50.0,
+            x + 25.0,
+            y + 25.0,
+            width - 50.0,
+            height - 50.0,
         );
-            context.set_line_width(2.0);
              context.begin_path();
             context.stroke_rect(
-            player_ship.shockwave.get_x().round() + 50.0,
-            player_ship.shockwave.get_y().round() + 50.0,
-            player_ship.shockwave.get_width() - 100.0,
-            player_ship.shockwave.get_height() - 100.0,
+            x + 50.0,
+            y + 50.0,
+            width - 100.0,
+            height - 100.0,
         );
     } 
 }
 
 #[wasm_bindgen]
 pub fn draw_power_up(power_up: &PowerUp, context: &web_sys::CanvasRenderingContext2d) {
+    let two_pi = f64::consts::PI * 2.0;
     context.begin_path();
     context.set_line_width(2.0);
     context.set_stroke_style(&power_up.get_color_1());
-    context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size(), 0.0, f64::consts::PI * 2.0).unwrap();
+    context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size(), 0.0, two_pi).unwrap();
     context.stroke();
     context.begin_path();
     context.set_line_width(2.0);
     context.set_stroke_style(&power_up.get_color_2());
-    context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size() * 0.6, 0.0, f64::consts::PI * 2.0).unwrap();
+    context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size() * 0.6, 0.0, two_pi).unwrap();
     context.stroke();
     context.begin_path();
     context.set_line_width(2.0);
     context.set_stroke_style(&power_up.get_color_3());
-    context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size() * 0.3, 0.0, f64::consts::PI * 2.0).unwrap();
+    context.arc(power_up.get_x(), power_up.get_y(), power_up.get_size() * 0.3, 0.0, two_pi).unwrap();
     context.stroke();
 }
 
 #[wasm_bindgen]
 pub fn draw_spiral_enemy(spiral_enemy: &SpiralEnemy, 
 color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
-    context.begin_path();
+    let x = spiral_enemy.base.get_x().round();
+    let y = spiral_enemy.base.get_y().round();
+    let size = spiral_enemy.base.get_size();
+    let two_pi = f64::consts::PI * 2.0;
     context.set_line_width(2.0);
     context.set_stroke_style(color);
-    context.arc(spiral_enemy.base.get_x().round(),  
-    spiral_enemy.base.get_y().round(), spiral_enemy.base.get_size(), 0.0, f64::consts::PI * 2.0).unwrap();
+    context.begin_path();
+    context.arc(x, y, size, 0.0, two_pi).unwrap();
     context.close_path();
     context.stroke();
 }
 
 #[wasm_bindgen]
 pub fn draw_square_enemy(square_enemy: &SquareEnemy, color: &JsValue,  context: &web_sys::CanvasRenderingContext2d){
-    context.begin_path();
-    context.set_stroke_style(color);
+    let x = square_enemy.base.get_x().round() - (square_enemy.base.get_size() / 2.0).round();
+    let y = square_enemy.base.get_y().round() - (square_enemy.base.get_size() / 2.0).round();
+    let size = square_enemy.base.get_size();
     context.set_line_width(2.0);
-    context.stroke_rect(square_enemy.base.get_x().round() - (square_enemy.base.get_size() / 2.0).round(),
-    square_enemy.base.get_y().round() - (square_enemy.base.get_size() / 2.0).round(),
-    square_enemy.base.get_size(),
-    square_enemy.base.get_size())
+    context.set_stroke_style(color);
+    context.begin_path();
+    context.stroke_rect(x, y, size, size)
 }
 
 #[wasm_bindgen]
 pub fn draw_enemy_projectile(square_enemy: &SquareEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
-    context.begin_path();
+    let x = square_enemy.base.get_x().round() + (square_enemy.base.get_size() / 2.0).round();
+    let y = square_enemy.base.get_y().round() + (square_enemy.base.get_size() / 2.0).round();
+    let laser_x = square_enemy.get_laser_x().round();
+    let laser_y = square_enemy.get_laser_y().round();
     context.set_line_width(2.0);
-    context.move_to(square_enemy.base.get_x().round() + (square_enemy.base.get_size() / 2.0).round(),
-    square_enemy.base.get_y().round() + (square_enemy.base.get_size() / 2.0).round());
-    context.line_to(square_enemy.get_laser_x().round(), square_enemy.get_laser_y().round());
     context.set_stroke_style(color);
+    context.begin_path();
+    context.move_to(x, y);
+    context.line_to(laser_x, laser_y);
     context.stroke();
 }
 
 #[wasm_bindgen]
 pub fn draw_basic_enemy(basic_enemy: &BasicEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
+    let x = basic_enemy.base.get_x().round() - (basic_enemy.base.get_size() / 2.0).round();
+    let y = basic_enemy.base.get_y().round() - (basic_enemy.base.get_size() / 2.0).round();
+    let size = basic_enemy.base.get_size();
     context.set_stroke_style(color);
     context.set_line_width(2.0);
     context.begin_path();
-    context.stroke_rect(basic_enemy.base.get_x().round() - (basic_enemy.base.get_size() / 2.0).round(),
-    basic_enemy.base.get_y().round() - (basic_enemy.base.get_size() / 2.0).round(),
-    basic_enemy.base.get_size(),
-    basic_enemy.base.get_size())
+    context.stroke_rect(x, y, size, size);
 }
 
 #[wasm_bindgen]
 pub fn draw_follow_enemy(follow_enemy: &mut FollowEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d) {
     context.set_line_width(2.0);
-    context.move_to(
-        follow_enemy.x_draw_position().round(),
-        follow_enemy.y_draw_position().round()
-    );
+    let x = follow_enemy.x_draw_position().round();
+    let y = follow_enemy.y_draw_position().round();
+    let coordinates: Vec<_> = (0 ..follow_enemy.get_number_of_sides() as i32 + 1)
+        .map(f64::from)
+        .map(|i| (follow_enemy.draw_x(i).round(), follow_enemy.draw_y(i).round()))
+        .collect();
+    context.move_to(x, y);
     context.begin_path();
     for i in 0..follow_enemy.get_number_of_sides() as i32 + 1 {
-            context.set_line_width(2.0);
             context.line_to(
-            follow_enemy.draw_x(i as f64).round(),
-            follow_enemy.draw_y(i as f64).round()
+            coordinates[i as usize].0,
+            coordinates[i as usize].1,
             );
     }
     context.set_stroke_style(color);
@@ -184,19 +202,22 @@ pub fn draw_follow_enemy(follow_enemy: &mut FollowEnemy, color: &JsValue, contex
 pub fn draw_claw_enemy(claw_enemy: &mut ClawEnemy, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
     let center_x = claw_enemy.base.get_x() + claw_enemy.base.get_size() / 2.0;
     let center_y = claw_enemy.base.get_y() + claw_enemy.base.get_size() / 2.0;
+    let x = claw_enemy.x_draw_position().round();
+    let y = claw_enemy.y_draw_position().round();
+    let coordinates: Vec<_> = (0 ..claw_enemy.get_number_of_sides() as i32 + 1)
+        .map(f64::from)
+        .map(|i| (claw_enemy.draw_x(i).round(), claw_enemy.draw_y(i).round()))
+        .collect();
     context.translate(center_x, center_y).unwrap();
     context.rotate(claw_enemy.get_radians()).unwrap();
-    context.begin_path();
     context.set_line_width(2.0);
-    context.move_to(
-        claw_enemy.x_draw_position().round(),
-        claw_enemy.y_draw_position().round()
-    );
+    context.begin_path();
+    context.move_to(x, y);
     for i in 0..claw_enemy.get_number_of_sides() as i32 + 1 {
         context.set_line_width(2.0);
         context.line_to(
-            claw_enemy.draw_x(i as f64).round(),
-            claw_enemy.draw_y(i as f64).round()
+            coordinates[i as usize].0,
+            coordinates[i as usize].1,
         )
     } 
     context.set_stroke_style(color);
@@ -207,9 +228,9 @@ pub fn draw_claw_enemy(claw_enemy: &mut ClawEnemy, color: &JsValue, context: &we
 
 #[wasm_bindgen]
 pub fn draw_outline(space: &Space, color: &JsValue, context: &web_sys::CanvasRenderingContext2d){
-    context.begin_path();
     context.set_line_width(10.0);
     context.set_stroke_style(color);
+    context.begin_path();
     context.stroke_rect(0.0, 0.0, space.get_width(), space.get_height());
 }
 

@@ -43,9 +43,6 @@ const offscreenCtx = offscreen.getContext("2d", { alpha: false })
 
 canvas.width = (window.innerWidth - 20) * 0.75
 canvas.height = 860 * 0.75
-// offscreen.width = space.get_width()
-// offscreen.height = space.get_height()
-
 
 let initStarArray = []
 
@@ -65,9 +62,6 @@ let velX = 0
 let velY = 0
 let rotationSpeed = 0
 let delay = 0
-let drawSpirals = true
-let spiralX = getRandomInt(space.get_width() - 30)
-let spiralY = getRandomInt(space.get_height() - 30)
 let startGame = false
 let startBackgroundMusic = false
 let playerShotStarted = false
@@ -82,10 +76,12 @@ let bufferLoader
 const explosionContext = new AudioContext()
 const context = new AudioContext()
 const playerShotContext = new AudioContext()
+const playerExplosionContext = new AudioContext()
 
 let backgroundMusic
 let playerShotSound
 let explosionSound
+let playerExplosionSound
 
 let playerShotGainNode
 
@@ -104,9 +100,8 @@ playButton.addEventListener('click', function() {
   if(!startBackgroundMusic){
     context.resume().then(() => {
       backgroundMusic.loop = true
-      backgroundMusic.loopStart = 60
+      backgroundMusic.start(0)
       startBackgroundMusic = true
-      backgroundMusic.start(0, 60)
     })
   }
 })
@@ -129,6 +124,7 @@ const finishedLoading = (bufferList) => {
   playerShotSound.connect(playerShotGainNode)
 
   explosionSound = bufferList[2]
+  playerExplosionSound = bufferList[3]
   
   const loading = document.querySelector('.loading')
   const playerInfo = document.querySelector('#player-info')
@@ -146,14 +142,22 @@ const playExplosion = () => {
   explosion.stop(explosionContext.currentTime + 1)
 }
 
+const playPlayerExplosion = () => {
+  const playerExplosion = playerExplosionContext.createBufferSource()
+  playerExplosion.buffer = playerExplosionSound
+  playerExplosion.connect(playerExplosionContext.destination)
+  playerExplosion.start(0)
+}
+
 const init = () => {
   window.AudioContext = window.AudioContext || window.webkitAudioContext
   bufferLoader = new BufferLoader(
     context,
     [
-      'http://localhost:5000/media/technical-debt.mp3',
+      'http://localhost:5000/media/future-club.mp3',
       'http://localhost:5000/media/player-shot-2.wav',
       'http://localhost:5000/media/enemy-explosion.wav',
+      'http://localhost:5000/media/player-explosion.wav',
     ],
     finishedLoading
     )
@@ -246,9 +250,9 @@ const initObjectArrays = (array, amountToAdd, Type, optionalX, optionalY, option
 
 const initSquareArray = (squareEnemyArray, amountToAdd) => {
   for(let i = 0; i < amountToAdd; i++){
-    const buffer = 120
-    const patrolWidth = 1560
-    const patrolHeight = 960
+    const buffer = 300
+    const patrolWidth = spaceX - (buffer * 2)
+    const patrolHeight = spaceY - (buffer * 2)
     const squareEnemyX = getRandomInt(patrolWidth) + buffer
     const squareEnemyY = getRandomInt(patrolHeight) + buffer
     const squareEnemy = SquareEnemy.new(squareEnemyX, squareEnemyY)
@@ -293,34 +297,34 @@ const addEnemies = (enemyArray, amountToAdd, interval) => {
 }
 
 
-const updateSpiralEnemies = () => {
-  spiralEnemyInterval = setInterval(() => {
-    const addedArrayLength = spiralEnemyArray
-    .filter(enemy => enemy.get_added_to_array()).length
-    const activeArrayLength = spiralEnemyArray
-    .filter(enemy => enemy.base.is_active()).length
-  if(addedArrayLength == 30 && activeArrayLength == 30){
-    drawSpirals = false
-  } else if(activeArrayLength <= 30 && drawSpirals && startGame){
-      let idx
-      const spiralEnemyToSet = spiralEnemyArray
-        .find((enemy, index)  => {
-          idx = index
-          return !enemy.base.is_active()
-        })
-      spiralEnemyToSet.set_active()
-      spiralEnemyToSet.set_add_to_array()
-      spiralEnemyToSet.set_x(spiralX)
-      spiralEnemyToSet.set_x(spiralY)
-      spiralEnemyToSet.set_speed(1)
-      spiralEnemyArray[idx] = spiralEnemyToSet
-  } else if (addedArrayLength == 30 && activeArrayLength == 0){
-    drawSpirals = true
-    spiralX = getRandomInt(space.get_width() - 30)
-    spiralY = getRandomInt(space.get_height() - 30)
-  }
-  }, 10)
-}    
+// const updateSpiralEnemies = () => {
+//   spiralEnemyInterval = setInterval(() => {
+//     const addedArrayLength = spiralEnemyArray
+//     .filter(enemy => enemy.get_added_to_array()).length
+//     const activeArrayLength = spiralEnemyArray
+//     .filter(enemy => enemy.base.is_active()).length
+//   if(addedArrayLength == 30 && activeArrayLength == 30){
+//     drawSpirals = false
+//   } else if(activeArrayLength <= 30 && drawSpirals && startGame){
+//       let idx
+//       const spiralEnemyToSet = spiralEnemyArray
+//         .find((enemy, index)  => {
+//           idx = index
+//           return !enemy.base.is_active()
+//         })
+//       spiralEnemyToSet.set_active()
+//       spiralEnemyToSet.set_add_to_array()
+//       spiralEnemyToSet.set_x(spiralX)
+//       spiralEnemyToSet.set_x(spiralY)
+//       spiralEnemyToSet.set_speed(1)
+//       spiralEnemyArray[idx] = spiralEnemyToSet
+//   } else if (addedArrayLength == 30 && activeArrayLength == 0){
+//     drawSpirals = true
+//     spiralX = getRandomInt(space.get_width() - 30)
+//     spiralY = getRandomInt(space.get_height() - 30)
+//   }
+//   }, 10)
+// }    
 
 const updatePlayerHealthDisplay = () => {
   const playerHealthElement = document.getElementById("player-health")
@@ -525,10 +529,10 @@ const resetEnemyArray = (enemyArray) => {
 const enemyRampUp = () => {
   if (playerShip.get_score() >= 0 && space.get_intensity_level() === 0) {
     space.increment_intensity_level()
-    basicEnemyInterval = addEnemies(basicEnemyArray, 5, basicEnemyInterval)
+    addEnemies(basicEnemyArray, 5, basicEnemyInterval)
     addEnemies(spiralEnemyArray, 5, spiralEnemyInterval)
-    // followEnemyInterval = addEnemies(followEnemyArray, 5, followEnemyInterval)
-    // addEnemies(squareEnemyArray, 1, squareEnemyInterval)
+    // addEnemies(followEnemyArray, 5, followEnemyInterval)
+    // addEnemies(squareEnemyArray, 5, squareEnemyInterval)
     // addEnemies(clawEnemyArray, 3, clawEnemyInterval)
     // updateSpiralEnemies() 
   } 
@@ -539,6 +543,7 @@ const enemyRampUp = () => {
     addEnemies(followEnemyArray, 5, followEnemyInterval)
     addEnemies(squareEnemyArray, 2, squareEnemyInterval)
     addEnemies(spiralEnemyArray, 5, spiralEnemyInterval)
+    addEnemies(clawEnemyArray, 2, clawEnemyInterval)
   } 
   else if (playerShip.get_score() >= 20000 && space.get_intensity_level() === 2) {
     space.increment_intensity_level()
@@ -546,10 +551,11 @@ const enemyRampUp = () => {
     followEnemyArray = resetEnemyArray(followEnemyArray)
     squareEnemyArray = resetEnemyArray(squareEnemyArray)
     spiralEnemyArray = resetEnemyArray(spiralEnemyArray)
+    clawEnemyArray = resetEnemyArray(clawEnemyArray)
     addEnemies(followEnemyArray, 5, followEnemyInterval)
     addEnemies(squareEnemyArray, 2, squareEnemyInterval)
     addEnemies(basicEnemyArray, 10, basicEnemyInterval)
-    addEnemies(clawEnemyArray, 2, clawEnemyInterval)
+    addEnemies(clawEnemyArray, 5, clawEnemyInterval)
     addEnemies(spiralEnemyArray, 7, spiralEnemyInterval)
   } else if (playerShip.get_score() >= 40000 && space.get_intensity_level() === 3) {
     space.increment_intensity_level()
@@ -613,9 +619,6 @@ const restartGame = () => {
   followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
   clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
   spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy)
-  // spiralEnemyArray.forEach(enemy => {
-  //   enemy.set_active()
-  // })
   const starX = space.get_width() / 2
   const starY = space.get_height() / 2
   initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
@@ -624,9 +627,6 @@ const restartGame = () => {
   velY = 0
   rotationSpeed = 0
   delay = 0
-  drawSpirals = true
-  spiralX = getRandomInt(space.get_width() - 30)
-  spiralY = getRandomInt(space.get_height() - 30)
   playerShip = PlayerShip.new()
   space.reset_intensity_level()
   clearInterval(squareEnemyInterval)
@@ -659,21 +659,12 @@ squareEnemyArray = initSquareArray(squareEnemyArray, 5, SquareEnemy)
 followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
 clawEnemyArray = initObjectArrays(clawEnemyArray, 10, ClawEnemy)
 spiralEnemyArray = initObjectArrays(spiralEnemyArray, 30, SpiralEnemy)
-// spiralEnemyArray.forEach(enemy => {
-//   enemy.set_active()
-// })
 const starX = space.get_width() / 2
 const starY = space.get_height() / 2
 initStarArray = initObjectArrays(initStarArray, 20, Star, starX, starY)
 
 refreshLoop()
 addStars()
-
-// const step = () => {
-//   animate(step)
-//   update()
-//   render()
-// }
 
 
 const framerate = 1000 / 60
@@ -714,7 +705,6 @@ const update = () => {
     updatePowerUp()
     updateFPSDisplay()
     draw_offscreen_canvas(space, playerShip, canvas, offscreen, primaryCtx, offscreenCtx)
-    // draw_offscreen_canvas(space, playerShip, canvas, offscreen2, primaryCtx, offscreenCtx2)
   }
 }
 
@@ -726,6 +716,7 @@ const render = () => {
       drawPlayerShip()
     } else {
       restartGame()
+      playPlayerExplosion()
       playButton.click()
     }
     if(playerShip.get_power_up() === 'projectile'){

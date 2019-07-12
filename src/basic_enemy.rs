@@ -27,7 +27,7 @@ impl BasicEnemy {
     pub fn new(x: f64, y: f64) -> BasicEnemy {
         utils::set_panic_hook();
         BasicEnemy {
-            base: Enemy::new(17.5, x, y, 2.0, 2.0, EnemyType::Basic)
+            base: Enemy::new(25.0, x, y, 2.0, 2.0, EnemyType::Basic)
         }
     }
 

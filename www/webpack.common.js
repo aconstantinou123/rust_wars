@@ -12,7 +12,13 @@ module.exports = {
         {
             test: /\.(ogg|mp3|wav|mpe?g)$/i,
             use: 'file-loader'
-        }
+        },
+        {
+          test: /\.(png|jpg|ttf)$/,
+          use: [
+             { loader: 'url-loader', options: { limit: 5000192 } }
+          ]
+        },
       ]
     },
   plugins: [

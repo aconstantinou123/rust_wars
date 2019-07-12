@@ -91,7 +91,7 @@ impl Laser {
     }
 
     pub fn delay_shot(&mut self, player_ship: &mut PlayerShip) {
-        if self.shoot_timer <= 500 && self.can_shoot == false {
+        if self.shoot_timer <= 250 && self.can_shoot == false {
             self.shoot_timer += 1
         } else if self.shoot_timer <= 0 {
             if self.current_x_and_y_positions.len() >= 1 {
@@ -103,7 +103,7 @@ impl Laser {
         } else {
             self.can_shoot = true;
             self.shoot_timer -= 1;
-            if self.shoot_timer == 250 {
+            if self.shoot_timer == 125 {
                 self.set_ship_postion(player_ship)
             }
             if self.radians != 0.0  {

@@ -204,7 +204,7 @@ impl Enemy {
                     self.active = false;
                     player_ship.set_score(500);
                 } else {
-                    player_ship.set_health(-5);
+                    player_ship.set_health(-25);
                 }
             } 
             if right_side_of_ship >= left_x
@@ -219,7 +219,7 @@ impl Enemy {
                     self.active = false;
                     player_ship.set_score(500);
                 } else {
-                    player_ship.set_health(-5);
+                    player_ship.set_health(-25);
                 }
             }
             if bottom_of_ship >= top_y
@@ -234,7 +234,7 @@ impl Enemy {
                     self.active = false;
                     player_ship.set_score(500);
                 } else {
-                    player_ship.set_health(-5);
+                    player_ship.set_health(-25);
                 }
             }
             if top_of_ship <= bottom_y
@@ -249,7 +249,7 @@ impl Enemy {
                     self.active = false;
                     player_ship.set_score(500);
                 } else {
-                    player_ship.set_health(-5);
+                    player_ship.set_health(-25);
                 }
             }
         }

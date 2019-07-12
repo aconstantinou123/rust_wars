@@ -9,8 +9,8 @@ const port = process.env.PORT || 5000
 app.use(cors())
 app.use(express.static(path.join(__dirname, './dist')))
 
-app.get('/media/technical-debt.mp3', (req, res) => {
-  res.sendFile(path.join(__dirname, './media/timecrawler.mp3'))
+app.get('/media/future-club.mp3', (req, res) => {
+  res.sendFile(path.join(__dirname, './media/future-club.mp3'))
 })
 
 app.get('/media/player-shot-2.wav', (req, res) => {
@@ -19,6 +19,10 @@ app.get('/media/player-shot-2.wav', (req, res) => {
 
 app.get('/media/enemy-explosion.wav', (req, res) => {
   res.sendFile(path.join(__dirname, './media/enemy-explosion.wav'))
+})
+
+app.get('/media/player-explosion.wav', (req, res) => {
+  res.sendFile(path.join(__dirname, './media/player-explosion.wav'))
 })
 
 app.listen(port, () => {
