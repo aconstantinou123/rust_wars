@@ -32,7 +32,7 @@ impl Shockwave {
             y,
             height: 0.0,
             width: 0.0,
-            speed: 10.0,
+            speed: 20.0,
             is_active: false,
             shockwaves_remaining: 3,
         }

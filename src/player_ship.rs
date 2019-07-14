@@ -44,7 +44,7 @@ impl PlayerShip {
             centre_x,
             centre_y,
             radians: rotation_degress * f64::consts::PI / 180.0,
-            speed: 3,
+            speed: 6,
             health: 100,
             is_alive: true,
             score: 0,

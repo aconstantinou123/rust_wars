@@ -247,18 +247,18 @@ const drawEnemy = (enemyArray, color, drawFunction, playerShip) => {
   })
 }
 
-const drawEnemyImg = (enemyArray, img, playerShip) => {
-  enemyArray.forEach(enemy => {
-    if(enemy.get_added_to_array() && enemy.base.is_active()
-    && enemy.base.can_draw(playerShip, spaceX, spaceY)){
-      offscreenCtx.drawImage(img, 
-        enemy.base.get_x(), 
-        enemy.base.get_y(), 
-        enemy.base.get_size(),
-        enemy.base.get_size())
-    }
-  })
-}
+// const drawEnemyImg = (enemyArray, img, playerShip) => {
+//   enemyArray.forEach(enemy => {
+//     if(enemy.get_added_to_array() && enemy.base.is_active()
+//     && enemy.base.can_draw(playerShip, spaceX, spaceY)){
+//       offscreenCtx.drawImage(img, 
+//         enemy.base.get_x(), 
+//         enemy.base.get_y(), 
+//         enemy.base.get_size(),
+//         enemy.base.get_size())
+//     }
+//   })
+// }
 
 const initObjectArrays = (array, amountToAdd, Type, optionalX, optionalY, optionalRadians) => {
   const x = optionalX ? optionalX : getRandomInt(space.get_width() - 30)
@@ -504,10 +504,10 @@ document.body.addEventListener("keyup", (e) => {
 
 const controlShip = () => {
   if(playerShip.get_is_alive()) {
-    if(keys[37] && rotationSpeed > -3){
-      rotationSpeed -= 1.5
-    } if (keys[39] && rotationSpeed < 3){
-      rotationSpeed += 1.5
+    if(keys[37] && rotationSpeed > -5){
+      rotationSpeed -= 2.5
+    } if (keys[39] && rotationSpeed < 5){
+      rotationSpeed += 2.5
     } if(keys[65] && velX > -playerShip.get_speed()){
       velX -= 1
     } if (keys[68] && velX < playerShip.get_speed()){
@@ -637,9 +637,9 @@ const restartGame = () => {
   clawEnemyArray = []
   spiralEnemyArray = []
   basicEnemyArray = []
-  projectileArray = initObjectArrays(projectileArray, 20, Projectile, 0, 0, 0)
-  powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 20, Projectile, 0, 0, 0)
-  powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 20, Projectile, 0, 0, 0)
+  projectileArray = initObjectArrays(projectileArray, 30, Projectile, 0, 0, 0)
+  powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 30, Projectile, 0, 0, 0)
+  powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 30, Projectile, 0, 0, 0)
   basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
   squareEnemyArray = initSquareArray(squareEnemyArray, 5, SquareEnemy)
   followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
@@ -653,7 +653,7 @@ const restartGame = () => {
   velY = 0
   rotationSpeed = 0
   delay = 0
-  playerShip = PlayerShip.new()
+  playerShip = PlayerShip.new(spaceX / 2, spaceY / 2)
   space.reset_intensity_level()
   clearInterval(squareEnemyInterval)
   clearInterval(followEnemyInterval)
@@ -665,8 +665,8 @@ const restartGame = () => {
 
 const animate = window.requestAnimationFrame ||
 window.webkitRequestAnimationFrame ||
-window.mozRequestAnimationFrame ||
-function(callback) { window.setTimeout(callback, 1000/60) }
+window.mozRequestAnimationFrame 
+|| function(callback) { window.setTimeout(callback, 1000/60) }
 
 const refreshLoop = () => {
   window.requestAnimationFrame(() => {
@@ -680,9 +680,9 @@ const refreshLoop = () => {
   });
 }
 
-projectileArray = initObjectArrays(projectileArray, 50, Projectile, 0, 0, 0)
-powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 50, Projectile, 0, 0, 0)
-powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 50, Projectile, 0, 0, 0)
+projectileArray = initObjectArrays(projectileArray, 100, Projectile, 0, 0, 0)
+powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 100, Projectile, 0, 0, 0)
+powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 100, Projectile, 0, 0, 0)
 basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
 squareEnemyArray = initSquareArray(squareEnemyArray, 5, SquareEnemy)
 followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
@@ -768,5 +768,3 @@ window.onload = () => {
   init()
   animate(step)
 } 
-
-window.onload()

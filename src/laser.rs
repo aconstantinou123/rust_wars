@@ -39,7 +39,7 @@ impl Laser {
             is_active: false,
             shoot_timer: 0,
             can_shoot: false,
-            speed: 10.0,
+            speed: 20.0,
             current_x_and_y_positions,
         }
     }
