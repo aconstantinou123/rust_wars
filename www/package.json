@@ -1,15 +1,16 @@
 {
-  "name": "create-wasm-app",
+  "name": "shooter",
   "version": "0.1.0",
-  "description": "create an app to consume rust-generated wasm packages",
+  "description": "twitch shooter made using rust, js and wasm",
   "main": "index.js",
   "bin": {
     "create-wasm-app": ".bin/create-wasm-app.js"
   },
   "scripts": {
+    "heroku-postbuild": "webpack -p",
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack-dev-server --config webpack.dev.js",
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
     "rust",
     "webpack"
   ],
-  "author": "Ashley Williams <ashley666ashley@gmail.com>",
+  "author": "Alex Constantinou <a_constantinou@hotmail.co.uk>",
   "license": "(MIT OR Apache-2.0)",
   "bugs": {
     "url": "https://github.com/rustwasm/create-wasm-app/issues"

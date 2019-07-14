@@ -1,0 +1,15 @@
+{
+  "name": "shooter",
+  "collaborators": [
+    "Alex Constantinou <a_constantinou@hotmail.co.uk>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "shooter_bg.wasm",
+    "shooter.js",
+    "shooter.d.ts"
+  ],
+  "module": "shooter.js",
+  "types": "shooter.d.ts",
+  "sideEffects": "false"
+}
