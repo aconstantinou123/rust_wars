@@ -29,7 +29,7 @@ impl FollowEnemy {
     pub fn new(x: f64, y: f64) -> FollowEnemy {
         utils::set_panic_hook();
         FollowEnemy {
-            base: Enemy::new(15.0, x, y, 2.5, 2.5, EnemyType::Follow),
+            base: Enemy::new(17.0, x, y, 1.25, 1.25, EnemyType::Follow),
             radians: 0.0,
             number_of_sides: 6.0,
         }
@@ -108,7 +108,7 @@ impl FollowEnemy {
     }
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
-        self.base.move_and_reactivate(space, 2.5, 35.0, max_x, max_y, 0.0);
+        self.base.move_and_reactivate(space, 1.25, 17.0, max_x, max_y, 0.0);
         self.check_player_ship_collision(player_ship);
         self.check_shockwave_collision(&player_ship.shockwave);
         self.change_speed(player_ship, 0.2);

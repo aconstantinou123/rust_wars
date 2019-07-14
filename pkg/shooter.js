@@ -2400,6 +2400,14 @@ export const __widl_f_stroke_rect_CanvasRenderingContext2D = function(arg0, arg1
     getObject(arg0).strokeRect(arg1, arg2, arg3, arg4);
 };
 
+export const __widl_f_restore_CanvasRenderingContext2D = function(arg0) {
+    getObject(arg0).restore();
+};
+
+export const __widl_f_save_CanvasRenderingContext2D = function(arg0) {
+    getObject(arg0).save();
+};
+
 export const __widl_f_rotate_CanvasRenderingContext2D = function(arg0, arg1) {
     try {
         getObject(arg0).rotate(arg1);

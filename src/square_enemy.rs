@@ -31,7 +31,7 @@ impl SquareEnemy {
     pub fn new(x: f64, y: f64) -> SquareEnemy {
         utils::set_panic_hook();
         SquareEnemy {
-            base: Enemy::new(25.0, x, y, 2.0, 2.0, EnemyType::Square),
+            base: Enemy::new(17.0, x, y, 1.0, 1.0, EnemyType::Square),
             in_x_position: false,
             in_y_position: false,
             laser: Laser::new(0.0, x, y),
@@ -136,7 +136,7 @@ impl SquareEnemy {
     }
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
-        self.base.move_and_reactivate(space, 2.0, 35.0, max_x, max_y, 120.0);
+        self.base.move_and_reactivate(space, 1.0, 17.0, max_x, max_y, 120.0);
         self.check_player_ship_collision(player_ship);
         space.check_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);

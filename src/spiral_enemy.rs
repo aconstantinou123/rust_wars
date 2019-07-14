@@ -30,7 +30,7 @@ impl SpiralEnemy {
     pub fn new(x: f64, y: f64) -> SpiralEnemy {
         utils::set_panic_hook();
         SpiralEnemy {
-            base: Enemy::new(15.0, x, y, 3.0, 3.0, EnemyType::Spiral),
+            base: Enemy::new(15.0, x, y, 1.5, 1.5, EnemyType::Spiral),
             radians: 0.0,
             rotation_radius: 2.0,
             reverse: false,
@@ -125,7 +125,7 @@ impl SpiralEnemy {
     }
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
-        self.move_and_reactivate(space, 0.0, 25.0);
+        self.move_and_reactivate(space, 1.5, 15.0);
         self.check_player_ship_collision(player_ship);
         space.check_spiral_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);

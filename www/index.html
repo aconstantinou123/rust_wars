@@ -42,8 +42,8 @@
         padding-left: 20px;
       }
       #space {
-        height: 860px;
-        width: 1660px;
+        /* height: 322.5px;
+        width: 448.5px; */
         border: 1px solid black;
       }
     .modal-header {
@@ -80,6 +80,14 @@
       height: 100%;
       top: 0;
       left: 0;
+    }
+    .canvas-wrapper {
+      margin-left: 20%;
+      width: 60%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #6E0DD0;
     }
     #modal-content {
       display: block;
@@ -143,13 +151,15 @@
           </div>
         </div>
     </div>
-    <canvas id="space"></canvas>
-    <div id="player-info">
-      <h4 id="player-health"></h4>
-      <h4 id="shockwaves">Shockwaves Remaining: 3</h4>
-      <h4 id="fps">FPS: 0</h4>
-      <h4 id="score">Score: 0</h4>
-    </div>
+    <div class="canvas-wrapper">
+      <canvas id="space"></canvas>
+        <div id="player-info">
+          <h4 id="player-health"></h4>
+          <h4 id="shockwaves">Shockwaves Remaining: 3</h4>
+          <h4 id="fps">FPS: 0</h4>
+          <h4 id="score">Score: 0</h4>
+        </div>
+      <div class="modal-wrapper">
     <script src="./bootstrap.js"></script>
   </body>
 </html>

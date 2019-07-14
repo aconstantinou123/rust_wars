@@ -29,7 +29,7 @@ impl ClawEnemy {
     pub fn new(x: f64, y: f64) -> ClawEnemy {
         utils::set_panic_hook();
         ClawEnemy {
-            base: Enemy::new(17.5, x, y, 7.0, 7.0, EnemyType::Claw),
+            base: Enemy::new(15.0, x, y, 3.5, 3.5, EnemyType::Claw),
             radians: 0.0,
             number_of_sides: 4.5,
         }
@@ -127,7 +127,7 @@ impl ClawEnemy {
     }
 
     pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
-        self.base.move_and_reactivate(space, 3.0, 25.0, max_x, max_y, 0.0);
+        self.base.move_and_reactivate(space, 3.5, 15.0, max_x, max_y, 0.0);
         self.check_player_ship_collision(player_ship);
         space.check_claw_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);

@@ -39,12 +39,12 @@ impl PlayerShip {
         let rotation_degress = 270.0;
         PlayerShip {
             side_count: 3,
-            size: 17.5,
+            size: 12.5,
             rotation_degress,
             centre_x: 550.0,
             centre_y: 550.0,
             radians: rotation_degress * f64::consts::PI / 180.0,
-            speed: 6,
+            speed: 3,
             health: 100,
             is_alive: true,
             score: 0,

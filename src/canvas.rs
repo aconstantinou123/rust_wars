@@ -29,6 +29,7 @@ pub fn draw_player_ship(player_ship: &PlayerShip, context: &web_sys::CanvasRende
         .map(|i| (player_ship.draw_line_x(i).round(), 
         player_ship.draw_line_y(i).round()))
         .collect();
+    context.save();
     context.translate(player_ship.get_centre_x(), player_ship.get_centre_y())
         .unwrap();
     context.rotate(radians)
@@ -54,6 +55,7 @@ pub fn draw_player_ship(player_ship: &PlayerShip, context: &web_sys::CanvasRende
         .unwrap();
     context.translate(-player_ship.get_centre_x(), -player_ship.get_centre_y())
         .unwrap();
+    context.restore();
 }
 
 #[wasm_bindgen]
@@ -241,11 +243,13 @@ offscreen_canvas: &web_sys::HtmlCanvasElement,
 primary_context: &web_sys::CanvasRenderingContext2d,
 offscreen_context: &web_sys::CanvasRenderingContext2d){
     primary_context.begin_path();
+    primary_context.save();
     primary_context.set_transform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0).unwrap();
     primary_context.clear_rect(0.0, 0.0, space.get_width() * 2.0, space.get_height() * 2.0);
     primary_context.translate(-player_ship.get_centre_x() + canvas.width() as f64 / 2.0, 
     -player_ship.get_centre_y() + canvas.height() as f64 / 2.0).unwrap();
     primary_context.draw_image_with_html_canvas_element(offscreen_canvas, 0.0, 0.0).unwrap();
+    primary_context.restore();
     offscreen_context.begin_path();
     offscreen_context.clear_rect(0.0, 0.0, space.get_width(), space.get_height());
 }
