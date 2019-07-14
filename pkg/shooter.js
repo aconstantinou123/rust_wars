@@ -1261,10 +1261,12 @@ export class PlayerShip {
         return wasm.__wbg_set_playership_shockwave(this.ptr, ptr0);
     }
     /**
+    * @param {number} centre_x
+    * @param {number} centre_y
     * @returns {PlayerShip}
     */
-    static new() {
-        return PlayerShip.__wrap(wasm.playership_new());
+    static new(centre_x, centre_y) {
+        return PlayerShip.__wrap(wasm.playership_new(centre_x, centre_y));
     }
     /**
     * @returns {string}

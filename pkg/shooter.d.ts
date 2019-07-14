@@ -604,9 +604,11 @@ export class Laser {
 export class PlayerShip {
   free(): void;
 /**
+* @param {number} centre_x 
+* @param {number} centre_y 
 * @returns {PlayerShip} 
 */
-  static new(): PlayerShip;
+  static new(centre_x: number, centre_y: number): PlayerShip;
 /**
 * @returns {string} 
 */

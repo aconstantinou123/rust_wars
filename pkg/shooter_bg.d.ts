@@ -106,7 +106,7 @@ export function star_can_draw(a: number, b: number, c: number, d: number): numbe
 export function __wbg_playership_free(a: number): void;
 export function __wbg_get_playership_shockwave(a: number): number;
 export function __wbg_set_playership_shockwave(a: number, b: number): void;
-export function playership_new(): number;
+export function playership_new(a: number, b: number): number;
 export function playership_get_power_up(a: number, b: number): void;
 export function playership_get_color(a: number): number;
 export function playership_set_color(a: number, b: number): void;

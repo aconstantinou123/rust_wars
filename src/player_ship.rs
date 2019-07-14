@@ -34,15 +34,15 @@ pub struct PlayerShip {
 
 #[wasm_bindgen]
 impl PlayerShip {
-    pub fn new() -> PlayerShip {
+    pub fn new(centre_x: f64, centre_y: f64) -> PlayerShip {
         utils::set_panic_hook();
         let rotation_degress = 270.0;
         PlayerShip {
             side_count: 3,
             size: 12.5,
             rotation_degress,
-            centre_x: 550.0,
-            centre_y: 550.0,
+            centre_x,
+            centre_y,
             radians: rotation_degress * f64::consts::PI / 180.0,
             speed: 3,
             health: 100,

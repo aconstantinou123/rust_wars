@@ -32,7 +32,7 @@ const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
 const spaceX = window.innerWidth / 2
 const spaceY =  window.innerHeight - 100
 
-let playerShip = PlayerShip.new()
+let playerShip = PlayerShip.new(spaceX / 2, spaceY / 2)
 const space = Space.new(spaceX, spaceY)
 const powerUp = PowerUp.new()
 
@@ -100,7 +100,7 @@ let playerShotGainNode
 const playButton = document.getElementById('play-button')
 const modal = document.getElementById('modal-content')
 
-playButton.addEventListener('click', function() {
+playButton.addEventListener('click', () => {
   const computedDisplay = window.getComputedStyle(modal, null).getPropertyValue('display');
   if (computedDisplay === "block") {
     modal.style.display = "none"
@@ -663,9 +663,12 @@ const restartGame = () => {
 }
 
 
-const animate = requestAnimationFrame
+const animate = window.requestAnimationFrame ||
+window.webkitRequestAnimationFrame ||
+window.mozRequestAnimationFrame ||
+function(callback) { window.setTimeout(callback, 1000/60) }
 
-function refreshLoop() {
+const refreshLoop = () => {
   window.requestAnimationFrame(() => {
     const now = performance.now()
     while (times.length > 0 && times[0] <= now - 1000) {
