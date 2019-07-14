@@ -157,10 +157,10 @@ const init = () => {
   bufferLoader = new BufferLoader(
     context,
     [
-      `http://localhost:${process.env.PORT}/media/future-club.mp3`,
-      `http://localhost:${process.env.PORT}/media/player-shot-2.wav`,
-      `http://localhost:${process.env.PORT}/media/enemy-explosion.wav`,
-      `http://localhost:${process.env.PORT}/media/player-explosion.wav`,
+      `./media/future-club.mp3`,
+      `./media/player-shot-2.wav`,
+      `./media/enemy-explosion.wav`,
+      `./media/player-explosion.wav`,
     ],
     finishedLoading
     )
