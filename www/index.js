@@ -36,13 +36,15 @@ const powerUp = PowerUp.new()
 
 
 const canvas=document.getElementById("space")
-const offscreen = new OffscreenCanvas(space.get_width(), space.get_height())
+const offscreen = document.createElement('canvas')
 
 const primaryCtx = canvas.getContext("2d",  { alpha: false })
 const offscreenCtx = offscreen.getContext("2d", { alpha: false })
 
 canvas.width = (window.innerWidth - 20) * 0.75
 canvas.height = 860 * 0.75
+offscreen.width = spaceX
+offscreen.height = spaceY
 
 let initStarArray = []
 
