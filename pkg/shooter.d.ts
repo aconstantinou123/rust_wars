@@ -1052,13 +1052,6 @@ export class SpiralEnemy {
 */
   set_speed(speed: number): void;
 /**
-* @param {Space} space 
-* @param {number} original_speed 
-* @param {number} original_size 
-* @returns {void} 
-*/
-  move_and_reactivate(space: Space, original_speed: number, original_size: number): void;
-/**
 * @returns {void} 
 */
   remove_enemy_from_array(): void;
@@ -1069,9 +1062,11 @@ export class SpiralEnemy {
 /**
 * @param {PlayerShip} player_ship 
 * @param {Space} space 
+* @param {number} max_x 
+* @param {number} max_y 
 * @returns {void} 
 */
-  update(player_ship: PlayerShip, space: Space): void;
+  update(player_ship: PlayerShip, space: Space, max_x: number, max_y: number): void;
   base: Enemy;
 }
 /**

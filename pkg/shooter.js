@@ -1981,15 +1981,6 @@ export class SpiralEnemy {
         return wasm.spiralenemy_set_speed(this.ptr, speed);
     }
     /**
-    * @param {Space} space
-    * @param {number} original_speed
-    * @param {number} original_size
-    * @returns {void}
-    */
-    move_and_reactivate(space, original_speed, original_size) {
-        return wasm.spiralenemy_move_and_reactivate(this.ptr, space.ptr, original_speed, original_size);
-    }
-    /**
     * @returns {void}
     */
     remove_enemy_from_array() {
@@ -2004,10 +1995,12 @@ export class SpiralEnemy {
     /**
     * @param {PlayerShip} player_ship
     * @param {Space} space
+    * @param {number} max_x
+    * @param {number} max_y
     * @returns {void}
     */
-    update(player_ship, space) {
-        return wasm.spiralenemy_update(this.ptr, player_ship.ptr, space.ptr);
+    update(player_ship, space, max_x, max_y) {
+        return wasm.spiralenemy_update(this.ptr, player_ship.ptr, space.ptr, max_x, max_y);
     }
 }
 /**

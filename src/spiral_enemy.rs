@@ -104,18 +104,6 @@ impl SpiralEnemy {
         self.base.set_y_speed(speed);
     }
 
-    pub fn move_and_reactivate(&mut self, space: &Space, original_speed: f64, original_size: f64) {
-        if self.base.is_active() == false {
-            self.base.set_x(space.get_width() * -10.0);
-            self.base.set_y(space.get_height() * -10.0);
-            // self.base.set_active();
-            self.base.set_ready_to_remove();
-            self.base.set_x_speed(original_speed);
-            self.base.set_y_speed(original_speed);
-            self.base.set_size(original_size);
-        }
-    }
-
     pub fn remove_enemy_from_array(&mut self) {
         self.base.remove_enemy_from_array()
     }
@@ -124,8 +112,8 @@ impl SpiralEnemy {
         self.base.set_ready_to_remove_false()
     }
 
-    pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space) {
-        self.move_and_reactivate(space, 3.0, 15.0);
+    pub fn update(&mut self, player_ship: &mut PlayerShip, space: &Space, max_x: f64, max_y: f64) {
+        self.base.move_and_reactivate(space, 2.0, 17.0, max_x, max_y, 0.0);
         self.check_player_ship_collision(player_ship);
         space.check_spiral_enemy_at_edge(self);
         self.check_shockwave_collision(&player_ship.shockwave);

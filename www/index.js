@@ -29,7 +29,7 @@ import BufferLoader from './bufferLoader'
 const urlPrefix = process.env.NODE_ENV === 'production' ? '.' : 'http://localhost:5000'
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max))
-const spaceX = window.innerWidth / 2
+const spaceX = window.innerWidth
 const spaceY =  window.innerHeight - 100
 
 let playerShip = PlayerShip.new(spaceX / 2, spaceY / 2)
@@ -637,9 +637,9 @@ const restartGame = () => {
   clawEnemyArray = []
   spiralEnemyArray = []
   basicEnemyArray = []
-  projectileArray = initObjectArrays(projectileArray, 30, Projectile, 0, 0, 0)
-  powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 30, Projectile, 0, 0, 0)
-  powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 30, Projectile, 0, 0, 0)
+  projectileArray = initObjectArrays(projectileArray, 50, Projectile, 0, 0, 0)
+  powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 50, Projectile, 0, 0, 0)
+  powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 50, Projectile, 0, 0, 0)
   basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
   squareEnemyArray = initSquareArray(squareEnemyArray, 5, SquareEnemy)
   followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)
@@ -680,9 +680,9 @@ const refreshLoop = () => {
   });
 }
 
-projectileArray = initObjectArrays(projectileArray, 100, Projectile, 0, 0, 0)
-powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 100, Projectile, 0, 0, 0)
-powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 100, Projectile, 0, 0, 0)
+projectileArray = initObjectArrays(projectileArray, 150, Projectile, 0, 0, 0)
+powerUpProjectileArray1 = initObjectArrays(powerUpProjectileArray1, 50, Projectile, 0, 0, 0)
+powerUpProjectileArray2 = initObjectArrays(powerUpProjectileArray2, 50, Projectile, 0, 0, 0)
 basicEnemyArray = initObjectArrays(basicEnemyArray, 20, BasicEnemy)
 squareEnemyArray = initSquareArray(squareEnemyArray, 5, SquareEnemy)
 followEnemyArray = initObjectArrays(followEnemyArray, 20, FollowEnemy)

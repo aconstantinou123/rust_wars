@@ -289,8 +289,8 @@ impl Enemy {
             self.ready_to_remove = false;
             self.removal_time = 0;
             let mut rng = thread_rng();
-            let rand_x = rng.gen_range(0.0, max_x - 30.0) + buffer;
-            let rand_y = rng.gen_range(0.0, max_y - 30.0) + buffer;
+            let rand_x = rng.gen_range(0.0, max_x - (2.0 * buffer)) + buffer;
+            let rand_y = rng.gen_range(0.0, max_y - (2.0 * buffer)) + buffer;
             self.x = rand_x;
             self.y = rand_y;
             self.x_speed = original_speed;
